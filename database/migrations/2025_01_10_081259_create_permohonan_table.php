@@ -1,0 +1,45 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('permohonan', function (Blueprint $table) {
+            $table->id();
+            $table->date('tanggal_diajukan');
+            $table->enum('kategori_berbayar', ['berbayar', 'nolrupiah']);
+            $table->unsignedBigInteger('id_jenis_layanan');
+            $table->foreign('id_jenis_layanan')->references('id')->on('jenis_layanan')->onDelete('cascade');
+            $table->string('deskripsi_keperluan');
+            $table->date('tanggal_awal');
+            $table->date('tanggal_akhir');
+            $table->time('jam_awal');
+            $table->time('jam_akhir');
+            $table->enum('status_permohonan', ['diproses', 'selesai'])->default('diproses');
+            $table->date('tanggal_selesai');
+            $table->date('tanggal_diambil');
+            $table->unsignedBigInteger('id_pemohon');
+            $table->foreign('id_pemohon')->references('id')->on('pemohon')->onDelete('cascade');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('permohonan', function (Blueprint $table) {
+            $table->dropForeign(['id_jenis_layanan']);
+            $table->dropForeign(['id_pemohon']);
+        });
+        Schema::dropIfExists('permohonan');
+    }
+};
