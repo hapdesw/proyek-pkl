@@ -17,11 +17,14 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+
+    protected $primaryKey = 'id';
+    protected $fillable = ['nama', 'username', 'password'];
+
+    public function pegawai()
+    {
+        return $this->hasOne(Pegawai::class, 'username', 'username'); // Relasi berdasarkan username
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -30,7 +33,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
+
     ];
 
     /**
