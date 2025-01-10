@@ -1,0 +1,70 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    image: proyek-pkl
+    container_name: proyek-pkl
+    ports:
+      - "8002:8000"  # Port mapping
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: app
+    working_dir: /var/www/proyek-pkl
+    volumes:
+      - .:/var/www/proyek-pkl
+      - ./storage/php.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+       - proyek-pkl
+  webserver:
+    image: nginx:latest
+    container_name: nginxlaraveldocker_pkl
+    restart: unless-stopped
+    tty: true
+    ports:
+     - "2024:80"
+    volumes:
+      - .:/var/www/proyek-pkl
+      - ./storage/app.conf:/etc/nginx/conf.d/app.conf
+    networks:
+      - proyek-pkl
+
+  db:
+    image: mysql:latest
+    container_name: dblaraverdocker_pkl
+    restart: always
+    tty: true
+    ports:
+      - "3307:3306"
+    volumes:
+      - lbdata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    networks:
+      - proyek-pkl
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pmalaraveldocker_pkl
+    links:
+      - db
+    restart: always
+    ports:
+      - 7001:80 
+    networks:
+      - proyek-pkl
+
+networks:
+  proyek-pkl:
+    driver: bridge
+
+volumes:
+  lbdata:
+    driver: local
