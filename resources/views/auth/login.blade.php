@@ -6,39 +6,52 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="m-0 p-0 h-screen flex">
-    <div class="flex w-full h-full">
-        <!-- Bagian Kiri: Gambar -->
-        <div class="flex-1 bg-blue-100">
-            <img src="{{ asset('img/bmkg.jpg') }}" alt="BMKG Building" class="w-full h-full object-cover">
-        </div>
+    <style>
+        body {
+            background-image: url('/img/bmkg_6.jpg'); /* Path ke gambar */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
 
-        <!-- Bagian Kanan: Login -->
-        <div class="flex-1 flex flex-col justify-center p-10">
-            <h1 class="text-2xl font-bold mb-6 text-gray-700">
-                Sistem Informasi Pengajuan Permohonan Layanan
-            </h1>
-            <form class="space-y-6">
-                <div>
-                    <label for="username" class="block text-gray-700 font-semibold mb-2">Username</label>
-                    <input type="text" id="username" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Masukkan username">
+        .bg-overlay {
+            backdrop-filter: blur(5px); /* Efek blur */
+            background-color: rgba(255, 255, 255, 0.4); /* Transparansi dengan warna putih */
+        }
+    </style>
+</head>
+<body>
+    <section class="relative h-screen">
+        <!-- Overlay untuk blur -->
+        <div class="absolute inset-0 bg-overlay"></div>
+
+        <!-- Login -->
+        <div class="relative flex flex-col items-center justify-center px-6 py-6 mx-auto md:h-screen lg:py-0">
+          
+            <div class="w-full bg-white rounded-lg shadow dark:border md:mt-20 sm:max-w-md xl:p-0 dark:bg-gray-800/80 dark:border-gray-700">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight text-slate-900 md:text-2xl dark:text-white" >
+                        Sistem Layanan Data dan Informasi
+                    </h1>
+                    <form class="space-y-4 md:space-y-6"  method="POST">
+                        @csrf
+                        <div>
+                            <label for="username" class="block mb-2 text-sm font-medium text-black dark:text-white">Username</label>
+                            <input type="username" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="username" required>
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 text-sm font-medium text-black dark:text-white">Password</label>
+                            <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-start">
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-800 ease-out duration-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Log in</button> 
+                    </form>
                 </div>
-                <div>
-                    <label for="password" class="block text-gray-700 font-semibold mb-2">Password</label>
-                    <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Masukkan Password">
-                </div>
-                <div class="flex justify-between items-center">
-                    <label class="flex items-center text-gray-600">
-                        <input type="checkbox" class="mr-2"> Ingat Saya
-                    </label>
-                    <a href="#" class="text-blue-500 hover:underline">Lupa Kata Sandi?</a>
-                </div>
-                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg">
-                    Login
-                </button>
-            </form>
+            </div>
         </div>
-    </div>
+      </section>
 </body>
 </html>
