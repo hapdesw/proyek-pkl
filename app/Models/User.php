@@ -19,7 +19,7 @@ class User extends Authenticatable
      */
 
     protected $primaryKey = 'id';
-    protected $fillable = ['nama', 'username', 'password'];
+    protected $fillable = ['nama', 'username','role', 'password' ];
 
     public function pegawai()
     {

@@ -3,8 +3,49 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Permohonan extends Model
 {
-    //
+    use HasFactory;
+
+    protected $table = 'permohonan';
+    protected $primaryKey = 'id';
+    protected $fillable = [
+        'tanggal_diajukan', 
+        'kategori_berbayar', 
+        'id_jenis_layanan', 
+        'deskripsi_keperluan', 
+        'tanggal_awal',
+        'tanggal_akhir',
+        'jam_awal',
+        'jam_akhir',
+        'status_permohonan',
+        'tanggal_selesai',
+        'tanggal_diambil',
+        'id_pemohon'];
+
+    public function pemohon(){
+        return $this->belongsTo(Pemohon::class, 'id_pemohon', 'id');
+    }
+
+    public function jenisLayanan(){
+        return $this->belongsTo(JenisLayanan::class, 'id_jenis_layanan', 'id');
+    }
+
+    public function hasilLayanan(){
+        return $this->hasOne(HasilLayanan::class, 'id', 'id_permohonan');
+    }
+
+    public function disposisi(){
+        return $this->hasOne(Disposisi::class, 'id', 'id_permohonan');
+    }
+
+    public function tagihan(){
+        return $this->hasOne(Tagihan::class, 'id', 'id_permohonan');
+    }
+
+    public function kuitansi(){
+        return $this->hasOne(Kuitansi::class, 'id', 'id_permohonan');
+    }
 }

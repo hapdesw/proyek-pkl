@@ -12,6 +12,10 @@ class JenisLayanan extends Model
     protected $table = 'jenis_layanan';
     protected $primaryKey = 'id';
 
-    protected $fillable = ['nama_jenis_layanan',];
+    protected $fillable = ['nama_jenis_layanan'];
+
+    public function permohonan(){
+        return $this->hasMany(Permohonan::class, 'id', 'id_jenis_layanan');
+    }
 
 }
