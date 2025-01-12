@@ -11,7 +11,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->alias([
+            'Petugas_1000' => \App\Http\Middleware\Petugas_1000::class,
+            'Kapokja_0100' => \App\Http\Middleware\Kapokja_0100::class,
+            'Analis_0010' => \App\Http\Middleware\Analis_0010::class,
+            'Bendahara_0001' => \App\Http\Middleware\Bendahara_0001::class,
+            'PetugasKapokja_1100' => \App\Http\Middleware\PetugasKapokja_1100::class,
+            'KapokjaAnalis_0110' => \App\Http\Middleware\KapokjaAnalis_0110::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

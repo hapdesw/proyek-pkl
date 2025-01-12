@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('pegawai', function (Blueprint $table) {
             $table->id();
-            $table->string('username');
-            $table->foreign('username')->references('username')->on('users')->onDelete('cascade');
-            $table->char('status_petugas', 1);
-            $table->char('status_kapokja', 1);
-            $table->char('status_analis', 1);
-            $table->char('status_bendahara', 1);
+            $table->unsignedBigInteger('id_user');
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
+            $table->string('nama');
+            $table->string('no_kontak', 13);
             $table->timestamps();
         });
     }
