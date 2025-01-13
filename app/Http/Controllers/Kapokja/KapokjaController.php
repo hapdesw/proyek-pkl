@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Petugas;
+namespace App\Http\Controllers\Kapokja;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 
-class PetugasController extends Controller
+class KapokjaController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        return view('dashboardcoba');
     }
 }

@@ -9,16 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-image: url('/img/bg.jpg'); /* Path ke gambar */
+            background-image: url('/img/bg.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            font-family: 'Plus Jakarta Sans', sans-serif; /* Set font default */
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .bg-overlay {
-            backdrop-filter: blur(5px); /* Efek blur */
-            background-color: rgba(255, 255, 255, 0.4); /* Transparansi dengan warna putih */
+            backdrop-filter: blur(5px);
+            background-color: rgba(255, 255, 255, 0.4);
         }
     </style>
 </head>
@@ -34,17 +34,37 @@
                     Sistem Layanan Data dan Informasi
                 </h1>
                 <div class="p-4 space-y-2 md:space-y-6 sm:p-8">
-                    <form class="space-y-2 md:space-y-6" method="POST">
+                    <!-- Form Login -->
+                    <form class="space-y-4 md:space-y-6" method="POST" action="{{ route('login') }}">
                         @csrf
+
+                        <!-- Email Address -->
                         <div>
-                            <label for="username" class="block mb-2 text-sm font-medium text-black dark:text-white">Username</label>
-                            <input type="username" name="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="username" required>
+                            <label for="email" class="block mb-2 text-sm font-medium text-black dark:text-white">Email</label>
+                            <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="email@example.com" :value="old('email')" required autofocus autocomplete="username">
+                            <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
+
+                        <!-- Password -->
                         <div>
                             <label for="password" class="block mb-2 text-sm font-medium text-black dark:text-white">Password</label>
-                            <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                            <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required autocomplete="current-password">
+                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>
-                        <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-800 ease-out duration-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Log in</button> 
+
+                        <!-- Remember Me -->
+                        <div class="flex items-center justify-between">
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:underline dark:text-blue-400">
+                                    {{ __('Forgot your password?') }}
+                                </a>
+                            @endif
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-800 ease-out duration-300 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            {{ __('Log in') }}
+                        </button>
                     </form>
                 </div>
             </div>

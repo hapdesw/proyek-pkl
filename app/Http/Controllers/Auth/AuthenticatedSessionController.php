@@ -30,7 +30,11 @@ class AuthenticatedSessionController extends Controller
 
         if($request->user()->peran === '1000')
         {
-            return redirect('dashboard');
+            return redirect('/petugas-layanan/beranda');
+        }
+        elseif($request->user()->peran === '0100')
+        {
+            return redirect('/kapokja/beranda');
         }
         
 
@@ -48,6 +52,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('login');
     }
+    
 }
