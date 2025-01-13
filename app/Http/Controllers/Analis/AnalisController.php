@@ -10,6 +10,6 @@ class AnalisController extends Controller
 {
     public function index()
     {
-        return view('dashboardanalis');
+        return view('analis.dashboardanalis');
     }
 }
