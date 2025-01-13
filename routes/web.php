@@ -9,7 +9,7 @@ use App\Http\Controllers\Analis\AnalisController;
 use App\Http\Controllers\Bendahara\BendaharaController;
 
 Route::get('/', function () {
-    return view('login');
+    return view('auth.login');
 });
 
 Route::middleware(['auth', 'Petugas_1000'])->group(function () {
@@ -24,15 +24,7 @@ Route::middleware(['auth', 'Analis_0010'])->group(function () {
     Route::get('/analis/beranda', [AnalisController::class, 'index'])->name('dashboardcoba'); 
 }); 
 
-Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
-    Route::get('/bendahara/beranda', [BendaharaController::class, 'index'])->name('dashboardcoba'); 
-}); 
 
-
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
