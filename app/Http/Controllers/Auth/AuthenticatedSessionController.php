@@ -36,6 +36,10 @@ class AuthenticatedSessionController extends Controller
         {
             return redirect('/kapokja/beranda');
         }
+        elseif($request->user()->peran === '0010')
+        {
+            return redirect('/analis/beranda');
+        }
         
 
         return redirect()->intended(route('login'));
