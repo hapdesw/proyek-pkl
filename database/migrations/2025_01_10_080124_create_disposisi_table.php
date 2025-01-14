@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_permohonan');
             $table->foreign('id_permohonan')->references('id')->on('permohonan')->onDelete('cascade');
-            $table->unsignedBigInteger('id_pegawai');
-            $table->foreign('id_pegawai')->references('id')->on('pegawai')->onDelete('cascade');
+            $table->char('nip_pegawai', 18);
+            $table->foreign('nip_pegawai')->references('nip')->on('pegawai')->onDelete('cascade');
             $table->date('tanggal_disposisi');
             $table->timestamps();
         });
@@ -29,7 +29,7 @@ return new class extends Migration
     {
         Schema::table('disposisi', function (Blueprint $table) {
             $table->dropForeign(['id_permohonan']);
-            $table->dropForeign(['id_pegawai']);
+            $table->dropForeign(['nip_pegawai']);
         });
         Schema::dropIfExists('disposisi');
     }
