@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Petugas\PetugasController;
 use App\Http\Controllers\Kapokja\KapokjaController;
 use App\Http\Controllers\Analis\AnalisController;
+use App\Http\Controllers\PermohonanController;
 use App\Http\Controllers\Bendahara\BendaharaController;
 
 Route::get('/', function () {
@@ -14,6 +15,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'Petugas_1000'])->group(function () {
     Route::get('/petugas-layanan/beranda', [PetugasController::class, 'index'])->name('dashboard'); 
+    Route::get('/petugas-layanan/permohonan', [PermohonanController::class, 'index'])->name('permohonan.index'); 
 }); 
 
 Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
