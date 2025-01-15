@@ -15,6 +15,15 @@ export default {
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                kodamaWhite: '#E8F5FC',
+                darkKnight: '#0F172A',
+                sapphireGlitter: '#0133CC',
+                islamicGreen: '#009900',
+                sunflowerIsland: '#FFC900',
+                red: '#FF0000',
+                plumb: '#64748B',
+            },
         },
     },
 

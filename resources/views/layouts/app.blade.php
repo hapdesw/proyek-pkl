@@ -21,10 +21,19 @@
     <div class="flex flex-col min-h-screen" style = "background-color: #E8F5FC">
         <!-- Header -->
         @include('layouts.header')
+        @if(Auth::check() && Auth::user()->peran === '1000')
+            @include('layouts.header-petugas')
+        @elseif(Auth::check() && Auth::user()->peran === '0100')
+            @include('layouts.header-kapokja')
+        @elseif(Auth::check() && Auth::user()->peran === '0010')
+            @include('layouts.header-analis')
+        @elseif(Auth::check() && Auth::user()->peran === '0001')
+            @include('layouts.header-bendahara')
+        @endif
         
         <div class="flex-1">
             <!-- Page Content -->
-            {{-- <main class="flex-1 p-6 mb-[40px] bg-white">
+            {{-- <main class="flex-1 p-6 mb-[40px]">
                 @yield('content') 
             </main> --}}
             <main class="flex-1 p-6 pt-16" style = "background-color: #E8F5FC">

@@ -8,22 +8,29 @@ use App\Http\Controllers\Kapokja\KapokjaController;
 use App\Http\Controllers\Analis\AnalisController;
 use App\Http\Controllers\PermohonanController;
 use App\Http\Controllers\Bendahara\BendaharaController;
+use App\Http\Controllers\Kapokja\DisposisiController;
 
 Route::get('/', function () {
     return view('auth.login');
 });
 
 Route::middleware(['auth', 'Petugas_1000'])->group(function () {
-    Route::get('/petugas-layanan/beranda', [PetugasController::class, 'index'])->name('dashboard'); 
-    Route::get('/petugas-layanan/permohonan', [PermohonanController::class, 'index'])->name('permohonan.index'); 
+    Route::get('/petugas-layanan/beranda', [PetugasController::class, 'index'])->name('petugas.beranda'); 
+    Route::get('/petugas-layanan/pengajuan-permohonan', [PermohonanController::class, 'index'])->name('petugas.permohonan'); 
 }); 
 
 Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
-    Route::get('/kapokja/beranda', [KapokjaController::class, 'index'])->name('dashboardcoba'); 
+    Route::get('/kapokja/beranda', [KapokjaController::class, 'index'])->name('kapokja.beranda'); 
+    Route::get('/kapokja/disposisi', [DisposisiController::class, 'index'])->name('kapokja.disposisi'); 
+    Route::get('/kapokja/disposisi/create', [DisposisiController::class, 'create'])->name('kapokja.disposisi.create'); 
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {
-    Route::get('/analis/beranda', [AnalisController::class, 'index'])->name('dashboardcoba'); 
+    Route::get('/analis/hasil-layanan', [AnalisController::class, 'index'])->name('analis.hasil-layanan'); 
+}); 
+
+Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
+    Route::get('/bendahara/tagihan', [BendaharaController::class, 'index'])->name('bendahara.tagihan'); 
 }); 
 
 

@@ -38,7 +38,11 @@ class AuthenticatedSessionController extends Controller
         }
         elseif($request->user()->peran === '0010')
         {
-            return redirect('/analis/beranda');
+            return redirect('/analis/hasil-layanan');
+        }
+        elseif($request->user()->peran === '0001')
+        {
+            return redirect('/bendahara/tagihan');
         }
         
 

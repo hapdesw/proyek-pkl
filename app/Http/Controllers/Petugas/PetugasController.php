@@ -10,6 +10,6 @@ class PetugasController extends Controller
 {
     public function index()
     {
-        return view('petugas.dashboard');
+        return view('petugas.beranda-petugas');
     }
 }
