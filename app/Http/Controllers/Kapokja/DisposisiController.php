@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Kapokja;
 
 use App\Models\Disposisi;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DisposisiController extends Controller
 {
@@ -12,7 +13,7 @@ class DisposisiController extends Controller
      */
     public function index()
     {
-        //
+        return view('kapokja.disposisi');
     }
 
     /**
@@ -20,7 +21,7 @@ class DisposisiController extends Controller
      */
     public function create()
     {
-        //
+        return view('kapokja.form-disposisi');
     }
 
     /**

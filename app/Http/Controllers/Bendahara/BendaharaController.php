@@ -10,6 +10,6 @@ class BendaharaController extends Controller
 {
     public function index()
     {
-        return view('bendahara.dashboardbend');
+        return view('bendahara.tagihan');
     }
 }

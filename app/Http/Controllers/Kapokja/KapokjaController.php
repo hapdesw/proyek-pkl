@@ -10,6 +10,6 @@ class KapokjaController extends Controller
 {
     public function index()
     {
-        return view('kapokja.dashboardcoba');
+        return view('kapokja.beranda-kapokja');
     }
 }
