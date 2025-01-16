@@ -12,7 +12,7 @@ class JenisLayananController extends Controller
      */
     public function index()
     {
-        //
+        return view('petugas.kelola-jenis-layanan');
     }
 
     /**

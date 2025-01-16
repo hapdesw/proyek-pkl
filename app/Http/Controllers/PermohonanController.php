@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Permohonan;
+use App\Models\Pemohon;
 use Illuminate\Http\Request;
 
 class PermohonanController extends Controller
@@ -21,7 +22,9 @@ class PermohonanController extends Controller
      */
     public function create()
     {
-        //
+        $pemohon = Pemohon::all();
+        $permohonan = Permohonan::all();
+        return view('petugas.create-permohonan', compact('permohonan', 'pemohon'));
     }
 
     /**
@@ -29,7 +32,25 @@ class PermohonanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'id_pemohon' => 'required',
+            'tanggal_diajukan' => 'required|date',
+                
+        ]);
+        $request->validate([
+            'tanggal_diajukan' => 'required|date',
+            'kategori_berbayar' => 'required|string',
+            'id_jenis_layanan' => 'required',
+            'deskripsi_keperluan' => 'required|string',
+            'tanggal_awal' => 'required|date',
+            'tanggal_akhir' => 'required|date',
+            'jam_awal' => 'required|time',
+            'jam_akhir' => 'required|time',
+            'status_permohonan' => 'required|string',
+            'tanggal_selesai' => 'nullable',
+            'tanggal_diambil' => 'nullable',
+            'id_pemohon' => 'required'
+        ]);
     }
 
     /**
