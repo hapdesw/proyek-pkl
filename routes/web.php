@@ -17,6 +17,7 @@ Route::get('/', function () {
 Route::middleware(['auth', 'Petugas_1000'])->group(function () {
     Route::get('/petugas-layanan/beranda', [PetugasController::class, 'index'])->name('petugas.beranda'); 
     Route::get('/petugas-layanan/pengajuan-permohonan', [PermohonanController::class, 'index'])->name('petugas.permohonan'); 
+    Route::get('/petugas-layanan/pengajuan', [PermohonanController::class, 'index'])->name('petugas.permohonan'); 
 }); 
 
 Route::middleware(['auth', 'Kapokja_0100'])->group(function () {

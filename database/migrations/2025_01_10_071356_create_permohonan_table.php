@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('permohonan', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal_diajukan');
-            $table->enum('kategori_berbayar', ['berbayar', 'nolrupiah']);
+            $table->enum('kategori_berbayar', ['Berbayar', 'Nolrupiah']);
             $table->unsignedBigInteger('id_jenis_layanan');
             $table->foreign('id_jenis_layanan')->references('id')->on('jenis_layanan')->onDelete('cascade');
             $table->string('deskripsi_keperluan');
@@ -22,9 +22,9 @@ return new class extends Migration
             $table->date('tanggal_akhir');
             $table->time('jam_awal');
             $table->time('jam_akhir');
-            $table->enum('status_permohonan', ['diproses', 'selesai'])->default('diproses');
-            $table->date('tanggal_selesai');
-            $table->date('tanggal_diambil');
+            $table->enum('status_permohonan', ['Diproses', 'Selesai'])->default('diproses');
+            $table->date('tanggal_selesai')->nullable();
+            $table->date('tanggal_diambil')->nullable();
             $table->unsignedBigInteger('id_pemohon');
             $table->foreign('id_pemohon')->references('id')->on('pemohon')->onDelete('cascade');
             $table->timestamps();

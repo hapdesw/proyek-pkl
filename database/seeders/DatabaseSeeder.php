@@ -43,6 +43,12 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('fadhil123'),
             'peran' => '0110'
         ]);
-    }
 
+        $this->call([
+            JenisLayananSeeder::class,
+            PemohonSeeder::class,
+            PermohonanSeeder::class,
+            
+        ]);
+    }
 }
