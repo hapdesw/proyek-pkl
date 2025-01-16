@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Kapokja;
 
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class PegawaiController extends Controller
 {
@@ -12,7 +13,8 @@ class PegawaiController extends Controller
      */
     public function index()
     {
-        //
+        $pegawai = Pegawai::all();
+        return view('kapokja.kelola-pegawai', compact('pegawai'));   
     }
 
     /**
