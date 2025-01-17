@@ -28,8 +28,7 @@ Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
     Route::get('/kapokja/beranda', [KapokjaController::class, 'index'])->name('kapokja.beranda'); 
     Route::get('/kapokja/disposisi', [DisposisiController::class, 'index'])->name('kapokja.disposisi'); 
     Route::get('/kapokja/disposisi/create', [DisposisiController::class, 'create'])->name('kapokja.disposisi.create'); 
-    Route::get('/kapokja/kelola-pegawai', [PegawaiController::class, 'index'])->name('kapokja.kelola-pegawai'); 
-    Route::get('/kapokja/hasil-layanan', [HasilLayananController::class, 'index_kapokja'])->name('kapokja.hasil-layanan'); 
+    Route::get('/kapokja/kelola-pegawai', [PegawaiController::class, 'index'])->name('kapokja.kelola-pegawai');
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {
