@@ -15,6 +15,11 @@ class HasilLayananController extends Controller
         //
     }
 
+    public function index_kapokja()
+    {
+        return view('kapokja.hasil-layanan');
+    }
+
     /**
      * Show the form for creating a new resource.
      */

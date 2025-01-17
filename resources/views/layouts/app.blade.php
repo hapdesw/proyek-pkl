@@ -36,7 +36,7 @@
             {{-- <main class="flex-1 p-6 mb-[40px]">
                 @yield('content') 
             </main> --}}
-            <main class="flex-1 p-6 pt-16" style = "background-color: #E8F5FC">
+            <main class="flex-1 px-2 pt-5 pb-0" style = "background-color: #E8F5FC">
                 {{ $slot }}
             </main>
         </div>

@@ -11,6 +11,7 @@ use App\Http\Controllers\JenisLayananController;
 use App\Http\Controllers\Bendahara\BendaharaController;
 use App\Http\Controllers\Kapokja\DisposisiController;
 use App\Http\Controllers\Kapokja\PegawaiController;
+use App\Http\Controllers\HasilLayananController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -28,6 +29,7 @@ Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
     Route::get('/kapokja/disposisi', [DisposisiController::class, 'index'])->name('kapokja.disposisi'); 
     Route::get('/kapokja/disposisi/create', [DisposisiController::class, 'create'])->name('kapokja.disposisi.create'); 
     Route::get('/kapokja/kelola-pegawai', [PegawaiController::class, 'index'])->name('kapokja.kelola-pegawai'); 
+    Route::get('/kapokja/hasil-layanan', [HasilLayananController::class, 'index_kapokja'])->name('kapokja.hasil-layanan'); 
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {
