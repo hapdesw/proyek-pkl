@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Kapokja;
 
 use App\Models\Disposisi;
+use App\Models\Permohonan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -13,7 +14,8 @@ class DisposisiController extends Controller
      */
     public function index()
     {
-        return view('kapokja.disposisi');
+        $permohonan = Permohonan::all();
+        return view('kapokja.disposisi', compact('permohonan'));
     }
 
     /**
