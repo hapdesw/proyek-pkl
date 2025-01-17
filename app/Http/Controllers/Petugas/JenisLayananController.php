@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Petugas;
+use App\Http\Controllers\Controller;
 use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
 
@@ -12,7 +12,8 @@ class JenisLayananController extends Controller
      */
     public function index()
     {
-        return view('petugas.kelola-jenis-layanan');
+        $jenislayanan = JenisLayanan::all();
+        return view('petugas.kelola-jenis-layanan', compact('jenislayanan'));
     }
 
     /**
@@ -20,7 +21,8 @@ class JenisLayananController extends Controller
      */
     public function create()
     {
-        //
+        $jenislayanan = JenisLayanan::all();
+        return view('petugas.kelola-jenis-layanan', compact('jenislayanan'));
     }
 
     /**

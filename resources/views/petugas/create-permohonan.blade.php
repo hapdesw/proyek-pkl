@@ -1,80 +1,103 @@
 <x-app-layout>
     {{-- Form ajukan permohonan --}}
-        <div class="relative w-full h-auto max-w-screen-xl mx-auto">
-            <div class="relative bg-white p-6 w-full max-w-full rounded-lg shadow-lg">
-                <button type="button" class="absolute top-3 right-2.5 text-gray-400"></button>
-                    <h4 class="text-center text-2xl mb-6">Pengisian Permohonan</h4>
-                    <form method="POST" class="space-y-4">
+        <div class="mx-auto max-w-screen-xl px-4 lg:px-12"> 
+            <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
+                <div class="border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
+                        Ajukan Permohonan
+                    </h3>
+                </div>
+                    <form method="POST" class="space-y-4 p-4">
                         @csrf
-                        <div class="grid grid-cols-2 gap-4">
+                        {{-- Data pemohon --}}
+                        <div class="grid grid-cols-2 gap-5 w-h-screen">
                             <!-- Nama Pemohon -->
                             <div>
-                                <label for="kode_mk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Pemohon</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="kode_mk" name="kode_mk" required>
+                                <label for="nama_pemohon" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Pemohon</label>
+                                <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_pemohon" name="nama_pemohon" required>
                             </div>
                             <!-- No Hp -->
                             <div>
-                                <label for="jenis_mk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No Hp</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="kode_mk" name="kode_mk" required>
+                                <label for="no_hp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No Hp</label>
+                                <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="no_hp" name="no_hp" required>
                             </div>
                             <!-- Asal Instansi -->
                             <div>
-                                <label for="nama_mk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Asal Instansi</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_mk" name="nama_mk" required>
+                                <label for="instansi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Asal Instansi</label>
+                                <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="instansi" name="instansi" required>
                             
                             </div>
                             <!-- Email -->
                             <div>
-                                <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="sks" name="sks" required>
+                                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                                <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="email" name="email" required>
                             </div>
-                            <!-- Tanggal diajukan -->
+                        </div>
+                        {{-- Data Permohonan --}}
+                        <div class="grid grid-cols-1 gap-5 w-1/2">
+                            <!-- Tanggal Diajukan -->
                             <div>
-                                <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Diajukan</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="sks" name="sks" required>
+                                <label for="tgl_diajukan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Diajukan</label>
+                                <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_diajukan" name="tgl_diajukan" required>
                             </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-5">
                             <!-- Kategori -->
                             <div>
-                                <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="sks" name="sks" required>
+                                <label for="kategori" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
+                                <select class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="kategori" name="kategori" required>
+                                    <option value="" disabled selected>--Pilih Kategori--</option>
+                                    <option value="berbayar">Berbayar</option>
+                                    <option value="nol_rupiah">Nol Rupiah</option>
+                                </select>
                             </div>
+                            
                             <!-- Jenis Layanan -->
                             <div>
-                                <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Layanan</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="sks" name="sks" required>
+                                <label for="jenis_layanan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Layanan</label>
+                                <select name="jenis_layanan" id="jenis_layanan" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5" required>
+                                    <option value="" disabled selected>--Pilih Jenis Layanan--</option>
+                                    @foreach ($jenisLayanan as $layanan)
+                                        <option value="{{ $layanan->id }}">{{ $layanan->nama_jenis_layanan }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <!-- Tanggal awal -->
+                                
+                                
+                            <!-- Tanggal Awal -->
                             <div>
-                                <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Awal</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="sks" name="sks" required>
+                                <label for="tgl_awal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Awal</label>
+                                <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_awal" name="tgl_awal" required>
                             </div>
-                            <!-- Tanggal akhir -->
+                        
+                            <!-- Tanggal Akhir -->
                             <div>
-                                <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Akhir</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="sks" name="sks" required>
+                                <label for="tgl_akhir" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Akhir</label>
+                                <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_akhir" name="tgl_akhir">
                             </div>
-                            <!-- Jam awal -->
+
+                            <!-- Jam Awal -->
                             <div>
-                                <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Awal</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="sks" name="sks" required>
+                                <label for="jam_awal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Awal</label>
+                                <input type="time" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="jam_awal" name="jam_awal">
                             </div>
                             <!-- Jam Akhir -->
                             <div>
-                                <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Akhir</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="sks" name="sks" required>
-                            </div>
+                                <label for="jam_akhir" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Akhir</label>
+                                <input type="time" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="jam_akhir" name="jam_akhir">
+                            </div> 
+                        </div>
+                        <div class="grid grid-cols-1 gap-5 mt-5 w-1/2">    
                             <!-- Deskripsi -->
                             <div>
-                                <label for="sks" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
-                                <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="sks" name="sks" required>
+                                <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
+                                <textarea class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="deskripsi" name="deskripsi" rows="7" required></textarea>
                             </div>
                         </div>
-                        
                         <div class="flex items-center space-x-4 mt-4">
                             <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                                 Ajukan Permohonan
-                            </button>
-                            
+                            </button> 
                         </div>
                     </form>
             </div>    

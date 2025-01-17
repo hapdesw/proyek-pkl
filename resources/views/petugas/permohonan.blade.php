@@ -1,7 +1,7 @@
 <x-app-layout>
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12"> 
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
-                 <div class="border-b border-gray-200 dark:border-gray-700">
+                <div class="border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
                         Permohonan
                     </h3>

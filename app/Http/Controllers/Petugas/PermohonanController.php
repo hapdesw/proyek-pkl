@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Petugas;
+use App\Http\Controllers\Controller;
 use App\Models\Permohonan;
 use App\Models\Pemohon;
+use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
 
 class PermohonanController extends Controller
@@ -23,8 +24,9 @@ class PermohonanController extends Controller
     public function create()
     {
         $pemohon = Pemohon::all();
-        $permohonan = Permohonan::all();
-        return view('petugas.create-permohonan', compact('permohonan', 'pemohon'));
+        $permohonanID = Permohonan::select('id')->get();
+        $jenisLayanan = JenisLayanan::all();
+        return view('petugas.create-permohonan', compact('permohonanID', 'pemohon', 'jenisLayanan'));
     }
 
     /**
