@@ -115,10 +115,13 @@
                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $layanan->id }}">
                                             <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                 <li class=" flex px-4 py-1">
-                                                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
-                                                    </svg>
-                                                    <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Layanan</a>
+                                                    <button type="button" data-modal-target="edit-modal-{{ $layanan->id }}" data-modal-toggle="edit-modal-{{ $layanan->id }}" aria-controls="edit-modal-{{ $layanan->id }}" class="flex items-center gap-2 py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+                                                        </svg>
+                                                        Edit Layanan
+                                                    </button>
+                                                              
                                                 </li>
                                             </div>
                                             {{-- Untuk Hapus data per layanan --}}
@@ -138,6 +141,36 @@
                                             </div>  
                                         </ul>
                                     </div>
+                                    {{-- Buka modal untuk edit --}}
+                                    <div id="edit-modal-{{ $layanan->id }}" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                        <div class="relative w-1/2 h-auto max-w-screen-xl mx-auto">
+                                            <div class="relative bg-white p-6 w-full max-w-full rounded-lg shadow-lg">
+                                                <button type="button" class="absolute top-3 right-2.5 text-gray-400" data-modal-toggle="edit-modal-{{ $layanan->id }}">✖</button>
+                                                <div class="border-b border-gray-200 dark:border-gray-700">
+                                                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
+                                                        Edit Layanan
+                                                    </h3>
+                                                </div>
+                                                
+                                                <form action="{{route ('petugas.kelola-layanan.update', $layanan->id) }}" method="POST" class="space-y-4">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="grid grid-cols-1 gap-4">
+                                                        <!-- Nama Layanan-->
+                                                        <div>
+                                                            <label for="nama_jenis_layanan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Layanan</label>
+                                                            <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_jenis_layanan" name="nama_jenis_layanan" value="{{ $layanan->nama_jenis_layanan }}" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex items-center space-x-4 mt-4">
+                                                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                                                            Simpan Perubahan
+                                                        </button> 
+                                                    </div>
+                                                </form> 
+                                            </div> 
+                                        </div>
+                                    </div>         
                                     {{-- Pop up dialog untuk hapus --}}
                                     <div id="custom-confirm-{{$layanan->id}}" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                                         <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm">

@@ -8,7 +8,7 @@
                     </h3>
                 </div>
                 <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">Permohonan ke- {{ $nextID }}</div>
-                <form method="POST" class="space-y-4 p-4">
+                <form action="{{ route("petugas.permohonan.store") }}" method="POST" class="space-y-4 p-4">
                     @csrf
                     {{-- Data pemohon --}}
                     <div class="grid grid-cols-2 gap-5 w-h-screen">

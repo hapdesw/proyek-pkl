@@ -6,6 +6,7 @@ use App\Models\Permohonan;
 use App\Models\Pemohon;
 use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PermohonanController extends Controller
 {
@@ -15,7 +16,8 @@ class PermohonanController extends Controller
     public function index()
     {
         $permohonan = Permohonan::all();
-        return view('petugas.permohonan', compact('permohonan'));
+        $pemohon = Pemohon::all();
+        return view('petugas.permohonan', compact('permohonan', 'pemohon'));
     }
 
     /**
@@ -34,37 +36,70 @@ class PermohonanController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //validasi data
-        $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
-        $nextID = $permohonanIDLast + 1;
-        $request->validate([
-            'id' => $nextID,
-            'tanggal_diajukan' => 'required|date',
-            'kategori_berbayar' => 'required|string',
-            'id_jenis_layanan' => 'required',
-            'deskripsi_keperluan' => 'required|string',
-            'tanggal_awal' => 'required|date',
-            'tanggal_akhir' => 'required|date',
-            'jam_awal' => 'required|time',
-            'jam_akhir' => 'required|time',
-            'tanggal_selesai' => 'nullable',
-            'tanggal_diambil' => 'nullable',
-            'id_pemohon' => 'required'
-        ]);
-
-        // Simpan data ke database
-        $pemohon = Pemohon::create([
-            'id' => $request->kode_mk,
-            'nama_pemohon' => $request->nama_mk,
-            'instansi' => $request->semester,
-            'no_kontak' => $request->sks,
-            'email' => $request->jenis_mk,
-            
-           
-        ]);
+{
+    Log::info('Mulai proses store');
+    Log::info('Data request:', $request->all());
+    // Validasi data
+    $request->validate([
+        // Validasi data permohonan
+        'tanggal_diajukan' => 'required|date',
+        'kategori_berbayar' => 'required|string',
+        'id_jenis_layanan' => 'required|integer',
+        'deskripsi_keperluan' => 'required|string',
+        'tanggal_awal' => 'required|date',
+        'tanggal_akhir' => 'nullable|date',
+        'jam_awal' => 'nullable|date_format:H:i',
+        'jam_akhir' => 'nullable|date_format:H:i',
+        'tanggal_selesai' => 'nullable|date',
+        'tanggal_diambil' => 'nullable|date',
         
-    }
+        // Validasi data pemohon
+        'nama_pemohon' => 'required|string',
+        'instansi' => 'required|string',
+        'no_kontak' => 'required|string',
+        'email' => 'required|email',
+    ]);
+    // Setelah validasi
+Log::info('Validasi berhasil');
+
+    dd($request->all()); // Debug untuk memeriksa data yang divalidasi
+    // Cari atau buat data pemohon
+    $pemohon = Pemohon::firstOrCreate(
+        ['email' => $request->email], // Kriteria unik, misalnya email
+        [
+            'nama_pemohon' => $request->nama_pemohon,
+            'instansi' => $request->instansi,
+            'no_kontak' => $request->no_kontak,
+        ]
+       
+    );
+    dd($pemohon);
+    // Setelah Pemohon::create
+Log::info('Pemohon dibuat:', $pemohon->toArray());
+
+    // Simpan data permohonan
+    $permohonan=Permohonan::create([
+        'tanggal_diajukan' => $request->tanggal_diajukan,
+        'kategori_berbayar' => $request->kategori_berbayar,
+        'id_jenis_layanan' => $request->id_jenis_layanan,
+        'deskripsi_keperluan' => $request->deskripsi_keperluan,
+        'tanggal_awal' => $request->tanggal_awal,
+        'tanggal_akhir' => $request->tanggal_akhir,
+        'jam_awal' => $request->jam_awal,
+        'jam_akhir' => $request->jam_akhir,
+        'tanggal_selesai' => $request->tanggal_selesai,
+        'tanggal_diambil' => $request->tanggal_diambil,
+        'id_pemohon' => $pemohon->id, // ID pemohon dari data yang baru dibuat atau ditemukan
+    ]);
+    dd($permohonan);
+    // Setelah Permohonan::create
+Log::info('Permohonan dibuat:', $permohonan->toArray());
+
+
+    // route ke halaman index nya
+    return redirect()->route('petugas.permohonan')->with('success', 'Permohonan berhasil dibuat!');
+}
+
 
     /**
      * Display the specified resource.

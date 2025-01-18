@@ -55,15 +55,26 @@ class JenisLayananController extends Controller
      */
     public function edit(JenisLayanan $jenisLayanan)
     {
-        
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, JenisLayanan $jenisLayanan)
+    public function update(Request $request, $id)
     {
-        //
+        //validasi data
+        $request -> validate([
+        'nama_jenis_layanan' => 'required|string',
+        ]);
+
+        //update data
+        JenisLayanan::find($id)->update([
+            'nama_jenis_layanan' => $request->nama_jenis_layanan,
+        ]);
+
+        //route ke halaman index-nya
+        return redirect()->route('petugas.kelola-layanan')->with('success', 'Layanan berhasil diperbarui!');
     }
 
     /**
