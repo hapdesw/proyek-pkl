@@ -1,6 +1,20 @@
 <x-app-layout>
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12"> 
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
                         Permohonan
@@ -129,7 +143,7 @@
                                 <tr class="border-b dark:border-gray-700 text-darkKnight">
                                     <td class="px-4 py-3">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-3">{{ $pm->id }}</td>
-                                    <td class="px-4 py-3">{{ $pm->tanggal_diajukan }}</td>
+                                    <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3">{{ $pm->kategori_berbayar }}</td>
                                     <td class="px-4 py-3">{{ $pm->jenisLayanan->nama_jenis_layanan}}</td>
                                     <td class="px-4 py-3">{{ $pm->pemohon->instansi}}</td> 

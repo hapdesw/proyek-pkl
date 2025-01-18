@@ -24,9 +24,10 @@ class PermohonanController extends Controller
     public function create()
     {
         $pemohon = Pemohon::all();
-        $permohonanID = Permohonan::select('id')->get();
+        $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
+        $nextID = $permohonanIDLast + 1;
         $jenisLayanan = JenisLayanan::all();
-        return view('petugas.create-permohonan', compact('permohonanID', 'pemohon', 'jenisLayanan'));
+        return view('petugas.create-permohonan', compact('nextID', 'pemohon', 'jenisLayanan'));
     }
 
     /**
@@ -34,12 +35,11 @@ class PermohonanController extends Controller
      */
     public function store(Request $request)
     {
+        //validasi data
+        $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
+        $nextID = $permohonanIDLast + 1;
         $request->validate([
-            'id_pemohon' => 'required',
-            'tanggal_diajukan' => 'required|date',
-                
-        ]);
-        $request->validate([
+            'id' => $nextID,
             'tanggal_diajukan' => 'required|date',
             'kategori_berbayar' => 'required|string',
             'id_jenis_layanan' => 'required',
@@ -48,11 +48,22 @@ class PermohonanController extends Controller
             'tanggal_akhir' => 'required|date',
             'jam_awal' => 'required|time',
             'jam_akhir' => 'required|time',
-            'status_permohonan' => 'required|string',
             'tanggal_selesai' => 'nullable',
             'tanggal_diambil' => 'nullable',
             'id_pemohon' => 'required'
         ]);
+
+        // Simpan data ke database
+        $pemohon = Pemohon::create([
+            'id' => $request->kode_mk,
+            'nama_pemohon' => $request->nama_mk,
+            'instansi' => $request->semester,
+            'no_kontak' => $request->sks,
+            'email' => $request->jenis_mk,
+            
+           
+        ]);
+        
     }
 
     /**
@@ -82,7 +93,7 @@ class PermohonanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Permohonan $permohonan)
+    public function destroy(Permohonan $id)
     {
         //
     }

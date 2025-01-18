@@ -19,9 +19,15 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'Petugas_1000'])->group(function () {
     Route::get('/petugas-layanan/beranda', [PetugasController::class, 'index'])->name('petugas.beranda'); 
-    Route::get('/petugas-layanan/kelola-layanan', [JenisLayananController::class, 'index'])->name('petugas.kelola-layanan'); 
+    Route::get('/petugas-layanan/kelola-layanan', [JenisLayananController::class, 'index'])->name('petugas.kelola-layanan');
+    Route::get('/petugas-layanan/kelola-layanan/create', [JenisLayananController::class, 'create'])->name('petugas.kelola-layanan.create');
+    Route::post('/petugas-layanan/kelola-layanan/store', [JenisLayananController::class, 'store'])->name('petugas.kelola-layanan.store'); 
+    Route::delete('/petugas-layanan/kelola-layanan/{id}', [JenisLayananController::class, 'destroy'])->name('petugas.kelola-layanan.destroy'); 
     Route::get('/petugas-layanan/permohonan', [PermohonanController::class, 'index'])->name('petugas.permohonan'); 
     Route::get('/petugas-layanan/permohonan/create', [PermohonanController::class, 'create'])->name('petugas.permohonan.create'); 
+    Route::post('/petugas-layanan/permohonan/store', [PermohonanController::class, 'store'])->name('petugas.permohonan.store'); 
+    
+
 }); 
 
 Route::middleware(['auth', 'Kapokja_0100'])->group(function () {

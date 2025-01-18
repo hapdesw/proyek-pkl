@@ -1,6 +1,32 @@
 <x-app-layout>
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12"> 
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
+            @if ($message = Session::get('success'))
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: '{{ $message }}',
+                    });
+                </script>
+            @endif
+    
+            @if($errors->any())
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        html: `
+                            <strong>Terjadi Kesalahan:</strong>
+                            <ul style="text-align: left;">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        `,
+                    });
+                </script>
+            @endif
             <div class="border-b border-gray-200 dark:border-gray-700">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
                     Kelola Jenis Layanan
@@ -23,31 +49,41 @@
                 <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">                  
                     <div class="flex items-center space-x-3 w-full md:w-auto">
                         <div x-data="{ open: false }">
-                            <button data-modal-target="add-modal"  data-modal-toggle="add-modal" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">>
+                            <button data-modal-target="add-modal"  data-modal-toggle="add-modal" class="flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">
                                 <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
+                                    <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"/>
                                 </svg>
                                 Tambah Layanan
                             </button> 
                             {{-- Modal Tambah Layanan --}}
                             <div id="add-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                                <div class="relative w-full h-auto max-w-screen-xl mx-auto">
+                                <div class="relative w-1/2 h-auto max-w-screen-xl mx-auto">
                                     <div class="relative bg-white p-6 w-full max-w-full rounded-lg shadow-lg">
                                         <button type="button" class="absolute top-3 right-2.5 text-gray-400" data-modal-toggle="add-modal">✖</button>
-                                        <h4 class="text-center text-2xl mb-6">Tambah Jenis Layanan</h4>
+                                        <div class="border-b border-gray-200 dark:border-gray-700">
+                                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
+                                                Tambah Layanan
+                                            </h3>
+                                        </div>
                                         
-                                        <form " method="POST" class="space-y-4">
+                                        <form action="{{route ('petugas.kelola-layanan.store') }}" method="POST" class="space-y-4">
                                             @csrf
-                                            <div class="grid grid-cols-2 gap-4">
+                                            <div class="grid grid-cols-1 gap-4">
                                                 <!-- Nama Layanan-->
                                                 <div>
-                                                    <label for="kode_mk" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Layanan</label>
-                                                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_layanan" name="nama_layanan" required>
+                                                    <label for="nama_jenis_layanan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Layanan</label>
+                                                    <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_jenis_layanan" name="nama_jenis_layanan" required>
                                                 </div>
+                                            </div>
+                                            <div class="flex items-center space-x-4 mt-4">
+                                                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                                                    Tambah
+                                                </button> 
                                             </div>
                                         </form> 
                                     </div> 
                                 </div>
+                                
                             </div>                          
                         </div>            
                     </div>
@@ -85,16 +121,46 @@
                                                     <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Layanan</a>
                                                 </li>
                                             </div>
+                                            {{-- Untuk Hapus data per layanan --}}
                                             <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                <li class=" flex px-4 py-1">
-                                                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
-                                                      </svg>
-                                                    <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Hapus</a>
-                                                </li>   
-                                            </div>    
+                                                <li class=" flex items-center px-2 py-1">
+                                                    <form id="delete-form-{{$layanan->id}}" action="{{ route('petugas.kelola-layanan.destroy', $layanan->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" onclick="openDialog('custom-confirm-{{$layanan->id}}')" class="flex items-center gap-2 py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                            <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                                            </svg>
+                                                            <span>Hapus</span>
+                                                        </button>
+                                                    </form>
+                                                </li> 
+                                            </div>  
                                         </ul>
                                     </div>
+                                    {{-- Pop up dialog untuk hapus --}}
+                                    <div id="custom-confirm-{{$layanan->id}}" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                                        <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm">
+                                            <p class="mb-4">Apakah Anda yakin ingin menghapus layanan <strong>{{ $layanan->nama_jenis_layanan }}</strong>?</p>
+                                            <div class="flex gap-3">
+                                                <button onclick="closeDialog('custom-confirm-{{$layanan->id}}')" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-2 rounded">Batal</button>
+                                                <button onclick="submitForm('delete-form-{{$layanan->id}}')" class="bg-red hover:bg-orange-900 text-white px-2 py-2 rounded">Hapus</button>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                    <script>
+                                        function openDialog(dialogId) {
+                                            document.getElementById(dialogId).classList.remove('hidden');
+                                        }
+                
+                                        function closeDialog(dialogId) {
+                                            document.getElementById(dialogId).classList.add('hidden');
+                                        }
+                
+                                        function submitForm(formId) {
+                                            document.getElementById(formId).submit();
+                                        }
+                                    </script>
                                 </td>
                             </tr> 
                         @empty
@@ -102,8 +168,8 @@
                             <td colspan="10" class="text-center align-middle h-20">Tidak ada Layanan</td>
                         </tr>
                         @endforelse
-
                     </tbody>
+                    
                 </table>
             </div>
             <nav class="flex flex-col  md:flex-row  justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
