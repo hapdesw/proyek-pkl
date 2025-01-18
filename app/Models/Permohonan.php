@@ -38,7 +38,7 @@ class Permohonan extends Model
     }
 
     public function disposisi(){
-        return $this->hasOne(Disposisi::class, 'id', 'id_permohonan');
+        return $this->hasOne(Disposisi::class, 'id_permohonan', 'id');
     }
 
     public function tagihan(){

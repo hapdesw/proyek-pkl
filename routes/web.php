@@ -34,7 +34,11 @@ Route::middleware(['auth', 'Petugas_1000'])->group(function () {
 Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
     Route::get('/kapokja/beranda', [KapokjaController::class, 'index'])->name('kapokja.beranda'); 
     Route::get('/kapokja/disposisi', [DisposisiController::class, 'index'])->name('kapokja.disposisi'); 
-    Route::get('/kapokja/disposisi/create', [DisposisiController::class, 'create'])->name('kapokja.disposisi.create'); 
+    Route::get('/kapokja/disposisi/create/{id}', [DisposisiController::class, 'create'])->name('kapokja.disposisi.create'); 
+    Route::post('/kapokja/disposisi/store/{id}', [DisposisiController::class, 'store'])->name('kapokja.disposisi.store'); 
+    Route::get('/kapokja/disposisi/edit/{id}', [DisposisiController::class, 'edit'])->name('kapokja.disposisi.edit'); 
+    Route::post('/kapokja/disposisi/update/{id}', [DisposisiController::class, 'update'])->name('kapokja.disposisi.update'); 
+    Route::delete('/kapokja/disposisi/destroy/{id}', [DisposisiController::class, 'destroy'])->name('kapokja.disposisi.destroy'); 
     Route::get('/kapokja/kelola-pegawai', [PegawaiController::class, 'index'])->name('kapokja.kelola-pegawai');
 }); 
 

@@ -31,9 +31,22 @@ class PermohonanSeeder extends Seeder
                 'id_pemohon'=> $pemohon->id,
                 'created_at' => now(),
                 'updated_at' => now(), 
-                
-
-            ]
+          ]
+        ]);
+        $jenisLayanan = JenisLayanan::where('nama_jenis_layanan', 'Data Iklim')->first();
+        $pemohon = Pemohon::where('nama_pemohon', 'Hexos')->first();
+        DB::table('permohonan')->insert([
+            [
+                'tanggal_diajukan'=> '2025-01-18', 
+                'kategori_berbayar'=> 'berbayar', 
+                'id_jenis_layanan' => $jenisLayanan->id, 
+                'deskripsi_keperluan' => 'Informasi curah hujan bulanan  wilayah Ambarawa dan Bawen, Kab. Semarang', 
+                'tanggal_awal' => '2023-01-01', 
+                'tanggal_akhir'=>'2023-12-31', 
+                'id_pemohon'=> $pemohon->id,
+                'created_at' => now(),
+                'updated_at' => now(), 
+          ]
         ]);
     }
 }

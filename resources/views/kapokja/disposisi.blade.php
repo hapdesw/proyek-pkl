@@ -1,6 +1,25 @@
 <x-app-layout>
         <div class="mx-auto max-w-screen-xl px-4 lg:px-2"> 
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
+                @if ($message = Session::get('success'))
+                    <script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: '{{ $message }}',
+                        });
+                    </script>
+                @endif
+        
+                @if($errors->any())
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: '{{ $errors->first() }}',
+                        });
+                    </script>
+                @endif
                  <div class="border-b border-gray-200 dark:border-gray-700">
                     <h1 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
                         Disposisi
@@ -126,14 +145,14 @@
                                     <td class="px-3 py-3 w-36">{{ $pm->pemohon->instansi}}</td> 
                                     <td class="px-3 py-3">{{ $pm->deskripsi_keperluan }}</td>
                                     <td class="px-4 py-3 w-32">
-                                        @if($pm->disposisi && $pm->disposisi->pegawai)
+                                        @if($pm->disposisi?->pegawai)
                                             {{ $pm->disposisi->pegawai->nama }}
                                         @else
                                             <span class="text-red !important">Belum diatur</span>
                                         @endif
                                     </td>
                                     <td class="px-3 py-3">
-                                        @if($pm->disposisi && $pm->disposisi->tanggal_disposisi)
+                                        @if($pm->disposisi?->tanggal_disposisi)
                                             {{ \Carbon\Carbon::parse($pm->disposisi->tanggal_disposisi)->format('d/m/Y') }}
                                         @else
                                             <span class="text-red !important">Belum diatur</span>
@@ -156,7 +175,7 @@
                                         <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pm->id }}">
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex px-4 py-1" >
+                                                    <li class=" flex items-center px-4 py-1" >
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
                                                         </svg>
@@ -165,7 +184,7 @@
                                                     </li>
                                                 </div>
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex px-4 py-1" >
+                                                    <li class=" flex items-center px-4 py-1" >
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m14 9.006h-.335a1.647 1.647 0 0 1-1.647-1.647v-1.706a1.647 1.647 0 0 1 1.647-1.647L19 12M5 12v5h1.375A1.626 1.626 0 0 0 8 15.375v-1.75A1.626 1.626 0 0 0 6.375 12H5Zm9 1.5v2a1.5 1.5 0 0 1-1.5 1.5v0a1.5 1.5 0 0 1-1.5-1.5v-2a1.5 1.5 0 0 1 1.5-1.5v0a1.5 1.5 0 0 1 1.5 1.5Z"/>
                                                         </svg>
@@ -173,23 +192,66 @@
                                                     </li>
                                                 </div>
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex px-4 py-1">
+                                                    <li class=" flex items-center px-4 py-1">
+                                                    @if($pm->disposisi?->pegawai)
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                         </svg>
-                                                          
-                                                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Disposisi</a>
+                                                        <a href="{{ route('kapokja.disposisi.edit', ['id' => $pm->id]) }}" 
+                                                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                        Edit Disposisi
+                                                        </a>
+                                                    @else
+                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                        </svg>
+                                                        <a href="{{ route('kapokja.disposisi.create', ['id' => $pm->id]) }}" 
+                                                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                        Atur Disposisi
+                                                        </a>
+                                                    @endif
                                                     </li>
                                                 </div>
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex px-4 py-1">
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
-                                                          </svg>
-                                                          
-                                                        <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Hapus</a>
-                                                    </li>   
-                                                </div>    
+                                                    <li class="flex items-center px-4 py-1">
+                                                        <form id="delete-form-{{ $pm->id }}" 
+                                                            action="{{ route('kapokja.disposisi.destroy', $pm->id) }}" 
+                                                            method="POST" 
+                                                            class="flex items-center">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                                            </svg>
+                                                            
+                                                            <button type="button" 
+                                                                    onclick="confirmDelete({{ $pm->id }})" 
+                                                                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                                Hapus Disposisi
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </div>
+
+                                                <script>
+                                                function confirmDelete(id) {
+                                                    Swal.fire({
+                                                        title: 'Apakah Anda yakin?',
+                                                        text: "Data disposisi akan dihapus secara permanen!",
+                                                        icon: 'warning',
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: '#3085d6',
+                                                        cancelButtonColor: '#d33',
+                                                        confirmButtonText: 'Ya, hapus!',
+                                                        cancelButtonText: 'Batal'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            document.getElementById('delete-form-' + id).submit();
+                                                        }
+                                                    });
+                                                }
+                                                </script>   
                                             </ul>
                                         </div>
                                     </td>

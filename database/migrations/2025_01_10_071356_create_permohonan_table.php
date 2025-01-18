@@ -19,9 +19,9 @@ return new class extends Migration
             $table->foreign('id_jenis_layanan')->references('id')->on('jenis_layanan')->onDelete('cascade');
             $table->string('deskripsi_keperluan');
             $table->date('tanggal_awal');
-            $table->date('tanggal_akhir');
-            $table->time('jam_awal');
-            $table->time('jam_akhir');
+            $table->date('tanggal_akhir')->nullable();
+            $table->time('jam_awal')->nullable();
+            $table->time('jam_akhir')->nullable();
             $table->enum('status_permohonan', ['Diproses', 'Selesai'])->default('diproses');
             $table->date('tanggal_selesai')->nullable();
             $table->date('tanggal_diambil')->nullable();

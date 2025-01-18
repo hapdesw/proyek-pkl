@@ -18,6 +18,11 @@ class JenislayananSeeder extends Seeder
                 'nama_jenis_layanan'=>'SKC', 
                 'created_at' => now(),
                 'updated_at' => now(),
+            ],
+            [
+                'nama_jenis_layanan'=>'Data Iklim', 
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ]);
     }

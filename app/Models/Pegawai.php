@@ -10,7 +10,8 @@ class Pegawai extends Model
     use HasFactory;
 
     protected $table = 'pegawai';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'nip';
+    public $incrementing = false;
 
     protected $fillable = ['username', 'status_petugas', 'status_kapokja', 'status_analis', 'status_bendahara'];
 
@@ -19,7 +20,7 @@ class Pegawai extends Model
     }
 
     public function disposisi(){
-        return $this->hasMany(Disposisi::class, 'id', 'id_pegawai');
+        return $this->hasMany(Disposisi::class, 'nip_pegawai', 'nip');
     }
 
 

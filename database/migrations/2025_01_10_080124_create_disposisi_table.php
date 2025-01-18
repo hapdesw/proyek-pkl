@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('nip_pegawai')->references('nip')->on('pegawai')->onDelete('cascade');
             $table->date('tanggal_disposisi');
             $table->timestamps();
+            $table->unique('id_permohonan');
         });
     }
 

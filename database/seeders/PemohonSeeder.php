@@ -21,6 +21,14 @@ class PemohonSeeder extends Seeder
                 'email'=>'kantorandara@gmail.com', 
                 'created_at' => now(),
                 'updated_at' => now(),
+            ],
+            [
+                'nama_pemohon'=>'Hexos', 
+                'instansi'=>'PT Mencari Cinta', 
+                'no_kontak'=>'087156249587', 
+                'email'=>'hexoshexos@gmail.com', 
+                'created_at' => now(),
+                'updated_at' => now(),
             ]
         ]);
     }
