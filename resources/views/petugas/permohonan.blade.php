@@ -1,5 +1,5 @@
 <x-app-layout>
-        <div class="mx-auto max-w-screen-xl px-4 lg:px-12"> 
+        <div class="mx-auto max-w-screen-xl px-4 lg:px-2"> 
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
                 @if ($message = Session::get('success'))
                 <script>
@@ -12,20 +12,13 @@
             @endif
     
             @if($errors->any())
-                <script>
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        html: `
-                            <strong>Terjadi Kesalahan:</strong>
-                            <ul style="text-align: left;">
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        `,
-                    });
-                </script>
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: '{{ $errors->first() }}',
+                        });
+                    </script>
             @endif
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
@@ -134,7 +127,7 @@
                 </div>
                 {{-- Tabel --}}
                 <div class="overflow-x-auto  min-h-screen">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <table class="w-full text-sm text-left">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-4 py-3">No.</th>
@@ -156,7 +149,7 @@
                                     <td class="px-4 py-3">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-3">{{ $pm->id }}</td>
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
-                                    <td class="px-4 py-3">{{ $pm->kategori_berbayar }}</td>
+                                    <td class="px-4 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
                                     <td class="px-4 py-3">{{ $pm->jenisLayanan->nama_jenis_layanan}}</td>
                                     <td class="px-4 py-3">{{ $pm->pemohon->instansi}}</td> 
                                     <td class="px-4 py-3">{{ $pm->deskripsi_keperluan }}</td>
@@ -187,7 +180,7 @@
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                         </svg>
                                                           
-                                                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
+                                                        <a href="{{ route('petugas.permohonan.edit', $pm->id) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Permohonan</a>
                                                     </li>
                                                 </div>
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
@@ -196,7 +189,7 @@
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                                                           </svg>
                                                           
-                                                        <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Hapus</a>
+                                                        <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Hapus Permohonan</a>
                                                     </li>   
                                                 </div>    
                                             </ul>

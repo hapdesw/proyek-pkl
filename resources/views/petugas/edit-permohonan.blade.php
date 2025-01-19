@@ -4,33 +4,33 @@
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
-                        Pengajuan Permohonan
+                        Edit Permohonan
                     </h3>
                 </div>
-                <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">Permohonan ke- {{ $nextID }}</div>
-                <form action="{{ route("petugas.permohonan.store") }}" method="POST" class="space-y-4 p-4">
+                <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">ID Permohonan {{ $permohonan->id }}</div>
+                <form action="{{ route("petugas.permohonan.update", $permohonan->id) }}" method="POST" class="space-y-4 p-4">
                     @csrf
                     {{-- Data pemohon --}}
                     <div class="grid grid-cols-2 gap-5 w-h-screen">
                         <!-- Nama Pemohon -->
                         <div>
                             <label for="nama_pemohon" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Pemohon</label>
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_pemohon" name="nama_pemohon" required>
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_pemohon" name="nama_pemohon" value = "{{ $permohonan->pemohon->nama_pemohon }}" required>
                         </div>
                         <!-- No Hp -->
                         <div>
                             <label for="no_hp" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">No Hp</label>
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="no_hp" name="no_hp" required>
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="no_hp" name="no_hp" value = "{{ $permohonan->pemohon->no_kontak }}" required>
                         </div>
                         <!-- Asal Instansi -->
                         <div>
                             <label for="instansi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Asal Instansi</label>
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="instansi" name="instansi" required>
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="instansi" name="instansi" value = "{{ $permohonan->pemohon->instansi }}" required>
                         </div>
                         <!-- Email -->
                         <div>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="email" name="email" required>
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="email" name="email" value = "{{ $permohonan->pemohon->email }}" required>
                         </div>
                     </div>
                     {{-- Data Permohonan --}}
@@ -38,7 +38,7 @@
                         <!-- Tanggal Diajukan -->
                         <div>
                             <label for="tgl_diajukan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Diajukan</label>
-                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_diajukan" name="tgl_diajukan" required>
+                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_diajukan" name="tgl_diajukan" value = "{{ $permohonan->tanggal_diajukan }}" required>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-5">
@@ -47,8 +47,8 @@
                             <label for="kategori" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kategori</label>
                             <select class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="kategori" name="kategori" required>
                                 <option value="" disabled selected>--Pilih Kategori--</option>
-                                <option value="Berbayar">Berbayar</option>
-                                <option value="Nolrupiah">Nol Rupiah</option>
+                                <option value="Berbayar" {{ $permohonan->kategori_berbayar === 'Berbayar' ? 'selected' : '' }}>Berbayar</option>
+                                <option value="Nolrupiah" {{ $permohonan->kategori_berbayar === 'Nolrupiah' ? 'selected' : '' }}>Nol Rupiah</option>
                             </select>
                         </div>    
                         <!-- Jenis Layanan -->
@@ -64,29 +64,29 @@
                         <!-- Tanggal Awal -->
                         <div>
                             <label for="tgl_awal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Awal</label>
-                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_awal" name="tgl_awal" required>
+                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_awal" name="tgl_awal" value="{{ isset($permohonan) ? $permohonan->tanggal_awal : '' }}" required>
                         </div>
                         <!-- Tanggal Akhir -->
                         <div>
                             <label for="tgl_akhir" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Akhir</label>
-                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_akhir" name="tgl_akhir">
+                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_akhir" name="tgl_akhir" value="{{ isset($permohonan) ? $permohonan->tanggal_akhir : '' }}">
                         </div>
                         <!-- Jam Awal -->
                         <div>
                             <label for="jam_awal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Awal</label>
-                            <input type="time" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="jam_awal" name="jam_awal">
+                            <input type="time" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="jam_awal" name="jam_awal" value="{{ isset($permohonan) ? $permohonan->jam_awal : '' }}">
                         </div>
                         <!-- Jam Akhir -->
                         <div>
                             <label for="jam_akhir" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Akhir</label>
-                            <input type="time" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="jam_akhir" name="jam_akhir">
+                            <input type="time" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="jam_akhir" name="jam_akhir" value = "{{ $permohonan->jam_awal }}">
                         </div> 
                     </div>
                     <div class="grid grid-cols-1 gap-5 mt-5 w-1/2">    
                         <!-- Deskripsi -->
                         <div>
                             <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
-                            <textarea class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="deskripsi" name="deskripsi" rows="7" required></textarea>
+                            <textarea class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="deskripsi" name="deskripsi" rows="7" value="{{ isset($permohonan) ? $permohonan->deskripsi_keperluan : '' }}" required></textarea>
                         </div>
                     </div>
                     <div class="flex items-center space-x-4 mt-4">
