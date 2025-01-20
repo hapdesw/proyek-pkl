@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_pemohon', 50);
             $table->string('instansi', 100);
-            $table->string('no_kontak', 25);
+            $table->string('no_kontak', 25)->nullable();
             $table->string('email', 30)->nullable();
             $table->timestamps();
         });
