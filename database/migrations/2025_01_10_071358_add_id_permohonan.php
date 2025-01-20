@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pemohon', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama_pemohon', 50);
-            $table->string('instansi', 100);
-            $table->string('no_kontak', 25);
-            $table->string('email', 30)->nullable();
-            $table->timestamps();
+        Schema::table('pemohon', function (Blueprint $table) {
+            $table->unsignedBigInteger('id_permohonan')->nullable();
+            $table->foreign('id_permohonan')->references('id')->on('permohonan')->onDelete('cascade');
         });
     }
 
@@ -26,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pemohon');
+        Schema::table('pemohon', function (Blueprint $table) {
+            $table->dropForeign(['id_permohonan']);
+        });
     }
 };

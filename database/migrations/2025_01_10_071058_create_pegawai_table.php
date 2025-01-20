@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->string('nama');
             $table->string('no_kontak', 13);
+            $table->char('peran_pegawai', 4);
             $table->timestamps();
         });
     }
@@ -27,7 +28,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('pegawai', function (Blueprint $table) {
-            $table->dropForeign(['username']);
+            $table->dropForeign(['id_user']);
         });
         Schema::dropIfExists('pegawai');
     }

@@ -153,8 +153,21 @@
                                     <td class="px-4 py-3">{{ $pm->jenisLayanan->nama_jenis_layanan}}</td>
                                     <td class="px-4 py-3">{{ $pm->pemohon->instansi}}</td> 
                                     <td class="px-4 py-3">{{ $pm->deskripsi_keperluan }}</td>
-                                    <td class="px-4 py-3">{{ $pm->disposisi->pegawai->nama ?? 'Nama tidak tersedia' }}</td>
-                                    <td class="px-4 py-3">{{ $pm->status_permohonan }}</td>
+                                    <td class="px-4 py-3 w-32">
+                                        @if($pm->disposisi?->pegawai)
+                                            {{ $pm->disposisi->pegawai->nama }}
+                                        @else
+                                            <span class="text-red !important">Belum diatur</span>
+                                        @endif
+                                    </td>
+                                    
+                                    <td class="px-2 py-2">
+                                        @if($pm->status_permohonan === 'Diproses')
+                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">{{ $pm->status_permohonan }}</span>
+                                        @elseif($pm->status_permohonan === 'Selesai')
+                                            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">{{ $pm->status_permohonan }}</span>
+                                        @endif
+                                    </td>     
                                     
                                     
                                     <td class="px-4 py-3 flex items-center justify-end">

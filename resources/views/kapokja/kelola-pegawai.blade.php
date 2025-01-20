@@ -44,6 +44,7 @@
                                 <th scope="col" class="px-4 py-3">NIP</th>
                                 <th scope="col" class="px-4 py-3">Nama</th>
                                 <th scope="col" class="px-4 py-3">Nomor Kontak</th>
+                                <th scope="col" class="px-4 py-3">Peran</th>
                                 <th scope="col" class="px-4 py-3">Aksi</th> 
                             </tr>
                         </thead>
@@ -55,7 +56,7 @@
                                     <td class="px-4 py-3">{{ $pegawai->nip }}</td>
                                     <td class="px-4 py-3">{{ $pegawai->nama }}</td>
                                     <td class="px-4 py-3">{{ $pegawai->no_kontak }}</td>
-                                    
+                                    <td class="px-4 py-3">{{ $pegawai->peran_pegawai }}</td>
                                     
                                     <td class="px-4 py-3 flex items-center">
                                         <button id="actions-dropdown-button-{{ $pegawai->nip }}" data-dropdown-toggle="actions-dropdown-{{ $pegawai->nip }}" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">

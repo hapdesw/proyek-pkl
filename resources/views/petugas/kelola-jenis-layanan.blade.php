@@ -12,13 +12,13 @@
             @endif
     
             @if($errors->any())
-            <script>
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: '{{ $errors->first() }}',
-                });
-            </script>
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: '{{ $errors->first() }}',
+                    });
+                </script>
             @endif
             <div class="border-b border-gray-200 dark:border-gray-700">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
@@ -123,7 +123,7 @@
                                                     <form id="delete-form-{{$layanan->id}}" action="{{ route('petugas.kelola-layanan.destroy', $layanan->id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" onclick="openDialog('custom-confirm-{{$layanan->id}}')" class="flex items-center gap-2 py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                        <button type="button" onclick="confirmDelete({{$layanan->id}})" class="flex items-center gap-2 py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                                             <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                                                             </svg>
@@ -165,28 +165,24 @@
                                         </div>
                                     </div>         
                                     {{-- Pop up dialog untuk hapus --}}
-                                    <div id="custom-confirm-{{$layanan->id}}" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                                        <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm">
-                                            <p class="mb-4">Apakah Anda yakin ingin menghapus layanan <strong>{{ $layanan->nama_jenis_layanan }}</strong>?</p>
-                                            <div class="flex gap-3">
-                                                <button onclick="closeDialog('custom-confirm-{{$layanan->id}}')" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-3 py-2 rounded">Batal</button>
-                                                <button onclick="submitForm('delete-form-{{$layanan->id}}')" class="bg-red hover:bg-orange-900 text-white px-2 py-2 rounded">Hapus</button>
-                                            </div>
-                                        </div>
-                                    </div>  
                                     <script>
-                                        function openDialog(dialogId) {
-                                            document.getElementById(dialogId).classList.remove('hidden');
+                                        function confirmDelete(id) {
+                                            Swal.fire({
+                                                title: 'Apakah Anda yakin?',
+                                                text: "Data layanan {{$layanan->nama_jenis_layanan}} akan dihapus secara permanen!",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: 'Ya, hapus!',
+                                                cancelButtonText: 'Batal'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    document.getElementById('delete-form-' + id).submit();
+                                                }
+                                            });
                                         }
-                
-                                        function closeDialog(dialogId) {
-                                            document.getElementById(dialogId).classList.add('hidden');
-                                        }
-                
-                                        function submitForm(formId) {
-                                            document.getElementById(formId).submit();
-                                        }
-                                    </script>
+                                        </script>   
                                 </td>
                             </tr> 
                         @empty

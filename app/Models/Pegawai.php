@@ -13,15 +13,12 @@ class Pegawai extends Model
     protected $primaryKey = 'nip';
     public $incrementing = false;
 
-    protected $fillable = ['username', 'status_petugas', 'status_kapokja', 'status_analis', 'status_bendahara'];
+    protected $fillable = ['nip', 'id_user', 'nama', 'no_kontak', 'peran_pegawai'];
 
     public function user(){
-        return $this->belongsTo(User::class, 'username', 'username');
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
-
     public function disposisi(){
         return $this->hasMany(Disposisi::class, 'nip_pegawai', 'nip');
     }
-
-
 }

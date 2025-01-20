@@ -19,11 +19,11 @@ class User extends Authenticatable
      */
 
     protected $primaryKey = 'id';
-    protected $fillable = ['nama', 'username','role', 'password' ];
+    protected $fillable = ['username', 'password', 'peran'];
 
     public function pegawai()
     {
-        return $this->hasOne(Pegawai::class, 'username', 'username'); // Relasi berdasarkan username
+        return $this->hasOne(Pegawai::class, 'id_user', 'id_user'); 
     }
 
     /**

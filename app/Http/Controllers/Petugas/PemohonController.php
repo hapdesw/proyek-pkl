@@ -12,7 +12,8 @@ class PemohonController extends Controller
      */
     public function index()
     {
-        //
+
+         return view('petugas.data-pemohon');
     }
 
     /**
@@ -24,7 +25,7 @@ class PemohonController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a wly created resource in storage.
      */
     public function store(Request $request)
     {
