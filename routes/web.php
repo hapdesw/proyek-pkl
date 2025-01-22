@@ -12,6 +12,7 @@ use App\Http\Controllers\Bendahara\BendaharaController;
 use App\Http\Controllers\Kapokja\DisposisiController;
 use App\Http\Controllers\Kapokja\PegawaiController;
 use App\Http\Controllers\HasilLayananController;
+use App\Http\Controllers\TransisiController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -30,8 +31,6 @@ Route::middleware(['auth', 'Petugas_1000'])->group(function () {
     Route::put('/petugas-layanan/permohonan/update/{id}', [PermohonanController::class, 'update'])->name('petugas.permohonan.update'); 
     Route::post('/petugas-layanan/permohonan/store', [PermohonanController::class, 'store'])->name('petugas.permohonan.store'); 
     Route::delete('/petugas-layanan/permohonan/destroy/{id}', [PermohonanController::class, 'destroy'])->name('petugas.permohonan.destroy'); 
-    
-
 }); 
 
 Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
@@ -52,6 +51,7 @@ Route::middleware(['auth', 'Analis_0010'])->group(function () {
 Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
     Route::get('/bendahara/tagihan', [BendaharaController::class, 'index'])->name('bendahara.tagihan'); 
 }); 
+
 
 
 
