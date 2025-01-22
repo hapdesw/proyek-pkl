@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Petugas;
+use App\Http\Controllers\Controller;
 use App\Models\Pemohon;
 use Illuminate\Http\Request;
 

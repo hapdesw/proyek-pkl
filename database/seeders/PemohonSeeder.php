@@ -19,6 +19,7 @@ class PemohonSeeder extends Seeder
                 'instansi'=>'PT Arga Putra', 
                 'no_kontak'=>'0987867777556', 
                 'email'=>'kantorandara@gmail.com', 
+               
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -27,6 +28,7 @@ class PemohonSeeder extends Seeder
                 'instansi'=>'PT Mencari Cinta', 
                 'no_kontak'=>'087156249587', 
                 'email'=>'hexoshexos@gmail.com', 
+               
                 'created_at' => now(),
                 'updated_at' => now(),
             ]
