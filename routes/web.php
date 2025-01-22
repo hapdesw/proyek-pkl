@@ -52,8 +52,11 @@ Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
     Route::get('/bendahara/tagihan', [BendaharaController::class, 'index'])->name('bendahara.tagihan'); 
 }); 
 
-
-
+Route::middleware(['auth', 'PetugasKapokja_1100'])->group(function () {
+    Route::get('/PK/petugas-kapokja/transisi', [TransisiController::class, 'transisiPetugasKapokja'])->name('transisi.petugas-kapokja'); 
+    Route::get('/PK/kapokja/beranda', [KapokjaController::class, 'index'])->name('PK.kapokja.beranda');
+    Route::get('/PK/petugas-layanan/beranda', [PetugasController::class, 'index'])->name('PK.petugas.beranda'); 
+}); 
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -12,7 +12,7 @@ class ImportSeeder extends Seeder
     public function run()
     {
         // Import Pemohon
-        // Excel::import(new PemohonImport, storage_path('app/public/Pemohon.xlsx'));
+        Excel::import(new PemohonImport, storage_path('app/public/Pemohon.xlsx'));
         
         // Import Permohonan
         Excel::import(new PermohonanImport, storage_path('app/public/Permohonan.xlsx'));

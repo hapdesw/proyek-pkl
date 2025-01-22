@@ -11,14 +11,20 @@ class Disposisi extends Model
 
     protected $table = 'disposisi';
     protected $primaryKey = 'id';
-    protected $fillable = ['id_permohonan', 'nip_pegawai', 'tanggal_disposisi'];
+    protected $fillable = ['id_permohonan', 'nip_pegawai1', 'nip_pegawai2', 'nip_pegawai3', 'tanggal_disposisi'];
 
     public function permohonan(){
         return $this->belongsTo(Permohonan::class, 'id_permohonan', 'id');
     }
 
-    public function pegawai(){
-        return $this->belongsTo(Pegawai::class, 'nip_pegawai', 'nip');
+    public function pegawai1(){
+        return $this->belongsTo(Pegawai::class, 'nip_pegawai1', 'nip');
+    }
+    public function pegawai2(){
+        return $this->belongsTo(Pegawai::class, 'nip_pegawai2', 'nip');
+    }
+    public function pegawai3(){
+        return $this->belongsTo(Pegawai::class, 'nip_pegawai3', 'nip');
     }
 
     public function hasilLayanan(){

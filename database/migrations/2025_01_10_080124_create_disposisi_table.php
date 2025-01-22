@@ -17,9 +17,9 @@ return new class extends Migration
             $table->foreign('id_permohonan')->references('id')->on('permohonan')->onDelete('cascade');
             $table->char('nip_pegawai1', 18);
             $table->foreign('nip_pegawai1')->references('nip')->on('pegawai')->onDelete('cascade');
-            $table->char('nip_pegawai2', 18);
+            $table->char('nip_pegawai2', 18)->nullable();
             $table->foreign('nip_pegawai2')->references('nip')->on('pegawai')->onDelete('cascade');
-            $table->char('nip_pegawai3', 18);
+            $table->char('nip_pegawai3', 18)->nullable();
             $table->foreign('nip_pegawai3')->references('nip')->on('pegawai')->onDelete('cascade');
             $table->date('tanggal_disposisi');
             $table->timestamps();
