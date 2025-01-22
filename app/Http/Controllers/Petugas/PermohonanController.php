@@ -48,10 +48,6 @@ class PermohonanController extends Controller
         'kategori' => 'required|string',
         'jenis_layanan' => 'required|integer',
         'deskripsi' => 'required|string',
-        'tgl_awal' => 'required|date',
-        'tgl_akhir' => 'nullable|date',
-        'jam_awal' => 'nullable|date_format:H:i',
-        'jam_akhir' => 'nullable|date_format:H:i',
         'tgl_selesai' => 'nullable|date',
         'tgl_diambil' => 'nullable|date',
         
@@ -79,6 +75,7 @@ class PermohonanController extends Controller
             'instansi' => $request->instansi,
             'no_kontak' => $request->no_hp,
             'email' => $request->email,
+            
         ]);
         Log::info('Pemohon berhasil dibuat atau ditemukan:', $pemohon->toArray());
     } catch (\Exception $e) {
@@ -94,10 +91,6 @@ class PermohonanController extends Controller
         'kategori_berbayar' => $request->kategori,
         'id_jenis_layanan' => $request->jenis_layanan,
         'deskripsi_keperluan' => $request->deskripsi,
-        'tanggal_awal' => $request->tgl_awal,
-        'tanggal_akhir' => $request->tgl_akhir,
-        'jam_awal' => $request->jam_awal,
-        'jam_akhir' => $request->jam_akhir,
         'tanggal_selesai' => $request->tgl_selesai,
         'tanggal_diambil' => $request->tgl_diambil,
         'id_pemohon' => $pemohon->id, // ID pemohon dari data yang baru dibuat atau ditemukan
@@ -139,7 +132,7 @@ class PermohonanController extends Controller
      */
     public function update(Request $request,  $id)
     {
-         // Validasi data
+        // Validasi data
         try {
             $request->validate([
                 // Cek ulang validasi data permohonan
@@ -147,10 +140,6 @@ class PermohonanController extends Controller
             'kategori' => 'required|string',
             'jenis_layanan' => 'required|integer',
             'deskripsi' => 'required|string',
-            'tgl_awal' => 'required|date',
-            'tgl_akhir' => 'nullable|date',
-            'jam_awal' => 'nullable|date_format:H:i',
-            'jam_akhir' => 'nullable|date_format:H:i',
             'tgl_selesai' => 'nullable|date',
             'tgl_diambil' => 'nullable|date',
             
@@ -183,10 +172,6 @@ class PermohonanController extends Controller
                 'kategori_berbayar' => $request->kategori,
                 'id_jenis_layanan' => $request->jenis_layanan,
                 'deskripsi_keperluan' => $request->deskripsi,
-                'tanggal_awal' => $request->tgl_awal,
-                'tanggal_akhir' => $request->tgl_akhir,
-                'jam_awal' => $request->jam_awal,
-                'jam_akhir' => $request->jam_akhir,
                 'tanggal_selesai' => $request->tgl_selesai,
                 'tanggal_diambil' => $request->tgl_diambil,
                 'id_pemohon' => $pemohon->id, // ID pemohon dari data yang baru dibuat atau ditemukan

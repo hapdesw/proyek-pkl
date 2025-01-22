@@ -11,7 +11,7 @@ class Pemohon extends Model
 
     protected $table = 'pemohon';
     protected $primaryKey = 'id';
-    protected $fillable = ['nama_pemohon', 'instansi', 'no_kontak', 'email', 'id_permohonan'];
+    protected $fillable = ['nama_pemohon', 'instansi', 'no_kontak', 'email'];
 
     public function permohonan(){
         return $this->hasMany(Permohonan::class, 'id_pemohon', 'id');

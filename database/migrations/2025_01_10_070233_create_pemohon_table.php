@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('instansi', 100);
             $table->string('no_kontak', 25)->nullable();
             $table->string('email', 30)->nullable();
-            $table->unsignedBigInteger('id_permohonan');
-            $table->foreign('id_permohonan')->references('id')->on('permohonan')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,9 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('pemohon', function (Blueprint $table) {
-            $table->dropForeign(['id_permohonan']);
-        });
+       
         Schema::dropIfExists('pemohon');
     }
 };

@@ -18,6 +18,9 @@ class PermohonanSeeder extends Seeder
      */
     public function run(): void
     {
+        Schema::table('pemohon', function (Blueprint $table) {
+            $table->dropForeign(['id_permohonan']);
+        });
         $jenisLayanan = JenisLayanan::where('nama_jenis_layanan', 'SKC')->first();
         $pemohon = Pemohon::where('nama_pemohon', 'Denise')->first();
         $permohonan1 = DB::table('permohonan')->insertGetId([
