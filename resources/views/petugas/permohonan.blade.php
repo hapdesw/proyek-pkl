@@ -154,8 +154,18 @@
                                     <td class="px-4 py-3">{{ $pm->pemohon->instansi}}</td> 
                                     <td class="px-4 py-3">{{ $pm->deskripsi_keperluan }}</td>
                                     <td class="px-4 py-3 w-32">
-                                        @if($pm->disposisi?->pegawai)
-                                            {{ $pm->disposisi->pegawai->nama }}
+                                        @if($pm->disposisi)
+                                            <ul>
+                                                @if($pm->disposisi->pegawai1)
+                                                    <li>- {{ $pm->disposisi->pegawai1->nama }}</li>
+                                                @endif
+                                                @if(optional($pm->disposisi->pegawai2)->nama)
+                                                <li>- {{ optional($pm->disposisi->pegawai2)->nama }}</li>
+                                            @endif
+                                            @if(optional($pm->disposisi->pegawai3)->nama)
+                                                <li>- {{ optional($pm->disposisi->pegawai3)->nama }}</li>
+                                            @endif
+                                            </ul>
                                         @else
                                             <span class="text-red !important">Belum diatur</span>
                                         @endif

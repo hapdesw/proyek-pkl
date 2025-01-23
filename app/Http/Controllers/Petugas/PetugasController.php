@@ -44,13 +44,16 @@ class PetugasController extends Controller
                 ->where('kategori_berbayar', 'Nolrupiah')
                 ->count();
         }
-        // Menghitung jumlah disposisi per pegawai per bulan
         $pegawaiList = Pegawai::all(); // Ambil seluruh pegawai
         foreach ($pegawaiList as $pegawai) {
             $disposisiPerPegawai = [];
             for ($bulan = 1; $bulan <= 12; $bulan++) {
                 $disposisiPerPegawai[$bulan - 1] = Disposisi::whereMonth('tanggal_disposisi', $bulan)
-                    ->where('nip_pegawai', $pegawai->nip)
+                    ->where(function($query) use ($pegawai) {
+                        $query->where('nip_pegawai1', $pegawai->nip)
+                            ->orWhere('nip_pegawai2', $pegawai->nip)
+                            ->orWhere('nip_pegawai3', $pegawai->nip);
+                    })
                     ->count();
             }
             $rekapPerBulan['disposisi_per_pegawai'][$pegawai->nama] = $disposisiPerPegawai; // Menyimpan berdasarkan nama pegawai
