@@ -35,7 +35,10 @@
                 <div class="grid grid-cols-1 gap-5">
                     <!-- Pegawai 1-->
                     <div>
-                        <label for="nip_pegawai1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi</label>
+                        <label for="nip_pegawai1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Lajur Disposisi 1
+                            <span class="text-red !important">*</span>
+                        </label>
                         <select name="nip_pegawai[]" id="nip_pegawai1" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5" required>
                             <option value="" disabled selected>--Pilih Pegawai--</option>
                             @foreach ($pegawai as $pg)
@@ -45,7 +48,7 @@
                     </div>
                     <!-- Pegawai 2-->
                     <div>
-                        <label for="nip_pegawai2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi</label>
+                        <label for="nip_pegawai2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi 2</label>
                         <select name="nip_pegawai[]" id="nip_pegawai2" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5">
                             <option value="" disabled selected>--Pilih Pegawai--</option>
                             @foreach ($pegawai as $pg)
@@ -55,7 +58,7 @@
                     </div>
                     <!-- Pegawai 3-->
                     <div>
-                        <label for="nip_pegawai3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi</label>
+                        <label for="nip_pegawai3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi 3</label>
                         <select name="nip_pegawai[]" id="nip_pegawai3" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5">
                             <option value="" disabled selected>--Pilih Pegawai--</option>
                             @foreach ($pegawai as $pg)
@@ -65,7 +68,10 @@
                     </div>
                     <!-- Tanggal Disposisi -->
                     <div>
-                        <label for="tanggal_disposisi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Disposisi</label>
+                        <label for="tanggal_disposisi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Tanggal Disposisi
+                            <span class="text-red !important">*</span>
+                        </label>
                         <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tanggal_disposisi" name="tanggal_disposisi" required>
                     </div>
                 </div>

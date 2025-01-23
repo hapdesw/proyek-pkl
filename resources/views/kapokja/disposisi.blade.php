@@ -140,7 +140,7 @@
                                     <td class="px-3 py-3">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-3">{{ $pm->id }}</td>
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
-                                    <td class="px-1.5 py-3">{{ $pm->kategori_berbayar }}</td>
+                                    <td class="px-1.5 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
                                     <td class="px-2.5 py-3">{{ $pm->jenisLayanan->nama_jenis_layanan}}</td>
                                     <td class="px-3 py-3 w-36">{{ $pm->pemohon->instansi}}</td> 
                                     <td class="px-3 py-3">{{ $pm->deskripsi_keperluan }}</td>
