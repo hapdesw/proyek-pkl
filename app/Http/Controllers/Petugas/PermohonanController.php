@@ -58,7 +58,7 @@ class PermohonanController extends Controller
         'email' => 'required|email',
 
         ]);
-        Log::info('Validasi berhasil');
+        Log::info('Validasi store berhasil');
     } catch (\Illuminate\Validation\ValidationException $e) {
         Log::error('Validasi gagal:', ['errors' => $e->errors()]);
         return redirect()->back()->withErrors($e->errors())->withInput();
@@ -130,12 +130,13 @@ class PermohonanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,  $id)
-    {
-        // Validasi data
-        try {
-            $request->validate([
-                // Cek ulang validasi data permohonan
+    public function update(Request $request, $id)
+{
+    Log::info('Masuk ke method update');
+    
+    // Validasi data
+    try {
+        $request->validate([
             'tgl_diajukan' => 'required|date',
             'kategori' => 'required|string',
             'jenis_layanan' => 'required|integer',
@@ -148,43 +149,51 @@ class PermohonanController extends Controller
             'instansi' => 'required|string',
             'no_hp' => 'required|string',
             'email' => 'required|email',
-
-            ]);
-            Log::info('Validasi berhasil');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Validasi gagal:', ['errors' => $e->errors()]);
-            return redirect()->back()->withErrors($e->errors())->withInput();
-        }
-
-        // update data pemohon
-        try {
-            $pemohon = Pemohon::where('id_pemohon', $id)->firstOrFail();
-            $pemohon->update([
-                'nama_pemohon' => $request->nama_pemohon,
-                'instansi' => $request->instansi,
-                'no_kontak' => $request->no_hp,
-                'email' => $request->email,
-            ]);
-                // Update data permohonan
-            $permohonan = Permohonan::where('id', $id)->firstOrFail();    
-            $permohonan::update([
-                'tanggal_diajukan' => $request->tgl_diajukan,
-                'kategori_berbayar' => $request->kategori,
-                'id_jenis_layanan' => $request->jenis_layanan,
-                'deskripsi_keperluan' => $request->deskripsi,
-                'tanggal_selesai' => $request->tgl_selesai,
-                'tanggal_diambil' => $request->tgl_diambil,
-                'id_pemohon' => $pemohon->id, // ID pemohon dari data yang baru dibuat atau ditemukan
-            ]);
-            // route ke halaman index nya
-            return redirect()->route('petugas.permohonan')->with('success', 'Permohonan berhasil diperbarui!');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['error' => 'Gagal memperbarui permohonan. ' . $e->getMessage()]);
-        }
-   
+        ]);
+        Log::info('Validasi update berhasil');
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        Log::error('Validasi update gagal:', ['errors' => $e->errors()]);
+        return redirect()->back()->withErrors($e->errors())->withInput();
     }
+
+    Log::info('Validasi masuk update data pemohon dan permohonan');
+
+    // Proses update data
+    try {
+        // Cari permohonan berdasarkan ID
+        $permohonan = Permohonan::findOrFail($id);
+
+        // Ambil data pemohon yang terkait melalui relasi
+        $pemohon = $permohonan->pemohon;
+
+        // Update data pemohon
+        $pemohon->update([
+            'nama_pemohon' => $request->nama_pemohon,
+            'instansi' => $request->instansi,
+            'no_kontak' => $request->no_hp,
+            'email' => $request->email,
+        ]);
+
+        // Update data permohonan
+        $permohonan->update([
+            'tanggal_diajukan' => $request->tgl_diajukan,
+            'kategori_berbayar' => $request->kategori,
+            'id_jenis_layanan' => $request->jenis_layanan,
+            'deskripsi_keperluan' => $request->deskripsi,
+            'tanggal_selesai' => $request->tgl_selesai,
+            'tanggal_diambil' => $request->tgl_diambil,
+        ]);
+
+        Log::info('Berhasil update data permohonan');
+        return redirect()->route('petugas.permohonan')->with('success', 'Permohonan berhasil diperbarui!');
+    } catch (\Exception $e) {
+        Log::error('Gagal memperbarui data: ' . $e->getMessage());
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['error' => 'Gagal memperbarui permohonan. ' . $e->getMessage()]);
+    }
+}
+
 
     /**
      * Remove the specified resource from storage.

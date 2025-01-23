@@ -8,6 +8,7 @@ use App\Http\Controllers\Kapokja\KapokjaController;
 use App\Http\Controllers\Analis\AnalisController;
 use App\Http\Controllers\Petugas\PermohonanController;
 use App\Http\Controllers\Petugas\JenisLayananController;
+use App\Http\Controllers\Petugas\PemohonController;
 use App\Http\Controllers\Bendahara\BendaharaController;
 use App\Http\Controllers\Kapokja\DisposisiController;
 use App\Http\Controllers\Kapokja\PegawaiController;
@@ -30,6 +31,7 @@ Route::middleware(['auth', 'Petugas_1000'])->group(function () {
     Route::put('/petugas-layanan/permohonan/update/{id}', [PermohonanController::class, 'update'])->name('petugas.permohonan.update'); 
     Route::post('/petugas-layanan/permohonan/store', [PermohonanController::class, 'store'])->name('petugas.permohonan.store'); 
     Route::delete('/petugas-layanan/permohonan/destroy/{id}', [PermohonanController::class, 'destroy'])->name('petugas.permohonan.destroy'); 
+    Route::get('/petugas-layanan/pemohon', [PemohonController::class, 'index'])->name('petugas.kelola-pemohon'); 
     
 
 }); 

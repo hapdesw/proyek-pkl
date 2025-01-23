@@ -118,7 +118,7 @@
                 {{-- Tabel --}}
                 <div class="overflow-x-auto  min-h-screen">
                     <table class="w-full text-sm text-left ">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 ">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 ">
                             <tr>
                                 <th scope="col" class="px-3 py-3">No.</th>
                                 <th scope="col" class="px-4 py-3">ID</th>

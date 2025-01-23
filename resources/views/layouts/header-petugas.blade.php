@@ -16,6 +16,11 @@
                         {{ request()->routeIs('petugas.kelola-layanan') ? ' 
                         text-darkKnight font-bold' : 'text-plumb' }}">Kelola Layanan</a>
                     </li>
+                    <li>
+                        <a href="{{ route('petugas.kelola-pemohon') }}" class="flex items-center p-2 rounded hover:bg-gray-100 hover:text-gray-400 font-semibold 
+                        {{ request()->routeIs('petugas.kelola-pemohon') ? ' 
+                        text-darkKnight font-bold' : 'text-plumb' }}">Pemohon</a>
+                    </li>
                 </ul>
             </div>
         </div>

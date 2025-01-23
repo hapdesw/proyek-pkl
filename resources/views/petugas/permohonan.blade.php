@@ -2,16 +2,16 @@
         <div class="mx-auto max-w-screen-xl px-4 lg:px-2"> 
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
                 @if ($message = Session::get('success'))
-                <script>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: '{{ $message }}',
-                    });
-                </script>
-            @endif
+                    <script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: '{{ $message }}',
+                        });
+                    </script>
+                @endif
     
-            @if($errors->any())
+                @if($errors->any())
                     <script>
                         Swal.fire({
                             icon: 'error',
@@ -19,7 +19,7 @@
                             text: '{{ $errors->first() }}',
                         });
                     </script>
-            @endif
+                @endif
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
                         Permohonan
@@ -128,7 +128,7 @@
                 {{-- Tabel --}}
                 <div class="overflow-x-auto  min-h-screen">
                     <table class="w-full text-sm text-left">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-4 py-3">No.</th>
                                 <th scope="col" class="px-4 py-3">ID</th>

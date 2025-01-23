@@ -10,6 +10,7 @@
                 <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">ID Permohonan {{ $permohonan->id }}</div>
                 <form action="{{ route("petugas.permohonan.update", $permohonan->id) }}" method="POST" class="space-y-4 p-4">
                     @csrf
+                    @method('PUT') <!-- Menyimulasikan PUT -->
                     {{-- Data pemohon --}}
                     <div class="grid grid-cols-2 gap-5 w-h-screen">
                         <!-- Nama Pemohon -->
@@ -55,43 +56,30 @@
                         <div>
                             <label for="jenis_layanan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Layanan</label>
                             <select name="jenis_layanan" id="jenis_layanan" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5" required>
-                                <option value="" disabled selected>--Pilih Jenis Layanan--</option>
+                                <option value="" disabled>--Pilih Jenis Layanan--</option>
                                 @foreach ($jenisLayanan as $layanan)
-                                    <option value="{{ $layanan->id }}">{{ $layanan->nama_jenis_layanan }}</option>
+                                    <option value="{{ $layanan->id }}" 
+                                        @if (isset($permohonan) && $permohonan->id_jenis_layanan == $layanan->id) selected @endif>
+                                        {{ $layanan->nama_jenis_layanan }}
+                                    </option>
                                 @endforeach
                             </select>
+                            
                         </div>   
-                        <!-- Tanggal Awal -->
-                        <div>
-                            <label for="tgl_awal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Awal</label>
-                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_awal" name="tgl_awal" value="{{ isset($permohonan) ? $permohonan->tanggal_awal : '' }}" required>
-                        </div>
-                        <!-- Tanggal Akhir -->
-                        <div>
-                            <label for="tgl_akhir" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Akhir</label>
-                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_akhir" name="tgl_akhir" value="{{ isset($permohonan) ? $permohonan->tanggal_akhir : '' }}">
-                        </div>
-                        <!-- Jam Awal -->
-                        <div>
-                            <label for="jam_awal" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Awal</label>
-                            <input type="time" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="jam_awal" name="jam_awal" value="{{ isset($permohonan) ? $permohonan->jam_awal : '' }}">
-                        </div>
-                        <!-- Jam Akhir -->
-                        <div>
-                            <label for="jam_akhir" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jam Akhir</label>
-                            <input type="time" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="jam_akhir" name="jam_akhir" value = "{{ $permohonan->jam_awal }}">
-                        </div> 
+                       
                     </div>
                     <div class="grid grid-cols-1 gap-5 mt-5 w-1/2">    
                         <!-- Deskripsi -->
                         <div>
                             <label for="deskripsi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deskripsi</label>
-                            <textarea class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="deskripsi" name="deskripsi" rows="7" value="{{ isset($permohonan) ? $permohonan->deskripsi_keperluan : '' }}" required></textarea>
+                            <textarea class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" 
+                                id="deskripsi" name="deskripsi" rows="7" required>{{ isset($permohonan) ? $permohonan->deskripsi_keperluan : '' }}</textarea>
                         </div>
+                        
                     </div>
                     <div class="flex items-center space-x-4 mt-4">
                         <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                            Ajukan Permohonan
+                            Simpan Perubahan
                         </button> 
                     </div>
                 </form>

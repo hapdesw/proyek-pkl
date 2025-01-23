@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12"> 
-        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-10">
             @if ($message = Session::get('success'))
                 <script>
                     Swal.fire({
