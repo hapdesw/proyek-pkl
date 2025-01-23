@@ -33,10 +33,30 @@
                     <input type="text" class="text-sm bg-gray-200 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 cursor-not-allowed" name="id_permohonan" id="id_permohonan" value="{{ $permohonan->id }}" readonly>
                 </div>
                 <div class="grid grid-cols-1 gap-5">
-                    <!-- Pegawai -->
+                    <!-- Pegawai 1-->
                     <div>
-                        <label for="nip_pegawai" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi</label>
-                        <select name="nip_pegawai" id="nip_pegawai" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5" required>
+                        <label for="nip_pegawai1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi</label>
+                        <select name="nip_pegawai[]" id="nip_pegawai1" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5" required>
+                            <option value="" disabled selected>--Pilih Pegawai--</option>
+                            @foreach ($pegawai as $pg)
+                                <option value="{{ $pg->nip }}">{{ $pg->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Pegawai 2-->
+                    <div>
+                        <label for="nip_pegawai2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi</label>
+                        <select name="nip_pegawai[]" id="nip_pegawai2" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5">
+                            <option value="" disabled selected>--Pilih Pegawai--</option>
+                            @foreach ($pegawai as $pg)
+                                <option value="{{ $pg->nip }}">{{ $pg->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Pegawai 3-->
+                    <div>
+                        <label for="nip_pegawai3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi</label>
+                        <select name="nip_pegawai[]" id="nip_pegawai3" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5">
                             <option value="" disabled selected>--Pilih Pegawai--</option>
                             @foreach ($pegawai as $pg)
                                 <option value="{{ $pg->nip }}">{{ $pg->nama }}</option>
@@ -57,4 +77,32 @@
             </form>
         </div>    
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const pegawai1 = document.getElementById('nip_pegawai1');
+        const pegawai2 = document.getElementById('nip_pegawai2');
+        const pegawai3 = document.getElementById('nip_pegawai3');
+        const allPegawai = [pegawai1, pegawai2, pegawai3];
+
+        function updateOptions(selectedIndex) {
+            const selectedValues = allPegawai.map(select => select.value);
+            allPegawai.forEach((select, index) => {
+                if (index !== selectedIndex) {
+                    Array.from(select.options).forEach(option => {
+                        if (selectedValues.includes(option.value) && option.value !== "") {
+                            option.hidden = true;
+                        } else {
+                            option.hidden = false;
+                        }
+                    });
+                }
+            });
+        }
+
+        allPegawai.forEach((select, index) => {
+            select.addEventListener('change', () => updateOptions(index));
+        });
+    });
+    </script>
 </x-app-layout>

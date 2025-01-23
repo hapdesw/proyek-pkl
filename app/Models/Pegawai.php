@@ -18,7 +18,13 @@ class Pegawai extends Model
     public function user(){
         return $this->belongsTo(User::class, 'id_user', 'id_user');
     }
-    public function disposisi(){
-        return $this->hasMany(Disposisi::class, 'nip_pegawai', 'nip');
+    public function disposisi1(){
+        return $this->hasMany(Disposisi::class, 'nip_pegawai1', 'nip');
+    }
+    public function disposisi2(){
+        return $this->hasMany(Disposisi::class, 'nip_pegawai2', 'nip');
+    }
+    public function disposisi3(){
+        return $this->hasMany(Disposisi::class, 'nip_pegawai3', 'nip');
     }
 }

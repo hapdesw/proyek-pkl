@@ -44,6 +44,10 @@ class AuthenticatedSessionController extends Controller
         {
             return redirect('/bendahara/tagihan');
         }
+        elseif($request->user()->peran === '1100')
+        {
+            return redirect('/PK/petugas-kapokja/transisi');
+        }
         
 
         return redirect()->intended(route('login'));

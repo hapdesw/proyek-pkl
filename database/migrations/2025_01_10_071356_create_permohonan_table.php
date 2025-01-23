@@ -17,8 +17,8 @@ return new class extends Migration
             $table->enum('kategori_berbayar', ['Berbayar', 'Nolrupiah']);
             $table->unsignedBigInteger('id_jenis_layanan');
             $table->foreign('id_jenis_layanan')->references('id')->on('jenis_layanan')->onDelete('cascade');
-            $table->string('deskripsi_keperluan');
-            $table->enum('status_permohonan', ['Diproses', 'Selesai'])->default('diproses');
+            $table->string('deskripsi_keperluan',500);
+            $table->enum('status_permohonan', ['Diproses', 'Selesai'])->default('Diproses');
             $table->date('tanggal_selesai')->nullable();
             $table->date('tanggal_diambil')->nullable();
             $table->unsignedBigInteger('id_pemohon');

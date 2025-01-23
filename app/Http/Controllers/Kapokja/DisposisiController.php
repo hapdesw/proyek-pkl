@@ -17,7 +17,11 @@ class DisposisiController extends Controller
      */
     public function index()
     {
-        $permohonan = Permohonan::with(['disposisi.pegawai'])->get();
+        $permohonan = Permohonan::with([
+            'disposisi.pegawai1', 
+            'disposisi.pegawai2', 
+            'disposisi.pegawai3', 
+            ])->get();
         return view('kapokja.disposisi', compact('permohonan'));
     }
 
@@ -37,16 +41,22 @@ class DisposisiController extends Controller
     public function store(Request $request, $id)
     {
         $request->validate([
-            'nip_pegawai' => 'required|exists:pegawai,nip',
+            'nip_pegawai.0' => 'required|distinct|exists:pegawai,nip',
+            'nip_pegawai.*' => 'distinct|exists:pegawai,nip',
             'tanggal_disposisi' => 'required|date',
+        ], [
+            'nip_pegawai.0.required' => 'Pegawai 1 harus diisi.',
+            'nip_pegawai.*.distinct' => 'Setiap pegawai harus berbeda.',
+            'nip_pegawai.*.exists' => 'Pegawai tidak valid.',
         ]);
-
         DB::beginTransaction();
     
         try {
             Disposisi::create([
                 'id_permohonan' => $id,
-                'nip_pegawai' => $request->nip_pegawai,
+                'nip_pegawai1' => $request->nip_pegawai[0],
+                'nip_pegawai2' => $request->nip_pegawai[1] ?? null,
+                'nip_pegawai3' => $request->nip_pegawai[2] ?? null,
                 'tanggal_disposisi' => $request->tanggal_disposisi,
                 'created_at' => now()
             ]);
