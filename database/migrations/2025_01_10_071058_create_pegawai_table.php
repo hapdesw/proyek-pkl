@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->string('nama');
-            $table->string('no_kontak', 13);
             $table->char('peran_pegawai', 4);
             $table->timestamps();
         });
