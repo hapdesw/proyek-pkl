@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         ]);
         User::create([
             'username' => 'dian123',
-            'password' => bcrypt('dian123'),
+            'password' => bcrypt('dian123'), 
             'peran' => '0001'
         ]);
         User::create([

@@ -148,7 +148,7 @@ class PermohonanController extends Controller
             'nama_pemohon' => 'required|string',
             'instansi' => 'required|string',
             'no_hp' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'nullable|email',
         ]);
         Log::info('Validasi update berhasil');
     } catch (\Illuminate\Validation\ValidationException $e) {

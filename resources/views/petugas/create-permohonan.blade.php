@@ -7,7 +7,7 @@
                         Pengajuan Permohonan
                     </h3>
                 </div>
-                <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">Permohonan ke- {{ $nextID }}</div>
+                <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">ID Permohonan ke- {{ $nextID }}</div>
                 <form action="{{ route("petugas.permohonan.store") }}" method="POST" class="space-y-4 p-4">
                     @csrf
                     {{-- Data pemohon --}}
@@ -30,7 +30,7 @@
                         <!-- Email -->
                         <div>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="email" name="email" required>
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="email" name="email">
                         </div>
                     </div>
                     {{-- Data Permohonan --}}

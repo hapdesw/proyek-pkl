@@ -151,7 +151,22 @@
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
                                     <td class="px-4 py-3">{{ $pm->jenisLayanan->nama_jenis_layanan}}</td>
-                                    <td class="px-4 py-3">{{ $pm->pemohon->instansi}}</td> 
+                                    <td class="px-4 py-3">
+                                        <div>
+                                            <strong>{{ $pm->pemohon->nama_pemohon }}</strong> <!-- Nama pemohon -->
+                                        </div>
+                                       
+                                        @if(!empty($pm->pemohon->no_kontak))
+                                            <div>
+                                                {{ $pm->pemohon->no_kontak }} <!-- No. HP pemohon jika tersedia -->
+                                            </div>
+                                        @endif
+                                        
+                                        <div>
+                                            {{ $pm->pemohon->instansi }} <!-- Tetap menampilkan instansi -->
+                                        </div>
+                                    </td>
+                                    
                                     <td class="px-4 py-3">{{ $pm->deskripsi_keperluan }}</td>
                                     <td class="px-4 py-3 w-32">
                                         @if($pm->disposisi)
@@ -214,7 +229,16 @@
                                                           
                                                         <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Hapus Permohonan</a>
                                                     </li>   
-                                                </div>    
+                                                </div>   
+                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <li class=" flex px-4 py-1">
+                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                                          </svg>
+                                                          
+                                                        <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Batalkan Permohonan</a>
+                                                    </li>   
+                                                </div>     
                                             </ul>
                                         </div>
                                     </td>
