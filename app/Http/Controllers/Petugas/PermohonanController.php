@@ -7,6 +7,7 @@ use App\Models\Pemohon;
 use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PermohonanController extends Controller
 {
@@ -36,72 +37,60 @@ class PermohonanController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    Log::info('Mulai proses store');
-    Log::info('Data request:', $request->all());
-    Log::info('Validasi dimulai');
-    // Validasi data
-    try {
-        $request->validate([
-            // Validasi data permohonan
-        'tgl_diajukan' => 'required|date',
-        'kategori' => 'required|string',
-        'jenis_layanan' => 'required|integer',
-        'deskripsi' => 'required|string',
-        'tgl_selesai' => 'nullable|date',
-        'tgl_diambil' => 'nullable|date',
-        
-        // Validasi data pemohon
-        'nama_pemohon' => 'required|string',
-        'instansi' => 'required|string',
-        'no_hp' => 'required|string',
-        'email' => 'required|email',
-
-        ]);
-        Log::info('Validasi store berhasil');
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        Log::error('Validasi gagal:', ['errors' => $e->errors()]);
-        return redirect()->back()->withErrors($e->errors())->withInput();
+    {
+        Log::info('Mulai proses store');
+        Log::info('Data request:', $request->all());
+    
+        try {
+            $request->validate([
+                'tgl_diajukan' => 'required|date',
+                'kategori' => 'required|string',
+                'jenis_layanan' => 'required|integer',
+                'deskripsi' => 'required|string',
+                'tgl_selesai' => 'nullable|date',
+                'tgl_diambil' => 'nullable|date',
+                'nama_pemohon' => 'required|string',
+                'instansi' => 'required|string',
+                'no_hp' => 'required|string',
+                'email' => 'nullable|email',
+            ]);
+            Log::info('Validasi berhasil');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validasi gagal:', ['errors' => $e->errors()]);
+            // Flash error message to session
+            return redirect()->back()->withInput()->withErrors(['error' => 'Gagal membuat permohonan. ' . $e->getMessage()]);
+        }
+    
+        // Proses data setelah validasi
+        try {
+            $pemohon = Pemohon::firstOrCreate([
+                'nama_pemohon' => $request->nama_pemohon,
+                'instansi' => $request->instansi,
+                'no_kontak' => $request->no_hp,
+                'email' => $request->email,
+            ]);
+    
+            $permohonan = Permohonan::create([
+                'tanggal_diajukan' => $request->tgl_diajukan,
+                'kategori_berbayar' => $request->kategori,
+                'id_jenis_layanan' => $request->jenis_layanan,
+                'deskripsi_keperluan' => $request->deskripsi,
+                'tanggal_selesai' => $request->tgl_selesai,
+                'tanggal_diambil' => $request->tgl_diambil,
+                'id_pemohon' => $pemohon->id,
+            ]);
+    
+            session()->flash('success', 'Permohonan berhasil dibuat!');
+        } catch (\Exception $e) {
+            Log::error('Gagal membuat permohonan: ' . $e->getMessage());
+            session()->flash('error', 'Terjadi kesalahan saat membuat permohonan. ' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    
+        return redirect()->route('petugas.permohonan');
     }
     
-    // Setelah validasi
-    Log::info('Validasi berhasil untuk permohonan');
-    Log::info('Sebelum Pemohon::firstOrCreate');
 
-    // Cari atau buat data pemohon
-    try {
-        $pemohon = Pemohon::firstOrCreate([
-            'nama_pemohon' => $request->nama_pemohon,
-            'instansi' => $request->instansi,
-            'no_kontak' => $request->no_hp,
-            'email' => $request->email,
-            
-        ]);
-        Log::info('Pemohon berhasil dibuat atau ditemukan:', $pemohon->toArray());
-    } catch (\Exception $e) {
-        Log::error('Gagal membuat pemohon: ' . $e->getMessage());
-        return back()->withErrors('Terjadi kesalahan saat menyimpan data pemohon.');
-    }
-    // Setelah Pemohon::create
-    Log::info('Pemohon berhasil dibuat:', $pemohon->toArray());
-    Log::info('Sebelum Permohonan::create');
-    // Simpan data permohonan
-    $permohonan=Permohonan::create([
-        'tanggal_diajukan' => $request->tgl_diajukan,
-        'kategori_berbayar' => $request->kategori,
-        'id_jenis_layanan' => $request->jenis_layanan,
-        'deskripsi_keperluan' => $request->deskripsi,
-        'tanggal_selesai' => $request->tgl_selesai,
-        'tanggal_diambil' => $request->tgl_diambil,
-        'id_pemohon' => $pemohon->id, // ID pemohon dari data yang baru dibuat atau ditemukan
-    ]);
-    // Setelah Permohonan::create
-    Log::info('Permohonan berhasil dibuat:', $permohonan->toArray());
-
-
-    // route ke halaman index nya
-    return redirect()->route('petugas.permohonan')->with('success', 'Permohonan berhasil dibuat!');
-}
 
 
     /**
@@ -151,9 +140,11 @@ class PermohonanController extends Controller
             'email' => 'nullable|email',
         ]);
         Log::info('Validasi update berhasil');
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        Log::error('Validasi update gagal:', ['errors' => $e->errors()]);
-        return redirect()->back()->withErrors($e->errors())->withInput();
+    } catch (\Exception $e) {
+        Log::error('Validasi update gagal:', ['errors' => $e->getMessage()]);
+        return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Gagal memperbaharui permohonan. ' . $e->getMessage()]);
     }
 
     Log::info('Validasi masuk update data pemohon dan permohonan');
@@ -198,8 +189,26 @@ class PermohonanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Permohonan $id)
+    public function destroy($id)
     {
-        //
+        Log::Info('Masuk ke method destroy');
+        try {
+            $permohonan = Permohonan::findOrFail($id);
+            $permohonan->delete();
+            Log::info('Berhasil hapus permohonan');
+            Log::info('Flash message:', session()->all());
+
+            return redirect()->route('petugas.permohonan')->with('success', 'Permohonan berhasil dihapus!');
+        } catch (ModelNotFoundException $e) {
+            Log::error('Tidak ditemukan permohonan. Penghapusan gagal: ' . $e->getMessage());
+            Log::info('Redirecting with flash message:', session()->all());
+            // return redirect()->back()->withInput()->withErrors(['error' => 'Gagal menghapus permohonan. ' . $e->getMessage()]);
+            return redirect()->route('petugas.permohonan')->with('error', 'Permohonan tidak ditemukan.');
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus permohonan: ' . $e->getMessage());
+            Log::info('Flash message:', session()->all());
+
+            return redirect()->route('petugas.permohonan')->with('error', 'Terjadi kesalahan saat menghapus permohonan.');
+        }
     }
 }

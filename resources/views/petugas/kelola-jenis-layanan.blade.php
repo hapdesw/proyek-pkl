@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12"> 
-        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-10">
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-80 mr-80 flex flex-col min-h-10">
             @if ($message = Session::get('success'))
                 <script>
                     Swal.fire({
@@ -98,16 +98,16 @@
                             <tr class="border-b dark:border-gray-700 text-darkKnight">
                                 <td class="px-4 py-3">{{ $loop->iteration }}</td>
                                 <td class="px-4 py-3">{{ $layanan->nama_jenis_layanan }}</td>
-                                <td class="px-4 py-3 flex items-center justify-end">
-                                    <button id="actions-dropdown-button-{{ $layanan->id }}" data-dropdown-toggle="actions-dropdown-{{ $layanan->id }}" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
+                                <td class="px-4 py-3 flex items-center">
+                                    <button id="actions-dropdown-button-{{ $layanan->id }}" data-dropdown-toggle="actions-dropdown-{{ $layanan->id }}" class="inline-flex items-start p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
                                         <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                         </svg>
                                     </button>
-                                    <div id="actions-dropdown-{{ $layanan->id }}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                    <div id="actions-dropdown-{{ $layanan->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                         <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $layanan->id }}">
                                             <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                <li class=" flex px-4 py-1">
+                                                <li class=" flex px-2 py-1">
                                                     <button type="button" data-modal-target="edit-modal-{{ $layanan->id }}" data-modal-toggle="edit-modal-{{ $layanan->id }}" aria-controls="edit-modal-{{ $layanan->id }}" class="flex items-center gap-2 py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
@@ -124,7 +124,7 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" onclick="confirmDelete({{$layanan->id}})" class="flex items-center gap-2 py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                                            <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                                                             </svg>
                                                             <span>Hapus</span>

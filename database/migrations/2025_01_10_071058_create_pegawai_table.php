@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('no_kontak', 13);
             $table->char('peran_pegawai', 4);
+            $table->softDeletes(); // Menambahkan kolom deleted_at
             $table->timestamps();
         });
     }
@@ -29,6 +30,7 @@ return new class extends Migration
     {
         Schema::table('pegawai', function (Blueprint $table) {
             $table->dropForeign(['id_user']);
+            $table->dropSoftDeletes(); // Menghapus kolom deleted_at
         });
         Schema::dropIfExists('pegawai');
     }

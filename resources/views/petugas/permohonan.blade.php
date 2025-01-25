@@ -10,16 +10,18 @@
                         });
                     </script>
                 @endif
-    
-                @if($errors->any())
+
+                @if (Session::has('error'))
                     <script>
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops...',
-                            text: '{{ $errors->first() }}',
+                            title: 'Gagal!',
+                            text: '{{ Session::get('error') }}',
                         });
                     </script>
                 @endif
+               
+
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
                         Permohonan
@@ -201,41 +203,65 @@
                                                 <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                             </svg>
                                         </button>
-                                        <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                        <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pm->id }}">
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex px-4 py-1" >
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
                                                         </svg>
-
                                                         <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detail</a>
                                                     </li>
                                                 </div>
+                        
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex px-4 py-1">
+                                                    <li class="flex items-center px-4 py-1" >
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                         </svg>
-                                                          
+                                                                                            
                                                         <a href="{{ route('petugas.permohonan.edit', $pm->id) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Permohonan</a>
                                                     </li>
                                                 </div>
+                                               
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex px-4 py-1">
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
-                                                          </svg>
-                                                          
-                                                        <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Hapus Permohonan</a>
+                                                    <li class=" flex items-center px-4 py-1">
+                                                        <form id="delete-form-{{$pm->id}}" action="{{ route('petugas.permohonan.destroy', $pm->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button" onclick="confirmDelete({{$pm->id}})" class="flex items-center gap-2 py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                                <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                                                </svg>
+                                                               Hapus Permohonan
+                                                            </button>
+                                                        </form>
                                                     </li>   
+                                                     {{-- Pop up dialog untuk hapus --}}
+                                                    <script>
+                                                        function confirmDelete(id) {
+                                                            Swal.fire({
+                                                                title: 'Apakah Anda yakin?',
+                                                                text: "Data permohonan dengan ID {{$pm->id}} akan dihapus secara permanen!",
+                                                                icon: 'warning',
+                                                                showCancelButton: true,
+                                                                confirmButtonColor: '#3085d6',
+                                                                cancelButtonColor: '#d33',
+                                                                confirmButtonText: 'Ya, hapus!',
+                                                                cancelButtonText: 'Batal'
+                                                            }).then((result) => {
+                                                                if (result.isConfirmed) {
+                                                                    document.getElementById('delete-form-' + id).submit();
+                                                                }
+                                                            });
+                                                        }
+                                                        </script>   
                                                 </div>   
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex px-4 py-1">
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
-                                                          </svg>
-                                                          
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 9H8a5 5 0 0 0 0 10h9m4-10-4-4m4 4-4 4"/>
+                                                        </svg>
                                                         <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Batalkan Permohonan</a>
                                                     </li>   
                                                 </div>     

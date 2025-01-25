@@ -2,6 +2,26 @@
     {{-- Form ajukan permohonan --}}
         <div class="mx-auto max-w-screen-xl px-4 lg:px-12"> 
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
+                @if ($message = Session::get('success'))
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: '{{ $message }}',
+                    });
+                </script>
+            @endif
+
+            @if ($errors->any())
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: '{{ $errors->first() }}',
+                    });
+                </script>
+            @endif
+            
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
                         Pengajuan Permohonan

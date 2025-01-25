@@ -23,6 +23,7 @@ return new class extends Migration
             $table->date('tanggal_diambil')->nullable();
             $table->unsignedBigInteger('id_pemohon');
             $table->foreign('id_pemohon')->references('id')->on('pemohon')->onDelete('cascade');
+            $table->softDeletes(); // Menambahkan kolom deleted_at
             $table->timestamps();
         });
     }
@@ -35,6 +36,7 @@ return new class extends Migration
         Schema::table('permohonan', function (Blueprint $table) {
             $table->dropForeign(['id_jenis_layanan']);
             $table->dropForeign(['id_pemohon']);
+            $table->dropSoftDeletes(); // Menghapus kolom deleted_at
         });
         Schema::dropIfExists('permohonan');
     }

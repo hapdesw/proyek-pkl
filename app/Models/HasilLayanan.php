@@ -13,7 +13,7 @@ class HasilLayanan extends Model
     protected $fillable = ['id_permohonan','nama_file_hasil','path_file_hasil'];
 
     public function permohonan(){
-        return $this->belongsTo(Permohonan::class, 'id_permohonan', 'id');
+        return $this->belongsTo(Permohonan::class, 'id_permohonan', 'id')->withTrashed();
     }
     public function disposisi(){
         return $this->belongsTo(Disposisi::class, 'id_permohonan', 'id_permohonan');
