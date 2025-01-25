@@ -42,7 +42,7 @@ class DisposisiController extends Controller
     {
         $request->validate([
             'nip_pegawai.0' => 'required|distinct|exists:pegawai,nip',
-            'nip_pegawai.*' => 'distinct|exists:pegawai,nip',
+            'nip_pegawai.*' => 'nullable|distinct|exists:pegawai,nip',
             'tanggal_disposisi' => 'required|date',
         ], [
             'nip_pegawai.0.required' => 'Pegawai 1 harus diisi.',
@@ -94,19 +94,32 @@ class DisposisiController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nip_pegawai' => 'required|exists:pegawai,nip',
+            'nip_pegawai.0' => 'required|distinct|exists:pegawai,nip',
+            'nip_pegawai.*' => 'nullable|distinct|exists:pegawai,nip',
             'tanggal_disposisi' => 'required|date',
+        ], [
+            'nip_pegawai.0.required' => 'Pegawai 1 harus diisi.',
+            'nip_pegawai.*.distinct' => 'Setiap pegawai harus berbeda.',
         ]);
 
+        DB::beginTransaction();
+    
         try {
             $disposisi = Disposisi::where('id_permohonan', $id)->firstOrFail();
             $disposisi->update([
-                'nip_pegawai' => $request->nip_pegawai,
+                'nip_pegawai1' => $request->nip_pegawai[0],
+                'nip_pegawai2' => $request->nip_pegawai[1] ?? null,
+                'nip_pegawai3' => $request->nip_pegawai[2] ?? null,
                 'tanggal_disposisi' => $request->tanggal_disposisi,
+                'updated_at' => now()
             ]);
 
+            DB::commit();
+    
             return redirect()->route('kapokja.disposisi')->with('success', 'Disposisi berhasil diperbarui.');
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error saat menyimpan disposisi: ' . $e->getMessage());
             return redirect()->back()
                 ->withInput()
                 ->withErrors(['error' => 'Gagal memperbarui disposisi. ' . $e->getMessage()]);

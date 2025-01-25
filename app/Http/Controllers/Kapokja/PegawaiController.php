@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Kapokja;
 
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class PegawaiController extends Controller
@@ -17,7 +19,7 @@ class PegawaiController extends Controller
 
         foreach ($pegawai as $p) {
             if ($p->peran_pegawai == '1000') {
-                $p->peran_pegawai = 'Petugas Layanan';
+                $p->peran_pegawai = 'Admin';
             } elseif ($p->peran_pegawai == '0100') {
                 $p->peran_pegawai = 'Kapokja';
             } elseif ($p->peran_pegawai == '0010') {
@@ -48,7 +50,42 @@ class PegawaiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nip_pegawai' => 'required|digits:18|unique:pegawai,nip',
+            'nama' => 'required|string|max:255',
+            'peran' => 'required|array',
+            'peran.*' => 'in:0100,0010,0001',
+        ]);
+
+        DB::beginTransaction(); 
+    
+        try {
+            Pegawai::create([
+                'nip' => $request->nip_pegawai,
+                'nama' => $request->nama,
+                'peran_pegawai' => str_pad(decbin(array_reduce($request->peran, function($carry, $item) {
+                    $decimal = bindec($item);
+                    Log::info('Conversion', [
+                        'item' => $item, 
+                        'decimal' => $decimal, 
+                        'carry' => $carry
+                    ]);
+                    return $carry | bindec($item); 
+                }, 0)), 4, '0', STR_PAD_LEFT), 
+                'id_user' => null,
+                'created_at' => now()
+            ]);
+
+            DB::commit();
+    
+            return redirect()->route('kapokja.kelola-pegawai')->with('success', 'Pegawai berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error saat menyimpan pegawai: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Gagal menambahkan pegawai. ' . $e->getMessage()]);
+        }
     }
 
     /**
