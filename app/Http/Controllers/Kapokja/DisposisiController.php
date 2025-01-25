@@ -47,7 +47,6 @@ class DisposisiController extends Controller
         ], [
             'nip_pegawai.0.required' => 'Pegawai 1 harus diisi.',
             'nip_pegawai.*.distinct' => 'Setiap pegawai harus berbeda.',
-            'nip_pegawai.*.exists' => 'Pegawai tidak valid.',
         ]);
         DB::beginTransaction();
     
