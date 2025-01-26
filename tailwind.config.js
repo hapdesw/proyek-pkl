@@ -21,7 +21,7 @@ export default {
                 sapphireGlitter: '#0133CC',
                 islamicGreen: '#009900',
                 sunflowerIsland: '#FFC900',
-                red: '#FF0000',
+                redNew: '#FF0000',
                 plumb: '#64748B',
             },
         },

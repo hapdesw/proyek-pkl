@@ -45,6 +45,7 @@ Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
     Route::delete('/kapokja/disposisi/destroy/{id}', [DisposisiController::class, 'destroy'])->name('kapokja.disposisi.destroy'); 
     Route::get('/kapokja/kelola-pegawai', [PegawaiController::class, 'index'])->name('kapokja.kelola-pegawai');
     Route::get('/kapokja/kelola-pegawai/create', [PegawaiController::class, 'create'])->name('kapokja.kelola-pegawai.create');
+    Route::post('/kapokja/kelola-pegawai/store', [PegawaiController::class, 'store'])->name('kapokja.kelola-pegawai.store');
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {

@@ -142,30 +142,48 @@
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-1.5 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
                                     <td class="px-2.5 py-3">{{ $pm->jenisLayanan->nama_jenis_layanan}}</td>
-                                    <td class="px-3 py-3 w-36">{{ $pm->pemohon->instansi}}</td> 
+                                    <td class="px-3 py-3 w-36">
+                                        <div>
+                                            <strong>{{ $pm->pemohon->nama_pemohon }}</strong>
+                                        </div>
+                                        @if(!empty($pm->pemohon->no_kontak))
+                                            <div>
+                                                {{ $pm->pemohon->no_kontak }}
+                                            </div>
+                                        @endif
+                                        <div>
+                                            {{ $pm->pemohon->instansi }}
+                                        </div>
+                                    </td> 
                                     <td class="px-3 py-3">{{ $pm->deskripsi_keperluan }}</td>
                                     <td class="px-4 py-3 w-32">
                                         @if($pm->disposisi)
-                                            <ul>
-                                                @if($pm->disposisi->pegawai1)
-                                                    <li>- {{ $pm->disposisi->pegawai1->nama }}</li>
-                                                @endif
-                                                @if(optional($pm->disposisi->pegawai2)->nama)
-                                                <li>- {{ optional($pm->disposisi->pegawai2)->nama }}</li>
+                                            @php
+                                                $pegawaiList = collect([
+                                                    optional($pm->disposisi->pegawai1)->nama,
+                                                    optional($pm->disposisi->pegawai2)->nama,
+                                                    optional($pm->disposisi->pegawai3)->nama,
+                                                ])->filter(); 
+                                            @endphp
+
+                                            @if ($pegawaiList->count() === 1)
+                                                {{ $pegawaiList->first() }}
+                                            @elseif ($pegawaiList->count() > 1)
+                                                <ul>
+                                                    @foreach ($pegawaiList as $pegawai)
+                                                        <li>• {{ $pegawai }}</li>
+                                                    @endforeach
+                                                </ul>
                                             @endif
-                                            @if(optional($pm->disposisi->pegawai3)->nama)
-                                                <li>- {{ optional($pm->disposisi->pegawai3)->nama }}</li>
-                                            @endif
-                                            </ul>
                                         @else
-                                            <span class="text-red !important">Belum diatur</span>
+                                            <span class="text-redNew !important">Belum diatur</span>
                                         @endif
                                     </td>
                                     <td class="px-3 py-3">
                                         @if($pm->disposisi?->tanggal_disposisi)
                                             {{ \Carbon\Carbon::parse($pm->disposisi->tanggal_disposisi)->format('d/m/Y') }}
                                         @else
-                                            <span class="text-red !important">Belum diatur</span>
+                                            <span class="text-redNew !important">Belum diatur</span>
                                         @endif
                                     </td>
                                     <td class="px-2 py-2">
@@ -173,6 +191,8 @@
                                             <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">{{ $pm->status_permohonan }}</span>
                                         @elseif($pm->status_permohonan === 'Selesai')
                                             <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">{{ $pm->status_permohonan }}</span>
+                                        @elseif($pm->status_permohonan === 'Batal')
+                                            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-red-400 border border-red-400">{{ $pm->status_permohonan }}</span>
                                         @endif
                                     </td>                               
                                     
