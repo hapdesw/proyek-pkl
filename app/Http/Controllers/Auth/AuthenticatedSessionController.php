@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
 
         if($request->user()->peran === '1000')
         {
-            return redirect('/petugas-layanan/beranda');
+            return redirect('/petugas-layanan/beranda'); 
         }
         elseif($request->user()->peran === '0100')
         {
