@@ -30,6 +30,8 @@ class PegawaiController extends Controller
                 $p->peran_pegawai = 'Kapokja dan Analis';
             } elseif ($p->peran_pegawai == '0011') {
                 $p->peran_pegawai = 'Analis dan Bendahara';
+            } elseif ($p->peran_pegawai == '0101') {
+                $p->peran_pegawai = 'Kapokja dan Bendahara';
             } else {
                 $p->peran_pegawai = 'Tidak Diketahui';
             }
@@ -53,7 +55,7 @@ class PegawaiController extends Controller
         $request->validate([
             'nip_pegawai' => 'required|digits:18|unique:pegawai,nip',
             'nama' => 'required|string|max:255',
-            'peran' => 'required|array',
+            'peran' => 'required|array|max:2',
             'peran.*' => 'in:0100,0010,0001',
         ]);
 
@@ -89,6 +91,72 @@ class PegawaiController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($nip)
+    {
+        $pegawai = Pegawai::where('nip', $nip)->firstOrFail();
+        return view('kapokja.edit-pegawai', compact('pegawai'));
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $nip)
+    {
+        $pegawai = Pegawai::where('nip', $nip)->firstOrFail();
+        
+        $request->validate([
+            'nip_pegawai' => 'required|digits:18|unique:pegawai,nip,' . $nip . ',nip',
+            'nama' => 'required|string|max:255',
+            'peran' => 'required|array|max:2',
+            'peran.*' => 'in:0100,0010,0001',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $pegawai->update([
+                'nip' => $request->nip_pegawai,
+                'nama' => $request->nama,
+                'peran_pegawai' => str_pad(decbin(array_reduce($request->peran, function($carry, $item) {
+                    return $carry | bindec($item);
+                }, 0)), 4, '0', STR_PAD_LEFT),
+                'updated_at' => now()
+            ]);
+
+            DB::commit();
+            return redirect()->route('kapokja.kelola-pegawai')->with('success', 'Data pegawai berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error saat memperbarui pegawai: ' . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Gagal memperbarui data pegawai. ' . $e->getMessage()]);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy($nip)
+    {
+        DB::beginTransaction();
+
+        try {
+            $pegawai = Pegawai::findOrFail($nip);
+            $pegawai->delete();
+
+            DB::commit();
+
+            return redirect()->route('kapokja.kelola-pegawai')->with('success', 'Pegawai berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Gagal menghapus pegawai. ' . $e->getMessage()]);
+        }
+    }
+
+
+    /**
      * Display the specified resource.
      */
     public function show(Pegawai $pegawai)
@@ -96,27 +164,5 @@ class PegawaiController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Pegawai $pegawai)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Pegawai $pegawai)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Pegawai $pegawai)
-    {
-        //
-    }
 }
