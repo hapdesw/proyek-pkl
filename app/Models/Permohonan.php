@@ -32,7 +32,7 @@ class Permohonan extends Model
     }
 
     public function hasilLayanan(){
-        return $this->hasOne(HasilLayanan::class, 'id', 'id_permohonan');
+        return $this->hasOne(HasilLayanan::class, 'id_permohonan', 'id');
     }
 
     public function disposisi(){

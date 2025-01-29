@@ -12,7 +12,7 @@ use App\Http\Controllers\Petugas\PemohonController;
 use App\Http\Controllers\Bendahara\BendaharaController;
 use App\Http\Controllers\Kapokja\DisposisiController;
 use App\Http\Controllers\Kapokja\PegawaiController;
-use App\Http\Controllers\HasilLayananController;
+use App\Http\Controllers\Analis\HasilLayananController;
 use App\Http\Controllers\TransisiController;
 
 Route::get('/', function () {
@@ -52,7 +52,9 @@ Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {
-    Route::get('/analis/hasil-layanan', [AnalisController::class, 'index'])->name('analis.hasil-layanan'); 
+    Route::get('/analis/hasil-layanan', [HasilLayananController::class, 'index'])->name('analis.hasil-layanan'); 
+    Route::get('/analis/hasil-layanan/create/{id}', [HasilLayananController::class, 'create'])->name('analis.hasil-layanan.create');
+    Route::post('/analis/hasil-layanan/store/{id}', [HasilLayananController::class, 'store'])->name('analis.hasil-layanan.store');  
 }); 
 
 Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
