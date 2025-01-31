@@ -5,11 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Petugas\PetugasController;
 use App\Http\Controllers\Kapokja\KapokjaController;
-use App\Http\Controllers\Analis\AnalisController;
 use App\Http\Controllers\Petugas\PermohonanController;
 use App\Http\Controllers\Petugas\JenisLayananController;
 use App\Http\Controllers\Petugas\PemohonController;
-use App\Http\Controllers\Bendahara\BendaharaController;
+use App\Http\Controllers\Bendahara\TagihanController;
+use App\Http\Controllers\Bendahara\KuitansiController;
 use App\Http\Controllers\Kapokja\DisposisiController;
 use App\Http\Controllers\Kapokja\PegawaiController;
 use App\Http\Controllers\Analis\HasilLayananController;
@@ -58,7 +58,12 @@ Route::middleware(['auth', 'Analis_0010'])->group(function () {
 }); 
 
 Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
-    Route::get('/bendahara/tagihan', [BendaharaController::class, 'index'])->name('bendahara.tagihan'); 
+    Route::get('/bendahara/tagihan', [TagihanController::class, 'index'])->name('bendahara.tagihan'); 
+    Route::get('/bendahara/kuitansi', [KuitansiController::class, 'index'])->name('bendahara.kuitansi'); 
+    Route::get('/bendahara/tagihan/create/{id}', [TagihanController::class, 'create'])->name('bendahara.tagihan.create');
+    Route::post('/bendahara/tagihan/store/{id}', [TagihanController::class, 'store'])->name('bendahara.tagihan.store');  
+    Route::get('/bendahara/kuitansi/create/{id}', [KuitansiController::class, 'create'])->name('bendahara.kuitansi.create');
+    Route::post('/bendahara/kuitansi/store/{id}', [KuitansiController::class, 'store'])->name('bendahara.kuitansi.store');  
 }); 
 
 Route::middleware(['auth', 'PetugasKapokja_1100'])->group(function () {

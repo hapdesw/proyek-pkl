@@ -45,7 +45,7 @@ class HasilLayananController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file_hasil' => 'required|mimes:pdf|max:10240', // Validasi hanya file PDF dan maksimal 10MB
+            'file_hasil' => 'required|mimes:pdf|max:10240', 
         ]);
 
         if ($request->hasFile('file_hasil') && $request->file('file_hasil')->isValid()) {

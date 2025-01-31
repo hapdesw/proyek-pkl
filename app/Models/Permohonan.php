@@ -40,10 +40,15 @@ class Permohonan extends Model
     }
 
     public function tagihan(){
-        return $this->hasOne(Tagihan::class, 'id', 'id_permohonan');
+        return $this->hasOne(Tagihan::class, 'id_permohonan', 'id');
     }
 
     public function kuitansi(){
-        return $this->hasOne(Kuitansi::class, 'id', 'id_permohonan');
+        return $this->hasOne(Kuitansi::class, 'id_permohonan', 'id');
+    }
+
+    public function canUploadKuitansi()
+    {
+        return $this->tagihan()->exists();
     }
 }
