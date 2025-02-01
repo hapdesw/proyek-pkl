@@ -18,7 +18,7 @@ class Pegawai extends Model
     protected $fillable = ['nip', 'id_user', 'nama', 'no_kontak', 'peran_pegawai'];
 
     public function user(){
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(User::class, 'id_user', 'id');
     }
     public function disposisi1(){
         return $this->hasMany(Disposisi::class, 'nip_pegawai1', 'nip')->withTrashed();

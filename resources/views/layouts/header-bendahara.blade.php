@@ -8,7 +8,8 @@
                         {{ request()->routeIs('bendahara.tagihan') ? ' text-darkKnight font-bold' : 'text-plumb' }}">Tagihan</a>
                     </li>
                     <li>
-                        <a href="#" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0">Kuitansi</a>
+                        <a href="{{ route('bendahara.kuitansi') }}" class="flex items-center p-2 rounded hover:bg-gray-100 hover:text-gray-400 font-semibold 
+                        {{ request()->routeIs('bendahara.kuitansi') ? ' text-darkKnight font-bold' : 'text-plumb' }}">Kuitansi</a>
                     </li>
                 </ul>
             </div>
