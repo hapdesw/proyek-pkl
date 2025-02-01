@@ -1,5 +1,6 @@
 <x-app-layout>
         <div class="mx-auto max-w-screen-xl px-4 lg:px-2"> 
+            
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
                 @if ($message = Session::get('success'))
                     <script>
@@ -213,13 +214,17 @@
                                         </button>
                                         <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pm->id }}">
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex px-4 py-1" >
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
-                                                        </svg>
-                                                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detail</a>
-                                                    </li>
+                                                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">                  
+                                                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                                                        <div x-data="{ open: false }">
+                                                            <button data-modal-target="add-modal"  data-modal-toggle="add-modal" class="flex items-center  px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 " onclick="showDetail({{ $pm->id }})">
+                                                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+                                                                </svg>
+                                                                Detail
+                                                            </button>     
+                                                        </div>
+                                                    </div>
                                                 </div>
                         
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
@@ -274,7 +279,123 @@
                                                     </li>   
                                                 </div>     
                                             </ul>
-                                        </div>
+                                        </div>   
+                                         {{-- Modal untuk detail permohonan --}}
+                                        <div id="add-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                            <button onclick="showDetail({{ $pm->id }})"></button>
+                                            <!-- Simpan data dalam atribut data- -->
+                                            @php
+                                                $tanggalSelesai = $pm->tanggal_selesai;
+                                                $tanggalDiambil = $pm->tanggal_diambil;
+                                            @endphp
+                                            <div id="permohonan-{{ $pm->id }}" class="hidden"
+                                                data-id="{{ $pm->id }}"
+                                                data-tgl-diajukan="{{ $pm->tanggal_diajukan }}"
+                                                data-kategori="{{ $pm->kategori_berbayar }}"
+                                                data-jenis-layanan="{{ $pm->jenisLayanan->nama_jenis_layanan ?? 'Tidak Diketahui' }}"
+                                                data-deskripsi="{{ $pm->deskripsi_keperluan }}"
+                                                data-disposisi1="{{$pm->disposisi->pegawai1->nama ?? 'Belum diatur' }}"
+                                                data-disposisi2="{{ $pm->disposisi->pegawai2->nama ?? 'Belum diatur' }}"
+                                                data-disposisi3="{{ $pm->disposisi->pegawai3->nama ?? 'Belum diatur' }}"
+                                                data-tgl-disposisi="{{ $pm->disposisi->tanggal_disposisi ?? 'Belum Diatur' }}"
+                                                data-pemohon="{{ $pm->pemohon->nama_pemohon ?? 'Tidak Diketahui' }}"
+                                                data-instansi="{{ $pm->pemohon->instansi ?? 'Tidak Diketahui' }}"
+                                                data-hp="{{ $pm->pemohon->no_kontak ?? 'Tidak Ada' }}"
+                                                data-email="{{ $pm->pemohon->email ?? 'Tidak Ada' }}"
+                                                data-tgl-selesai="{{ $tanggalSelesai }}"
+                                                data-tgl-diambil="{{ $tanggalDiambil }}"
+                                                data-status="{{ $pm->status_permohonan }}">
+                                            </div>
+                                           
+                                                <div class="relative w-auto h-auto max-w-screen-xl mx-auto">
+                                                    <div class="relative bg-white p-6 w-full max-w-full rounded-lg shadow-lg">
+                                                        <button type="button" class="absolute top-3 right-2.5 text-gray-400" data-modal-toggle="add-modal">✖</button>
+                                                        <div class="border-b border-gray-200 dark:border-gray-700">
+                                                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
+                                                                Detail Permohonan
+                                                            </h3>
+                                                        </div>
+                                                       
+                                                        <!-- ID Permohonan-->
+                                                        <p class="mb-2"><strong>ID Permohonan:</strong> <span id="detail-id"></span></p>
+                                                        <p class="mb-2"><strong>Tanggal Diajukan:</strong> <span id="detail-tgl-diajukan"></span></p>
+                                                        <p class="mb-2"><strong>Kategori Layanan:</strong> <span id="detail-kategori"></span></p>
+                                                        <p class="mb-2"><strong>Jenis Layanan:</strong> <span id="detail-jenis-layanan"></span></p>
+                                                        <p class="mb-2"><strong>Deskripsi Keperluan:</strong> <span id="detail-deskripsi"></span></p>
+                                                        <p class="mb-2"><strong>Disposisi 1:</strong> <span id="detail-disposisi1"></span></p>
+                                                        <p class="mb-2"><strong>Disposisi 2:</strong> <span id="detail-disposisi2"></span></p>
+                                                        <p class="mb-2"><strong>Disposisi 3:</strong> <span id="detail-disposisi3"></span></p>
+                                                        <p class="mb-2"><strong>Tanggal Disposisi:</strong> <span id="detail-tgl-disposisi"></span></p>
+                                                        <p class="mb-2"><strong>Pemohon:</strong> <span id="detail-pemohon"></span></p>
+                                                        <p class="mb-2"><strong>Instansi:</strong> <span id="detail-instansi"></span></p>
+                                                        <p class="mb-2"><strong>No HP:</strong> <span id="detail-hp"></span></p>
+                                                        <p ><strong>Email:</strong> <span id="detail-email"></span></p>
+                                                        <p ><strong>Tanggal Selesai:</strong> <span id="detail-tgl-selesai"></span>
+                                                            <input type="date" class="border-0 text-red-600 text-sm " id="detail-tgl-selesai" name="tanggal_selesai">
+                                                        <p ><strong>Tanggal Diambil:</strong> <span id="detail-tgl-diambil"></span>
+                                                            <input type="date" class="border-0 text-red-600 text-sm" id="detail-tgl-diambil" name="tanggal_diambil">
+                                                        <p class="mb-2"><strong>Status Permohonan:</strong> <span id="detail-status"></span></p>
+                                                      
+                                                    </div>
+                                                </div> 
+                                            </div>
+                                        </div> 
+                                        <script>
+                                            function aturTanggal(id, kolom) {
+                                                let input = prompt("Masukkan tanggal (YYYY-MM-DD):");
+
+                                                if (input) {
+                                                    fetch(`/petugas-layanan/permohonan/update`, { // Gunakan endpoint update yang sudah ada
+                                                        method: "POST",
+                                                        headers: {
+                                                            "Content-Type": "application/json",
+                                                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                                                        },
+                                                        body: JSON.stringify({
+                                                            id: id,
+                                                            [kolom]: input // Kirim data sesuai kolom yang diubah
+                                                        })
+                                                    })
+                                                    .then(response => response.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            document.getElementById(`tgl-${kolom}-${id}`).innerText = input;
+                                                        } else {
+                                                            alert("Gagal memperbarui tanggal!");
+                                                        }
+                                                    })
+                                                    .catch(error => console.error("Error:", error));
+                                                }
+                                            }
+                                            function showDetail(id) {
+                                                // Ambil data dari elemen dengan ID sesuai
+                                                const permohonan = document.getElementById('permohonan-' + id);
+                                                if (!permohonan) {
+                                                    console.error('Data permohonan tidak ditemukan untuk ID:', id);
+                                                    return;
+                                                }
+                                                document.getElementById('detail-id').textContent = permohonan.getAttribute('data-id');
+                                                document.getElementById('detail-tgl-diajukan').textContent = permohonan.getAttribute('data-tgl-diajukan');
+                                                document.getElementById('detail-kategori').textContent = permohonan.getAttribute('data-kategori');
+                                                document.getElementById('detail-jenis-layanan').textContent = permohonan.getAttribute('data-jenis-layanan');
+                                                document.getElementById('detail-deskripsi').textContent = permohonan.getAttribute('data-deskripsi');
+                                                document.getElementById('detail-disposisi1').textContent = permohonan.getAttribute('data-disposisi1');
+                                                document.getElementById('detail-disposisi2').textContent = permohonan.getAttribute('data-disposisi2');
+                                                document.getElementById('detail-disposisi3').textContent = permohonan.getAttribute('data-disposisi3');
+                                                document.getElementById('detail-tgl-disposisi').textContent = permohonan.getAttribute('data-tgl-disposisi');
+                                                document.getElementById('detail-pemohon').textContent = permohonan.getAttribute('data-pemohon');
+                                                document.getElementById('detail-instansi').textContent = permohonan.getAttribute('data-instansi');
+                                                document.getElementById('detail-hp').textContent = permohonan.getAttribute('data-hp');
+                                                document.getElementById('detail-email').textContent = permohonan.getAttribute('data-email');
+                                                document.getElementById('detail-tgl-selesai').textContent = permohonan.getAttribute('data-tgl-selesai');
+                                                document.getElementById('detail-tgl-diambil').textContent = permohonan.getAttribute('data-tgl-diambil');
+                                                document.getElementById('detail-status').textContent = permohonan.getAttribute('data-status');
+                                                
+                                                // Tampilkan modal
+                                                document.getElementById('add-modal').classList.remove('hidden');
+                                               
+                                            }
+                                        </script>      
                                     </td>
                                 </tr> 
                             @empty
