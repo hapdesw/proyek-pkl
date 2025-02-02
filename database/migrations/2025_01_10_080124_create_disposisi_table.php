@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreign('nip_pegawai2')->references('nip')->on('pegawai')->onDelete('cascade');
             $table->char('nip_pegawai3', 18)->nullable();
             $table->foreign('nip_pegawai3')->references('nip')->on('pegawai')->onDelete('cascade');
+            $table->char('nip_pegawai4', 18)->nullable();
+            $table->foreign('nip_pegawai4')->references('nip')->on('pegawai')->onDelete('cascade');
             $table->date('tanggal_disposisi');
             $table->timestamps();
             $table->unique('id_permohonan');
@@ -37,6 +39,7 @@ return new class extends Migration
             $table->dropForeign(['nip_pegawai1']);
             $table->dropForeign(['nip_pegawai2']);
             $table->dropForeign(['nip_pegawai3']);
+            $table->dropForeign(['nip_pegawai4']);
         });
         Schema::dropIfExists('disposisi');
     }

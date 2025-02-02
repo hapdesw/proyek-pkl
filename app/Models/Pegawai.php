@@ -29,4 +29,7 @@ class Pegawai extends Model
     public function disposisi3(){
         return $this->hasMany(Disposisi::class, 'nip_pegawai3', 'nip')->withTrashed();
     }
+    public function disposisi4(){
+        return $this->hasMany(Disposisi::class, 'nip_pegawai4', 'nip')->withTrashed();
+    }
 }

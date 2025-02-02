@@ -72,6 +72,18 @@
                             @endforeach
                         </select>
                     </div>
+                    <!-- Pegawai 4-->
+                    <div>
+                        <label for="nip_pegawai4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lajur Disposisi 4</label>
+                        <select name="nip_pegawai[]" id="nip_pegawai4" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5">
+                            <option value="" selected>--Pilih Pegawai--</option>
+                            @foreach ($pegawai as $pg)
+                                <option value="{{ $pg->nip }}" {{ (isset($disposisi) && $disposisi->nip_pegawai4 == $pg->nip) ? 'selected' : '' }}>
+                                    {{ $pg->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <!-- Tanggal Disposisi -->
                     <div>
                         <label for="tanggal_disposisi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -95,7 +107,8 @@
         const pegawai1 = document.getElementById('nip_pegawai1');
         const pegawai2 = document.getElementById('nip_pegawai2');
         const pegawai3 = document.getElementById('nip_pegawai3');
-        const allPegawai = [pegawai1, pegawai2, pegawai3];
+        const pegawai4 = document.getElementById('nip_pegawai4');
+        const allPegawai = [pegawai1, pegawai2, pegawai3, pegawai4];
 
         function updateOptions(selectedIndex) {
             const selectedValues = allPegawai.map(select => select.value);

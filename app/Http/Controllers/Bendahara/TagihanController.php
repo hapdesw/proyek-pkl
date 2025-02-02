@@ -14,7 +14,7 @@ class TagihanController extends Controller
      */
     public function index()
     {
-        $permohonan = Permohonan::where('kategori_berbayar', 'Berbayar')->get();
+        $permohonan = Permohonan::where('kategori_berbayar', 'Berbayar')->paginate(15);
         return view('bendahara.tagihan', compact('permohonan'));
     }
 
