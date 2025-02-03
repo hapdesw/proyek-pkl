@@ -50,59 +50,141 @@
                                     <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
                                 </svg>
                             </button>
-                            <div id="actionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
+                            {{-- <div id="actionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
                                 <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Pilih Bulan</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="actionsDropdownButton">
                                     <li class="flex items-center">
-                                        <input id="januari" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="januari" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="januari" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Januari</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="februari" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="februari" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="februari" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Februari</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="maret" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="maret" type="checkbox"  class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="maret" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Maret</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="april" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="april" type="checkbox"  class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="april" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">April</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="mei" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="mei" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="mei" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Mei</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="juni" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="juni" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="juni" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Juni</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="juli" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="juli" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="juli" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Juli</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="agustus" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="agustus" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="agustus" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Agustus</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="september" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="september" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="september" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">September</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="oktober" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="oktober" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="oktober" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Oktober</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="november" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="november" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="november" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">November</label>
                                     </li>
                                     <li class="flex items-center">
-                                        <input id="desember" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <input id="desember" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                         <label for="desember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Desember</label>
                                     </li>
                                 </ul>
+                            </div> --}}
+                             <!-- Dropdown Filter Bulan -->
+                            <div class="mb-3">
+                                
+                                <div id="actionsDropdown" class="hidden p-3 bg-white shadow rounded-lg">
+                                    <h6 class="mb-3">Pilih Bulan</h6>
+                                    <ul class="list-unstyled">
+                                        @php
+                                            $months = [
+                                                'januari', 'februari', 'maret', 'april', 'mei', 'juni',
+                                                'juli', 'agustus', 'september', 'oktober', 'november', 'desember'
+                                            ];
+                                        @endphp
+                                        @foreach ($months as $month)
+                                            <li class="form-check">
+                                                <input id="{{ $month }}" type="checkbox" class="month-filter form-check-input">
+                                                <label for="{{ $month }}" class="form-check-label">{{ ucfirst($month) }}</label>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                             </div>
+                            <!-- JavaScript -->
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    document.querySelectorAll('.month-filter').forEach(checkbox => {
+                                        checkbox.addEventListener('change', function () {
+                                            const selectedMonths = getSelectedMonths();
+                                            applyFilter(selectedMonths);
+                                        });
+                                    });
+
+                                    function getSelectedMonths() {
+                                        const selectedMonths = [];
+                                        document.querySelectorAll('.month-filter:checked').forEach(checkbox => {
+                                            selectedMonths.push(checkbox.id);
+                                        });
+                                        return selectedMonths;
+                                    }
+
+                                    function applyFilter(selectedMonths) {
+                                        if (selectedMonths.length > 0) {
+                                            filterPermohonanByMonth(selectedMonths);
+                                        } else {
+                                            fetchAllPermohonan();
+                                        }
+                                    }
+
+                                    function filterPermohonanByMonth(months) {
+                                        fetch(`/permohonan/filter?months=${months.join(',')}`)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                displayPermohonan(data);
+                                            })
+                                            .catch(error => console.error('Error:', error));
+                                    }
+
+                                    function fetchAllPermohonan() {
+                                        fetch('/petugas-layanan/permohonan')
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                displayPermohonan(data);
+                                            });
+                                    }
+
+                                    function displayPermohonan(data) {
+                                        let tableBody = document.getElementById('table-body');
+                                        tableBody.innerHTML = '';
+                                        data.forEach(permohonan => {
+                                            let row = `<tr>
+                                                <td>${permohonan.id}</td>
+                                                <td>${permohonan.tanggal_diajukan}</td>
+                                                <td>${permohonan.kategori}</td>
+                                                
+                                                <td>${permohonan.deskripsi_keperluan}</td>
+                                                <td>${permohonan.status_permohonan}</td>
+                                            </tr>`;
+                                            tableBody.innerHTML += row;
+                                        });
+                                    }
+                                });
+                            </script>
+                   
                             <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
                                 Pilih Tahun
                                 <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -197,13 +279,15 @@
                                     
                                     <td class="px-2 py-2">
                                         @if($pm->status_permohonan === 'Diproses')
-                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">{{ $pm->status_permohonan }}</span>
-                                        @elseif($pm->status_permohonan === 'Selesai')
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">{{ $pm->status_permohonan }}</span>
+                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300 inline-block">{{ $pm->status_permohonan }}</span>
+                                        @elseif($pm->status_permohonan === 'Selesai Dibuat')
+                                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 inline-block">{{ $pm->status_permohonan }}</span>
+                                        @elseif($pm->status_permohonan === 'Selesai Diambil')
+                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 inline-block">{{ $pm->status_permohonan }}</span>
                                         @elseif($pm->status_permohonan === 'Batal')
-                                            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-red-400 border border-red-400">{{ $pm->status_permohonan }}</span>
+                                            <span class="bg-red-100 text-red-800 text-xs font-medium px-3 py-1 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400 inline-block">{{ $pm->status_permohonan }}</span>
                                         @endif
-                                    </td>     
+                                    </td>
                                     
                                     
                                     <td class="px-4 py-3 flex items-center justify-end">
@@ -214,14 +298,14 @@
                                         </button>
                                         <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pm->id }}">
-                                                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">                  
-                                                    <div class="flex items-center space-x-3 w-full md:w-auto">
-                                                        <div x-data="{ open: false }">
-                                                            <button data-modal-target="add-modal"  data-modal-toggle="add-modal" class="flex items-center  px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-100 " onclick="showDetail({{ $pm->id }})">
+                                                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-start hover:bg-gray-100 md:space-x-3 flex-shrink-0">                  
+                                                    <div class="flex items-center space-x-3 w-auto md:w-auto">
+                                                        <div x-data="{ open: false }" class="block px-2">
+                                                            <button data-modal-target="add-modal"  data-modal-toggle="add-modal" class="flex items-center gap-6 px-2 py-2 text-sm" onclick="showDetail({{ $pm->id }})">
                                                                 <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
                                                                 </svg>
-                                                                Detail
+                                                                Detail Permohonan
                                                             </button>     
                                                         </div>
                                                     </div>
@@ -237,12 +321,12 @@
                                                     </li>
                                                 </div>
                                                
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex items-center px-4 py-1">
+                                                <div class="block px-0 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <li class=" flex items-center px-2 py-1">
                                                         <form id="delete-form-{{$pm->id}}" action="{{ route('petugas.permohonan.destroy', $pm->id) }}" method="POST">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="button" onclick="confirmDelete({{$pm->id}})" class="flex items-center gap-2 py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                            <button type="button" onclick="confirmDelete({{$pm->id}})" class="flex items-center gap-6 py-2 px-3 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                                                 <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                                                                 </svg>
@@ -270,12 +354,16 @@
                                                         }
                                                         </script>   
                                                 </div>   
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex px-4 py-1">
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 9H8a5 5 0 0 0 0 10h9m4-10-4-4m4 4-4 4"/>
-                                                        </svg>
-                                                        <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Batalkan Permohonan</a>
+                                                
+                                                <div class="block px-0 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <li class=" flex items-center px-2 py-1">
+                                                        <button onclick="updateStatus({{ $pm->id }}, 'Batal')" class="flex items-center gap-6 py-2 px-3 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                            <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 9H8a5 5 0 0 0 0 10h9m4-10-4-4m4 4-4 4"/>
+                                                            </svg>
+                                                            Batalkan Permohonan
+                                                        </button>
+                                                     
                                                     </li>   
                                                 </div>     
                                             </ul>
@@ -302,13 +390,13 @@
                                                 data-instansi="{{ $pm->pemohon->instansi ?? 'Tidak Diketahui' }}"
                                                 data-hp="{{ $pm->pemohon->no_kontak ?? 'Tidak Ada' }}"
                                                 data-email="{{ $pm->pemohon->email ?? 'Tidak Ada' }}"
-                                                data-tgl-selesai="{{ $tanggalSelesai }}"
-                                                data-tgl-diambil="{{ $tanggalDiambil }}"
+                                                data-tgl-selesai="{{ $tanggalSelesai ?? 'Belum Diatur' }}"
+                                                data-tgl-diambil="{{ $tanggalDiambil ?? 'Belum Diatur' }}"
                                                 data-status="{{ $pm->status_permohonan }}">
                                             </div>
                                            
-                                                <div class="relative w-auto h-auto max-w-screen-xl mx-auto">
-                                                    <div class="relative bg-white p-6 w-full max-w-full rounded-lg shadow-lg">
+                                                {{-- <div class="relative bg-yellow-400 w-auto h-auto max-w-screen-xl mx-auto"> --}}
+                                                    <div class="relative bg-white p-5 mt-10 w-full max-h-fit max-w-fit rounded-lg shadow-lg">
                                                         <button type="button" class="absolute top-3 right-2.5 text-gray-400" data-modal-toggle="add-modal">✖</button>
                                                         <div class="border-b border-gray-200 dark:border-gray-700">
                                                             <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
@@ -329,44 +417,17 @@
                                                         <p class="mb-2"><strong>Pemohon:</strong> <span id="detail-pemohon"></span></p>
                                                         <p class="mb-2"><strong>Instansi:</strong> <span id="detail-instansi"></span></p>
                                                         <p class="mb-2"><strong>No HP:</strong> <span id="detail-hp"></span></p>
-                                                        <p ><strong>Email:</strong> <span id="detail-email"></span></p>
-                                                        <p ><strong>Tanggal Selesai:</strong> <span id="detail-tgl-selesai"></span>
-                                                            <input type="date" class="border-0 text-red-600 text-sm " id="detail-tgl-selesai" name="tanggal_selesai">
-                                                        <p ><strong>Tanggal Diambil:</strong> <span id="detail-tgl-diambil"></span>
-                                                            <input type="date" class="border-0 text-red-600 text-sm" id="detail-tgl-diambil" name="tanggal_diambil">
+                                                        <p class="mb-2"><strong>Email:</strong> <span id="detail-email"></span></p>
+                                                        <p class="mb-2"><strong>Tanggal Selesai:</strong> <span id="detail-tgl-selesai"></span>
+                                                        <p class="mb-2"><strong>Tanggal Diambil:</strong> <span id="detail-tgl-diambil"></span>
                                                         <p class="mb-2"><strong>Status Permohonan:</strong> <span id="detail-status"></span></p>
                                                       
                                                     </div>
-                                                </div> 
+                                                {{-- </div>  --}}
                                             </div>
                                         </div> 
                                         <script>
-                                            function aturTanggal(id, kolom) {
-                                                let input = prompt("Masukkan tanggal (YYYY-MM-DD):");
-
-                                                if (input) {
-                                                    fetch(`/petugas-layanan/permohonan/update`, { // Gunakan endpoint update yang sudah ada
-                                                        method: "POST",
-                                                        headers: {
-                                                            "Content-Type": "application/json",
-                                                            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                                                        },
-                                                        body: JSON.stringify({
-                                                            id: id,
-                                                            [kolom]: input // Kirim data sesuai kolom yang diubah
-                                                        })
-                                                    })
-                                                    .then(response => response.json())
-                                                    .then(data => {
-                                                        if (data.success) {
-                                                            document.getElementById(`tgl-${kolom}-${id}`).innerText = input;
-                                                        } else {
-                                                            alert("Gagal memperbarui tanggal!");
-                                                        }
-                                                    })
-                                                    .catch(error => console.error("Error:", error));
-                                                }
-                                            }
+                                           
                                             function showDetail(id) {
                                                 // Ambil data dari elemen dengan ID sesuai
                                                 const permohonan = document.getElementById('permohonan-' + id);
@@ -395,6 +456,60 @@
                                                 document.getElementById('add-modal').classList.remove('hidden');
                                                
                                             }
+                                            
+                                      
+                                            function updateStatus(id, status) {
+                                                Swal.fire({
+                                                    title: "Memproses...",
+                                                    text: "Mohon tunggu sebentar",
+                                                    icon: "info",
+                                                    allowOutsideClick: false,
+                                                    showConfirmButton: false,
+                                                    didOpen: () => {
+                                                        Swal.showLoading();
+                                                    }
+                                                });
+
+                                                fetch(`/petugas-layanan/permohonan/update-status/${id}`, {
+                                                    method: "POST",
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                                                    },
+                                                    body: JSON.stringify({ status: status })
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    Swal.close(); // Tutup loading setelah mendapatkan respons dari server
+                                                    if (data.success) {
+                                                        Swal.fire({
+                                                            title: "Berhasil!",
+                                                            text: "Status permohonan berhasil diperbarui!",
+                                                            icon: "success",
+                                                            confirmButtonText: "OK"
+                                                        }).then(() => {
+                                                            location.reload(); // Refresh halaman setelah klik OK
+                                                        });
+                                                    } else {
+                                                        Swal.fire({
+                                                            title: "Gagal!",
+                                                            text: "Gagal memperbarui status: " + data.message,
+                                                            icon: "error",
+                                                            confirmButtonText: "Coba Lagi"
+                                                        });
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    Swal.close();
+                                                    Swal.fire({
+                                                        title: "Error!",
+                                                        text: "Terjadi kesalahan: " + error.message,
+                                                        icon: "error",
+                                                        confirmButtonText: "OK"
+                                                    });
+                                                });
+                                            }
+
                                         </script>      
                                     </td>
                                 </tr> 

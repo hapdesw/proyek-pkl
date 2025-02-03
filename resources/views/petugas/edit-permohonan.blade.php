@@ -66,6 +66,16 @@
                             </select>
                             
                         </div>   
+                        <!-- Tanggal Selesai dibuat-->
+                        <div>
+                            <label for="tgl_selesai_dibuat" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Selesai Dibuat</label>
+                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_selesai_dibuat" name="tgl_selesai_dibuat" value = "{{ $permohonan->tanggal_selesai }}">
+                        </div>
+                        <!-- Tanggal Selesai Diambil -->
+                        <div>
+                            <label for="tgl_selesai_diambil" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal Selesai Diambil</label>
+                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_selesai_diambil" name="tgl_selesai_diambil" value = "{{ $permohonan->tanggal_diambil }}">
+                        </div>
                        
                     </div>
                     <div class="grid grid-cols-1 gap-5 mt-5 w-1/2">    

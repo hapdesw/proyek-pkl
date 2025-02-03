@@ -26,13 +26,14 @@ Route::middleware(['auth', 'Petugas_1000'])->group(function () {
     Route::post('/petugas-layanan/kelola-layanan/store', [JenisLayananController::class, 'store'])->name('petugas.kelola-layanan.store'); 
     Route::put('/petugas-layanan/kelola-layanan/update/{id}', [JenisLayananController::class, 'update'])->name('petugas.kelola-layanan.update'); 
     Route::delete('/petugas-layanan/kelola-layanan/destroy/{id}', [JenisLayananController::class, 'destroy'])->name('petugas.kelola-layanan.destroy'); 
+    Route::get('/permohonan/filter', [PermohonanController::class, 'filter']);
     Route::get('/petugas-layanan/permohonan', [PermohonanController::class, 'index'])->name('petugas.permohonan'); 
     Route::get('/petugas-layanan/permohonan/create', [PermohonanController::class, 'create'])->name('petugas.permohonan.create'); 
     Route::get('/petugas-layanan/permohonan/edit/{id}', [PermohonanController::class, 'edit'])->name('petugas.permohonan.edit'); 
     Route::put('/petugas-layanan/permohonan/update/{id}', [PermohonanController::class, 'update'])->name('petugas.permohonan.update'); 
     Route::post('/petugas-layanan/permohonan/store', [PermohonanController::class, 'store'])->name('petugas.permohonan.store'); 
     Route::delete('/petugas-layanan/permohonan/destroy/{id}', [PermohonanController::class, 'destroy'])->name('petugas.permohonan.destroy');
-    Route::get('/petugas-layanan/permohonan/detail/{id}', [PermohonanController::class, 'show'])->name('petugas.permohonan.show');  
+    Route::post('/petugas-layanan/permohonan/update-status/{id}', [PermohonanController::class, 'updateStatus'])->name('petugas.permohonan.update-status');
     Route::get('/petugas-layanan/pemohon', [PemohonController::class, 'index'])->name('petugas.kelola-pemohon'); 
 }); 
 

@@ -9,6 +9,7 @@ use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 
 class PermohonanController extends Controller
 {
@@ -20,11 +21,37 @@ class PermohonanController extends Controller
         $permohonan = Permohonan::with([
             'disposisi.pegawai1', 
             'disposisi.pegawai2', 
-            'disposisi.pegawai3', 
-            ])->get();
+            'disposisi.pegawai3'
+        ])->get();
+
         $pemohon = Pemohon::all();
+
         return view('petugas.permohonan', compact('permohonan', 'pemohon'));
     }
+
+    
+    public function filter(Request $request)
+    {
+        $months = explode(',', $request->query('months'));
+
+        // Mapping nama bulan ke angka (1-12)
+        $monthNumbers = [
+            'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
+            'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8,
+            'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12
+        ];
+
+        // Konversi nama bulan ke angka
+        $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
+
+        // Ambil permohonan berdasarkan bulan yang dipilih
+        $permohonan = Permohonan::whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths)->get();
+
+        return response()->json($permohonan);
+    }
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -103,19 +130,7 @@ class PermohonanController extends Controller
      */
     public function show($id)
     {
-        // try {
-        //     // Cari data permohonan berdasarkan ID
-        //     $permohonan = Permohonan::with(['jenisLayanan', 'pemohon', 'disposisi'])->findOrFail($id);
-        //     $disposisi = Disposisi::with(['pegawai1', 'pegawai2', 'pegawai3'])->findOfFail($id);
-        //     Log::info('Berhasil mengambil detail data');
-            
-        //     // Return view dan kirimkan data permohonan
-        //     return view('petugas.permohonan', compact('permohonan', 'disposisi'));
-
-        // } catch (ModelNotFoundException $e) {
-        //     Log::error('gagal mengambil data untuk detail:', ['errors' => $e->getMessage()]);
-        //     return redirect()->route('petugas.permohonan')->with('error', 'Permohonan tidak ditemukan');
-        // }
+        
     }
 
 
@@ -142,37 +157,16 @@ class PermohonanController extends Controller
         Log::info('Masuk ke method update');
         
         try {
-            // Cek apakah ini update khusus tanggal (dari tombol 📅)
-            if ($request->has('tanggal_selesai') || $request->has('tanggal_diambil')) {
-                Log::info('Update khusus tanggal diterima');
-
-                $request->validate([
-                    'tanggal_selesai' => 'nullable|date',
-                    'tanggal_diambil' => 'nullable|date',
-                ]);
-
-                // Cari permohonan berdasarkan ID
-                $permohonan = Permohonan::findOrFail($id);
-
-                // Update hanya tanggal yang diberikan
-                $permohonan->update([
-                    'tanggal_selesai' => $request->tanggal_selesai ?? $permohonan->tanggal_selesai,
-                    'tanggal_diambil' => $request->tanggal_diambil ?? $permohonan->tanggal_diambil,
-                ]);
-
-                Log::info('Berhasil update tanggal permohonan');
-                return response()->json(['success' => true, 'message' => 'Tanggal berhasil diperbarui']);
-            }
-        
-    // Jika request tidak hanya berisi tanggal, lakukan update penuh
-    Log::info('Validasi update penuh');
+           
+            // Jika request tidak hanya berisi tanggal, lakukan update penuh
+            Log::info('Validasi update penuh');
             $request->validate([
                 'tgl_diajukan' => 'required|date',
                 'kategori' => 'required|string',
                 'jenis_layanan' => 'required|integer',
                 'deskripsi' => 'required|string',
-                'tgl_selesai' => 'nullable|date',
-                'tgl_diambil' => 'nullable|date',
+                'tgl_selesai_dibuat' => 'nullable|date',
+                'tgl_selesai_diambil' => 'nullable|date',
                 
                 // Validasi data pemohon
                 'nama_pemohon' => 'required|string',
@@ -212,8 +206,28 @@ class PermohonanController extends Controller
                 'kategori_berbayar' => $request->kategori,
                 'id_jenis_layanan' => $request->jenis_layanan,
                 'deskripsi_keperluan' => $request->deskripsi,
-                'tanggal_selesai' => $request->tgl_selesai,
-                'tanggal_diambil' => $request->tgl_diambil,
+                'tanggal_selesai' => $request->tgl_selesai_dibuat,
+                'tanggal_diambil' => $request->tgl_selesai_diambil,
+            ]);
+
+            // Tentukan status permohonan
+            $status = 'Diproses'; // Default status
+
+            // Periksa jika tanggal selesai dibuat diisi
+            if ($request->has('tgl_selesai_dibuat') && $request->tgl_selesai_dibuat) {
+                // Update status menjadi 'Selesai Dibuat'
+                $status = 'Selesai Dibuat';
+            }
+
+            // Periksa jika tanggal selesai diambil diisi
+            if ($request->has('tgl_selesai_diambil') && $request->tgl_selesai_diambil) {
+                // Update status menjadi 'Selesai Diambil'
+                $status = 'Selesai Diambil';
+            }
+
+            // Update status permohonan
+            $permohonan->update([
+                'status_permohonan' => $status,
             ]);
 
             Log::info('Berhasil update data permohonan');
@@ -252,4 +266,25 @@ class PermohonanController extends Controller
             return redirect()->route('petugas.permohonan')->with('error', 'Terjadi kesalahan saat menghapus permohonan.');
         }
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $status = $request->status; // Ambil status dari body request
+        $permohonan = Permohonan::find($id);
+
+        if ($permohonan) {
+            // Update status permohonan
+            $permohonan->status_permohonan = $status;
+            $permohonan->save();
+            Log::info("Status permohonan dengan ID $id diperbarui menjadi '$status'.");
+
+            // Kembalikan respons JSON
+            return response()->json(['success' => true, 'message' => 'Status permohonan berhasil diperbarui']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Permohonan tidak ditemukan'], 404);
+    }
+
+
+    
 }
