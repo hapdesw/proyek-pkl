@@ -21,9 +21,9 @@ class PermohonanController extends Controller
         $permohonan = Permohonan::with([
             'disposisi.pegawai1', 
             'disposisi.pegawai2', 
-            'disposisi.pegawai3'
-        ])->get();
-
+            'disposisi.pegawai3', 
+            'disposisi.pegawai4', 
+            ])->paginate(15);
         $pemohon = Pemohon::all();
 
         return view('petugas.permohonan', compact('permohonan', 'pemohon'));

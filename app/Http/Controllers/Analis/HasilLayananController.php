@@ -24,10 +24,19 @@ class HasilLayananController extends Controller
         $permohonan = Permohonan::whereHas('disposisi', function($query) use ($nip_analis) {
             $query->where('nip_pegawai1', $nip_analis)
                 ->orWhere('nip_pegawai2', $nip_analis)
-                ->orWhere('nip_pegawai3', $nip_analis);
-        })->with(['jenisLayanan', 'pemohon', 'hasilLayanan', 'disposisi'])->get();
+                ->orWhere('nip_pegawai3', $nip_analis)
+                ->orWhere('nip_pegawai4', $nip_analis);
+        })->with(['jenisLayanan', 'pemohon', 'hasilLayanan', 'disposisi'])->paginate(15);
 
         return view('analis.hasil-layanan', compact('permohonan'));
+    }
+
+    public function indexKapokja(Request $request)
+    {
+        $permohonan = Permohonan::whereHas('disposisi')
+            ->with(['jenisLayanan', 'pemohon', 'hasilLayanan', 'disposisi'])
+            ->paginate(15);
+        return view('kapokja.hasil-layanan', compact('permohonan'));
     }
 
     /**

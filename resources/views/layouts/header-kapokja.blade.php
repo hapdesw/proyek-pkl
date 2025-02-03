@@ -12,6 +12,10 @@
                         {{ request()->routeIs('kapokja.disposisi') ? ' text-darkKnight font-bold' : 'text-plumb' }}">Disposisi</a>
                     </li>
                     <li>
+                        <a href="{{ route('kapokja.hasil-layanan') }}" class="flex items-center p-2 rounded hover:bg-gray-50 hover:text-gray-400 font-semibold 
+                        {{ request()->routeIs('kapokja.hasil-layanan') ? ' text-darkKnight font-bold' : 'text-plumb' }}">Hasil Layanan</a>
+                    </li>
+                    <li>
                         <a href="{{ route('kapokja.kelola-pegawai') }}" class="flex items-center p-2 rounded hover:bg-gray-50 hover:text-gray-400 font-semibold 
                         {{ request()->routeIs('kapokja.kelola-pegawai') ? ' text-darkKnight font-bold' : 'text-plumb' }}">Kelola Pegawai</a>
                     </li>

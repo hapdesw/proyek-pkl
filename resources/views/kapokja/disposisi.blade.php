@@ -137,7 +137,7 @@
                             @forelse ($permohonan as $pm)
 
                                 <tr class="border-b dark:border-gray-700 text-darkKnight">
-                                    <td class="px-3 py-3">{{ $loop->iteration }}</td>
+                                <td class="px-3 py-3">{{ ($permohonan->currentPage() - 1) * $permohonan->perPage() + $loop->iteration }}</td>
                                     <td class="px-4 py-3">{{ $pm->id }}</td>
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-1.5 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
@@ -163,6 +163,7 @@
                                                     optional($pm->disposisi->pegawai1)->nama,
                                                     optional($pm->disposisi->pegawai2)->nama,
                                                     optional($pm->disposisi->pegawai3)->nama,
+                                                    optional($pm->disposisi->pegawai4)->nama,
                                                 ])->filter(); 
                                             @endphp
 
@@ -223,7 +224,7 @@
                                                 </div>
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex items-center px-4 py-1">
-                                                    @if($pm->disposisi && ($pm->disposisi->pegawai1 || $pm->disposisi->pegawai2 || $pm->disposisi->pegawai3))
+                                                    @if($pm->disposisi && ($pm->disposisi->pegawai1 || $pm->disposisi->pegawai2 || $pm->disposisi->pegawai3 || $pm->disposisi->pegawai4))
 
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
@@ -296,6 +297,56 @@
                         </tbody>
                     </table>
                 </div>
+                <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4">
+                    <span class="text-sm font-normal text-gray-500">
+                        Showing 
+                        <span class="font-semibold text-gray-900">
+                            {{ $permohonan->firstItem() }}-{{ $permohonan->lastItem() }} 
+                        </span>
+                        of
+                        <span class="font-semibold text-gray-900 dark:text-white">
+                        {{ $permohonan->total() }}
+                        </span>
+                    </span>
+                    
+                    @if ($permohonan->hasPages())
+                    <ul class="inline-flex items-stretch -space-x-px">
+                        <li>
+                            <a href="{{ $permohonan->previousPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $permohonan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
+                                <span class="sr-only">Previous</span>
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
+                                </svg>
+                            </a>
+                        </li>
+
+                        @foreach ($permohonan->getUrlRange(1, $permohonan->lastPage()) as $page => $url)
+                            @if ($page == 1 || $page == $permohonan->lastPage() || ($page >= $permohonan->currentPage() - 1 && $page <= $permohonan->currentPage() + 1))
+                                <li>
+                                    <a href="{{ $url }}" 
+                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
+                                    {{ $permohonan->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
+                                        {{ $page }}
+                                    </a>
+                                </li>
+                            @elseif ($page == $permohonan->currentPage() - 2 || $page == $permohonan->currentPage() + 2)
+                                <li>
+                                    <a class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">...</a>
+                                </li>
+                            @endif
+                        @endforeach
+
+                        <li>
+                            <a href="{{ $permohonan->nextPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$permohonan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
+                                <span class="sr-only">Next</span>
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                    @endif
+                </nav>
             </div>
         </div> 
 </x-app-layout>

@@ -4,7 +4,6 @@ namespace App\Imports;
 
 use App\Models\Permohonan;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Illuminate\Support\Facades\Log;
 
 class PermohonanImport implements ToModel
@@ -20,7 +19,6 @@ class PermohonanImport implements ToModel
         Log::info('Row data:', $row);
         return new Permohonan([
             'id' => $row[0],
-            // Ubah format parse date sesuai format di Excel
             'tanggal_diajukan' => !empty($row[1]) ? \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1])) : null,
             'kategori_berbayar' => $row[2],
             'id_jenis_layanan' => $row[3],

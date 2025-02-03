@@ -21,7 +21,8 @@ class DisposisiController extends Controller
             'disposisi.pegawai1', 
             'disposisi.pegawai2', 
             'disposisi.pegawai3', 
-            ])->get();
+            'disposisi.pegawai4', 
+            ])->paginate(15);
         return view('kapokja.disposisi', compact('permohonan'));
     }
 
@@ -56,6 +57,7 @@ class DisposisiController extends Controller
                 'nip_pegawai1' => $request->nip_pegawai[0],
                 'nip_pegawai2' => $request->nip_pegawai[1] ?? null,
                 'nip_pegawai3' => $request->nip_pegawai[2] ?? null,
+                'nip_pegawai4' => $request->nip_pegawai[3] ?? null,
                 'tanggal_disposisi' => $request->tanggal_disposisi,
                 'created_at' => now()
             ]);
@@ -110,6 +112,7 @@ class DisposisiController extends Controller
                 'nip_pegawai1' => $request->nip_pegawai[0],
                 'nip_pegawai2' => $request->nip_pegawai[1] ?? null,
                 'nip_pegawai3' => $request->nip_pegawai[2] ?? null,
+                'nip_pegawai4' => $request->nip_pegawai[3] ?? null,
                 'tanggal_disposisi' => $request->tanggal_disposisi,
                 'updated_at' => now()
             ]);
