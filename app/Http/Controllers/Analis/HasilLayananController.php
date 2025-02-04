@@ -48,6 +48,12 @@ class HasilLayananController extends Controller
         return view('analis.create-hasil-layanan', compact('permohonan'));
     }
 
+    public function createStatusKapokja($id)
+    {
+        $permohonan = Permohonan::findOrFail($id);
+        return view('kapokja.atur-status-hasil', compact('permohonan'));
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -74,6 +80,28 @@ class HasilLayananController extends Controller
             return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diunggah!');
         }
         return redirect()->back()->with('error', 'File gagal diunggah. Pastikan file valid.');
+    }
+
+    public function storeStatusKapokja(Request $request)
+    {
+        $request->validate([
+            'id_permohonan' => 'required|exists:permohonan,id',
+            'status' => 'required|in:revisi,disetujui',
+            'koreksi' => 'nullable|required_if:status,revisi|max:500',
+        ]);
+        
+        $hasilLayanan = HasilLayanan::where('id_permohonan', $request->id_permohonan)->first();
+
+        if (!$hasilLayanan) {
+            return redirect()->back()->with('error', 'Data hasil layanan tidak ditemukan.');
+        }
+
+        $hasilLayanan->update([
+            'status' => $request->status,
+            'koreksi' => $request->status == 'revisi' ? $request->koreksi : null,
+        ]);
+
+        return redirect()->route('kapokja.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
     }
 
     /**

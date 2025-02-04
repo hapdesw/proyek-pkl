@@ -156,16 +156,16 @@
                                                 <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">Pending</span>
                                             @elseif($pm->hasilLayanan->status === 'disetujui')
                                                 <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">Disetujui</span>
-                                            @elseif($pm->hasilLayanan->status === 'direvisi')
-                                                <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-red-400 border border-red-400">Direvisi</span>
+                                            @elseif($pm->hasilLayanan->status === 'revisi')
+                                                <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-red-400 border border-red-400">Revisi</span>
                                             @endif
                                         </td>
                                     @else
-                                            <span class="text-gray-500">Belum ada hasil layanan</span>
+                                            <span class="text-gray-500">Hasil layanan belum diunggah</span>
                                     @endif
                                     </td>
                                     <td class="px-3 py-3">
-                                        @if($pm->hasilLayanan)
+                                        @if(!empty($pm->hasilLayanan->koreksi))
                                             {{ $pm->hasilLayanan->koreksi }}
                                         @else
                                             <span class="text-gray-500">Tidak ada koreksi</span>
@@ -174,13 +174,14 @@
                                     <td class="px-4 py-3 w-32">
                                         @if($pm->hasilLayanan)
                                             <a href="{{ asset('storage/' . $pm->hasilLayanan->path_file_hasil) }}" 
-                                            class="btn btn-primary"
+                                            class="btn btn-primary text-blue-700"
                                             target="_blank">
                                                 Lihat File
                                             </a>
-                                            Diupload oleh: {{ $pm->hasilLayanan->pegawai->nama }}
+                                            <span class="text-xs text-gray-600">Diunggah oleh: </span>
+                                            <span class="text-xs font-medium">{{ $pm->hasilLayanan->pegawai->nama }}</span>
                                         @else
-                                            <span class="text-gray-500">Belum ada file</span>
+                                            <span class="text-gray-500">Hasil layanan belum diunggah</span>
                                         @endif
                                     </td>
                                     <td class="px-3 py-3 flex items-center">

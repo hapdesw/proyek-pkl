@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('id_permohonan')->references('id')->on('permohonan')->onDelete('cascade');
             $table->string('nama_file_hasil');
             $table->string('path_file_hasil');
-            $table->enum('status', ['pending', 'direvisi', 'disetujui'])->default('pending');
+            $table->enum('status', ['pending', 'revisi', 'disetujui'])->default('pending');
             $table->string('koreksi', 500)->nullable();
             $table->char('pengunggah', 18);
             $table->timestamps();

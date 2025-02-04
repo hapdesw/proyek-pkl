@@ -137,7 +137,7 @@
                             @forelse ($permohonan as $pm)
 
                                 <tr class="border-b dark:border-gray-700 text-darkKnight">
-                                <td class="px-3 py-3">{{ ($permohonan->currentPage() - 1) * $permohonan->perPage() + $loop->iteration }}</td>
+                                    <td class="px-3 py-3">{{ ($permohonan->currentPage() - 1) * $permohonan->perPage() + $loop->iteration }}</td>
                                     <td class="px-4 py-3">{{ $pm->id }}</td>
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-1.5 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
@@ -189,11 +189,13 @@
                                     </td>
                                     <td class="px-2 py-2">
                                         @if($pm->status_permohonan === 'Diproses')
-                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">{{ $pm->status_permohonan }}</span>
-                                        @elseif($pm->status_permohonan === 'Selesai')
-                                            <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">{{ $pm->status_permohonan }}</span>
+                                            <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded border border-yellow-300 inline-block">{{ $pm->status_permohonan }}</span>
+                                        @elseif($pm->status_permohonan === 'Selesai Dibuat')
+                                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded border border-blue-400 inline-block">{{ $pm->status_permohonan }}</span>
+                                        @elseif($pm->status_permohonan === 'Selesai Diambil')
+                                            <span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded border border-green-400 inline-block">{{ $pm->status_permohonan }}</span>
                                         @elseif($pm->status_permohonan === 'Batal')
-                                            <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-red-400 border border-red-400">{{ $pm->status_permohonan }}</span>
+                                            <span class="bg-red-100 text-red-800 text-xs font-medium px-3 py-1 rounded border border-red-400 inline-block">{{ $pm->status_permohonan }}</span>
                                         @endif
                                     </td>                               
                                     
@@ -212,14 +214,6 @@
                                                         </svg>
 
                                                         <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detail</a>
-                                                    </li>
-                                                </div>
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex items-center px-4 py-1" >
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m14 9.006h-.335a1.647 1.647 0 0 1-1.647-1.647v-1.706a1.647 1.647 0 0 1 1.647-1.647L19 12M5 12v5h1.375A1.626 1.626 0 0 0 8 15.375v-1.75A1.626 1.626 0 0 0 6.375 12H5Zm9 1.5v2a1.5 1.5 0 0 1-1.5 1.5v0a1.5 1.5 0 0 1-1.5-1.5v-2a1.5 1.5 0 0 1 1.5-1.5v0a1.5 1.5 0 0 1 1.5 1.5Z"/>
-                                                        </svg>
-                                                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Lihat Hasil Layanan</a>
                                                     </li>
                                                 </div>
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
