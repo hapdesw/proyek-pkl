@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->string('nama');
             $table->char('peran_pegawai', 4);
-            $table->softDeletes(); // Menambahkan kolom deleted_at
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -29,7 +29,7 @@ return new class extends Migration
     {
         Schema::table('pegawai', function (Blueprint $table) {
             $table->dropForeign(['id_user']);
-            $table->dropSoftDeletes(); // Menghapus kolom deleted_at
+            $table->dropSoftDeletes();
         });
         Schema::dropIfExists('pegawai');
     }

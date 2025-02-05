@@ -131,7 +131,7 @@
                             @forelse ($permohonan as $pm)
 
                                 <tr class="border-b dark:border-gray-700 text-darkKnight">
-                                    <td class="px-3 py-3">{{ $loop->iteration }}</td>
+                                    <td class="px-3 py-3">{{ ($permohonan->currentPage() - 1) * $permohonan->perPage() + $loop->iteration }}</td>
                                     <td class="px-4 py-3">{{ $pm->id }}</td>
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-1.5 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
@@ -156,16 +156,16 @@
                                                 <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300">Pending</span>
                                             @elseif($pm->hasilLayanan->status === 'disetujui')
                                                 <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400">Disetujui</span>
-                                            @elseif($pm->hasilLayanan->status === 'direvisi')
-                                                <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-red-400 border border-red-400">Direvisi</span>
+                                            @elseif($pm->hasilLayanan->status === 'revisi')
+                                                <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-red-400 border border-red-400">Revisi</span>
                                             @endif
                                         </td>
                                     @else
-                                            <span class="text-gray-500">Belum ada hasil layanan</span>
+                                            <span class="text-gray-500">Hasil layanan belum diunggah</span>
                                     @endif
                                     </td>
                                     <td class="px-3 py-3">
-                                        @if($pm->hasilLayanan)
+                                        @if(!empty($pm->hasilLayanan->koreksi))
                                             {{ $pm->hasilLayanan->koreksi }}
                                         @else
                                             <span class="text-gray-500">Tidak ada koreksi</span>
@@ -174,13 +174,14 @@
                                     <td class="px-4 py-3 w-32">
                                         @if($pm->hasilLayanan)
                                             <a href="{{ asset('storage/' . $pm->hasilLayanan->path_file_hasil) }}" 
-                                            class="btn btn-primary"
+                                            class="btn btn-primary text-blue-700"
                                             target="_blank">
                                                 Lihat File
                                             </a>
-                                            Diupload oleh: {{ $pm->hasilLayanan->pegawai->nama }}
+                                            <span class="text-xs text-gray-600">Diunggah oleh: </span>
+                                            <span class="text-xs font-medium">{{ $pm->hasilLayanan->pegawai->nama }}</span>
                                         @else
-                                            <span class="text-gray-500">Belum ada file</span>
+                                            <span class="text-gray-500">Hasil layanan belum diunggah</span>
                                         @endif
                                     </td>
                                     <td class="px-3 py-3 flex items-center">
@@ -192,33 +193,30 @@
                                         <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pm->id }}">
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex items-center px-4 py-1" >
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
-                                                        </svg>
-
-                                                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detail</a>
-                                                    </li>
-                                                </div>
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex items-center px-4 py-1">
                                                     @if($pm->hasilLayanan && $pm->hasilLayanan->path_file_hasil)
-
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
-                                                        </svg>
-                                                        <a href="#" 
-                                                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        Edit
-                                                        </a>
+                                                        @if($pm->hasilLayanan->status === 'pending')
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                            </svg>
+                                                            <a href="{{ route('kapokja.hasil-layanan.create', ['id' => $pm->id]) }}" 
+                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            Atur Status
+                                                            </a>
+                                                        @else
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
+                                                            </svg>
+                                                            <a href="#" 
+                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            Edit
+                                                            </a>
+                                                        @endif
                                                     @else
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                        <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                                                         </svg>
-                                                        <a href="{{ route('analis.hasil-layanan.create', ['id' => $pm->id]) }}" 
-                                                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        Unggah Hasil
-                                                        </a>
+                                                        <span class="ml-2 text-red-500">Hasil layanan belum diunggah</span>
                                                     @endif
                                                     </li>
                                                 </div>

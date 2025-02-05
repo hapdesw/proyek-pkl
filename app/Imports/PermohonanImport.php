@@ -23,7 +23,7 @@ class PermohonanImport implements ToModel
             'kategori_berbayar' => $row[2],
             'id_jenis_layanan' => $row[3],
             'deskripsi_keperluan' => $row[4],
-            'status_permohonan' => in_array($row[5], ['Diproses', 'Selesai']) ? $row[5] : 'Selesai',
+            'status_permohonan' => in_array($row[5], ['Diproses', 'Selesai Dibuat','Selesai Diambil', 'Batal']) ? $row[5] : 'Selesai Diambil',
             'tanggal_selesai' => !empty($row[6]) ? \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[6])) : null,
             'tanggal_diambil' => !empty($row[7]) ? \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[7])) : null,
             'id_pemohon' => $row[8],

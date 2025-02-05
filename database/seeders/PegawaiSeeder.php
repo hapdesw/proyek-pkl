@@ -21,6 +21,12 @@ class PegawaiSeeder extends Seeder
                 'peran_pegawai' => '0110',
             ],
             [
+                'nip' => '196912111993021001',
+                'id_user' => null,
+                'nama' => 'Nur Fitriyanto',
+                'peran_pegawai' => '0010',
+            ],
+            [
                 'nip' => '197801221998031001',
                 'id_user' => '3',
                 'nama' => 'Iis Widya Harmoko, S.Kom.',
@@ -111,7 +117,7 @@ class PegawaiSeeder extends Seeder
                     'nip' => $data['nip'],
                     'id_user' => $data['id_user'],
                     'nama' => $data['nama'],
-                    'peran_pegawai' => $data['peran_pegawai']
+                    'peran_pegawai' => $data['peran_pegawai'],
                 ]);
         }
     }
