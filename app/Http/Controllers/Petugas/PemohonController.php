@@ -12,8 +12,8 @@ class PemohonController extends Controller
      */
     public function index()
     {
-
-         return view('petugas.data-pemohon');
+        $pemohon = Pemohon::all();
+        return view('petugas.data-pemohon', compact('pemohon'));
     }
 
     /**

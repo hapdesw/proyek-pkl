@@ -27,6 +27,7 @@ Route::middleware(['auth', 'Petugas_1000'])->group(function () {
     Route::put('/petugas-layanan/kelola-layanan/update/{id}', [JenisLayananController::class, 'update'])->name('petugas.kelola-layanan.update'); 
     Route::delete('/petugas-layanan/kelola-layanan/destroy/{id}', [JenisLayananController::class, 'destroy'])->name('petugas.kelola-layanan.destroy'); 
     Route::get('/permohonan/filter', [PermohonanController::class, 'filter']);
+    Route::get('/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
     Route::get('/petugas-layanan/permohonan', [PermohonanController::class, 'index'])->name('petugas.permohonan'); 
     Route::get('/petugas-layanan/permohonan/create', [PermohonanController::class, 'create'])->name('petugas.permohonan.create'); 
     Route::get('/petugas-layanan/permohonan/edit/{id}', [PermohonanController::class, 'edit'])->name('petugas.permohonan.edit'); 

@@ -1,6 +1,5 @@
 <x-app-layout>
         <div class="mx-auto max-w-screen-xl px-4 lg:px-2"> 
-            
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
                 @if ($message = Session::get('success'))
                     <script>
@@ -21,8 +20,6 @@
                         });
                     </script>
                 @endif
-               
-
                 <div class="border-b border-gray-200 dark:border-gray-700">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
                         Permohonan
@@ -44,153 +41,46 @@
                     </div>
                     <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">                  
                         <div class="flex items-center space-x-3 w-full md:w-auto">
-                            <button id="actionsDropdownButton" data-dropdown-toggle="actionsDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-                                Pilih Bulan
-                                <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                </svg>
-                            </button>
-                            {{-- <div id="actionsDropdown" class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700">
-                                <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Pilih Bulan</h6>
-                                <ul class="space-y-2 text-sm" aria-labelledby="actionsDropdownButton">
-                                    <li class="flex items-center">
-                                        <input id="januari" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="januari" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Januari</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="februari" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="februari" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Februari</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="maret" type="checkbox"  class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="maret" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Maret</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="april" type="checkbox"  class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="april" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">April</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="mei" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="mei" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Mei</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="juni" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="juni" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Juni</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="juli" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="juli" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Juli</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="agustus" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="agustus" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Agustus</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="september" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="september" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">September</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="oktober" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="oktober" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Oktober</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="november" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="november" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">November</label>
-                                    </li>
-                                    <li class="flex items-center">
-                                        <input id="desember" type="checkbox" class="month-filter w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="desember" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Desember</label>
-                                    </li>
-                                </ul>
-                            </div> --}}
-                             <!-- Dropdown Filter Bulan -->
-                            <div class="mb-3">
-                                
-                                <div id="actionsDropdown" class="hidden p-3 bg-white shadow rounded-lg">
-                                    <h6 class="mb-3">Pilih Bulan</h6>
-                                    <ul class="list-unstyled">
+                            <div class="relative inline-block">
+                                <!-- Tombol Filter -->
+                                <button id="filterButton" data-dropdown-toggle="dropdownFilters" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                    <svg class="h-3.5 w-3.5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z"/>
+                                    </svg>                                      
+                                    Filter
+                                </button>
+                                <!-- Dropdown Filter -->
+                                <div id="dropdownFilters" style="display: none;" class="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-md p-4">
+                                    <h3 class="font-semibold mb-2">Pilih Bulan</h3>
+                                    <div class="grid grid-cols-2 gap-2">
                                         @php
                                             $months = [
-                                                'januari', 'februari', 'maret', 'april', 'mei', 'juni',
-                                                'juli', 'agustus', 'september', 'oktober', 'november', 'desember'
+                                                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                                                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
                                             ];
                                         @endphp
                                         @foreach ($months as $month)
-                                            <li class="form-check">
-                                                <input id="{{ $month }}" type="checkbox" class="month-filter form-check-input">
-                                                <label for="{{ $month }}" class="form-check-label">{{ ucfirst($month) }}</label>
-                                            </li>
+                                            <label class="flex items-center space-x-2">
+                                                <input type="checkbox" class="month-filter" value="{{ strtolower($month) }}">
+                                                <span>{{ $month }}</span>
+                                            </label>
                                         @endforeach
-                                    </ul>
+                                    </div>
+                            
+                                    <!-- Pilih Tahun -->
+                                    <h3 class="font-semibold mt-4 mb-2">Pilih Tahun</h3>
+                                    <select id="yearFilter" class="w-full p-2 border rounded">
+                                        <option value="">Semua Tahun</option>
+                                        <!-- Tahun akan diisi dengan JavaScript -->
+                                    </select>
+                            
+                                    <!-- Tombol Terapkan -->
+                                    <button id="applyFilter" class="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                                        Terapkan
+                                    </button>
                                 </div>
                             </div>
-                            <!-- JavaScript -->
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    document.querySelectorAll('.month-filter').forEach(checkbox => {
-                                        checkbox.addEventListener('change', function () {
-                                            const selectedMonths = getSelectedMonths();
-                                            applyFilter(selectedMonths);
-                                        });
-                                    });
 
-                                    function getSelectedMonths() {
-                                        const selectedMonths = [];
-                                        document.querySelectorAll('.month-filter:checked').forEach(checkbox => {
-                                            selectedMonths.push(checkbox.id);
-                                        });
-                                        return selectedMonths;
-                                    }
-
-                                    function applyFilter(selectedMonths) {
-                                        if (selectedMonths.length > 0) {
-                                            filterPermohonanByMonth(selectedMonths);
-                                        } else {
-                                            fetchAllPermohonan();
-                                        }
-                                    }
-
-                                    function filterPermohonanByMonth(months) {
-                                        fetch(`/permohonan/filter?months=${months.join(',')}`)
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                displayPermohonan(data);
-                                            })
-                                            .catch(error => console.error('Error:', error));
-                                    }
-
-                                    function fetchAllPermohonan() {
-                                        fetch('/petugas-layanan/permohonan')
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                displayPermohonan(data);
-                                            });
-                                    }
-
-                                    function displayPermohonan(data) {
-                                        let tableBody = document.getElementById('table-body');
-                                        tableBody.innerHTML = '';
-                                        data.forEach(permohonan => {
-                                            let row = `<tr>
-                                                <td>${permohonan.id}</td>
-                                                <td>${permohonan.tanggal_diajukan}</td>
-                                                <td>${permohonan.kategori}</td>
-                                                
-                                                <td>${permohonan.deskripsi_keperluan}</td>
-                                                <td>${permohonan.status_permohonan}</td>
-                                            </tr>`;
-                                            tableBody.innerHTML += row;
-                                        });
-                                    }
-                                });
-                            </script>
-                   
-                            <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
-                                Pilih Tahun
-                                <svg class="-mr-1 ml-1.5 w-5 h-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clip-rule="evenodd" fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
-                                </svg>
-                            </button>
                             <button id="filterDropdownButton" data-dropdown-toggle="filterDropdown" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" type="button">
                                 <svg class="h-3.5 w-3.5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 10V4a1 1 0 0 0-1-1H9.914a1 1 0 0 0-.707.293L5.293 7.207A1 1 0 0 0 5 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2M10 3v4a1 1 0 0 1-1 1H5m5 6h9m0 0-2-2m2 2-2 2"/>
@@ -208,6 +98,180 @@
                                 </a>    
                             </div>            
                         </div>
+                        <script>
+                        // document.addEventListener('DOMContentLoaded', function () {
+                        //     console.log("Script dimulai!");
+                        
+                        //     // Deklarasi elemen yang dibutuhkan
+                        //     const filterButton = document.getElementById('filterButton');
+                        //     const filterDropdown = document.getElementById('dropdownFilters');
+                        //     const applyFilterButton = document.getElementById('applyFilter');
+                        //     const monthCheckboxes = document.querySelectorAll('.month-filter');
+                        //     const yearSelect = document.getElementById('yearFilter');
+                        //     const tableBody = document.getElementById('table-body');
+                        
+                        //     // Toggle filter dropdown
+                        //     filterButton.addEventListener('click', function () {
+                        //         filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
+                        //     });
+                        
+                        //     document.addEventListener('click', function (event) {
+                        //         if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
+                        //             filterDropdown.classList.add('hidden');
+                        //         }
+                        //     });
+                        
+                        //     // Fetch available years
+                        //     fetch('/permohonan/available-years')
+                        //         .then(response => response.json())
+                        //         .then(years => {
+                        //             yearSelect.innerHTML = '<option value="">Pilih Tahun</option>';
+                        //             years.forEach(year => {
+                        //                 yearSelect.innerHTML += `<option value="${year}">${year}</option>`;
+                        //             });
+                        //         })
+                        //         .catch(error => console.error('Error fetching years:', error));
+                        
+                        //     // Function to get selected months
+                        //     function getSelectedMonths() {
+                        //         let selectedMonths = [];
+                        //         monthCheckboxes.forEach(checkbox => {
+                        //             if (checkbox.checked) {
+                        //                 selectedMonths.push(checkbox.value);
+                        //             }
+                        //         });
+                        //         return selectedMonths;
+                        //     }
+                        
+                        //     // Function to get selected year
+                        //     function getSelectedYear() {
+                        //         return yearSelect.value;
+                        //     }
+                        
+                        //     // Apply filter
+                        //     function applyFilter() {
+                        //         const selectedMonths = getSelectedMonths();
+                        //         const selectedYear = getSelectedYear();
+                        //         fetch(`/permohonan/filter?months=${selectedMonths.join(',')}&year=${selectedYear}`)
+                        //             .then(response => response.json())
+                        //             .then(data => {
+                        //                 updateTable(data);
+                        //             })
+                        //             .catch(error => console.error('Error:', error));
+                        //     }
+                        
+                        //     // Update table with filtered data
+                        //     function updateTable(data) {
+                        //         const tableBody = document.getElementById('table-body');
+                        //         tableBody.innerHTML = ''; // Clear table first
+                        //         data.forEach((pm, index) => {
+                        //             let row = `
+                        //                 <tr>
+                        //                     <td class="px-4 py-3">${index + 1}</td>
+                        //                     <td class="px-4 py-3">${pm.id}</td>
+                        //                     <td class="px-4 py-3">${pm.tanggal_diajukan}</td>
+                        //                     <td class="px-4 py-3">${pm.kategori_berbayar}</td>
+                                           
+                        //                     <td class="px-4 py-3">${pm.deskripsi_keperluan}</td>
+                        //                     <td class="px-4 py-3">${pm.status_permohonan}</td>
+                        //                 </tr>
+                        //             `;
+                        //             tableBody.innerHTML += row;
+                        //         });
+                        //     }
+                        
+                        //     // Apply filter when the button is clicked
+                        //     applyFilterButton.addEventListener('click', applyFilter);
+                        // });
+
+                        // ini versi 2
+                        document.addEventListener('DOMContentLoaded', function () {
+                        console.log("Script dimulai!");
+
+                        // Deklarasi elemen yang dibutuhkan
+                        const filterButton = document.getElementById('filterButton');
+                        const filterDropdown = document.getElementById('dropdownFilters');
+                        const applyFilterButton = document.getElementById('applyFilter');
+                        const monthCheckboxes = document.querySelectorAll('.month-filter');
+                        const yearSelect = document.getElementById('yearFilter');
+                        const tableRows = document.querySelectorAll('#table-body tr');
+
+                        // Toggle filter dropdown
+                        filterButton.addEventListener('click', function () {
+                            filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
+                        });
+
+                        document.addEventListener('click', function (event) {
+                            if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
+                                filterDropdown.classList.add('hidden');
+                            }
+                        });
+
+                        // Fetch available years
+                        fetch('/permohonan/available-years')
+                            .then(response => response.json())
+                            .then(years => {
+                                yearSelect.innerHTML = '<option value="">Pilih Tahun</option>';
+                                years.forEach(year => {
+                                    yearSelect.innerHTML += `<option value="${year}">${year}</option>`;
+                                });
+                            })
+                            .catch(error => console.error('Error fetching years:', error));
+
+                        // Function to get selected months
+                        function getSelectedMonths() {
+                            let selectedMonths = [];
+                            monthCheckboxes.forEach(checkbox => {
+                                if (checkbox.checked) {
+                                    selectedMonths.push(checkbox.value.toLowerCase());
+                                }
+                            });
+                            return selectedMonths;
+                        }
+
+                        // Function to get selected year
+                        function getSelectedYear() {
+                            return yearSelect.value;
+                        }
+
+                        // Apply filter
+                        function applyFilter() {
+                            const selectedMonths = getSelectedMonths();
+                            const selectedYear = getSelectedYear();
+
+                            tableRows.forEach(row => {
+                                const tanggalCell = row.children[2]?.innerText.trim(); // Ambil teks dari kolom tanggal
+                                if (!tanggalCell) return;
+
+                                const [day, month, year] = tanggalCell.split('/'); // Format: "dd/mm/yyyy"
+                                const bulanText = getMonthName(parseInt(month)); // Konversi angka ke teks
+
+                                const bulanMatch = selectedMonths.length === 0 || selectedMonths.includes(bulanText.toLowerCase());
+                                const tahunMatch = !selectedYear || selectedYear === year;
+
+                                if (bulanMatch && tahunMatch) {
+                                    row.style.display = ''; // Tampilkan baris jika cocok
+                                } else {
+                                    row.style.display = 'none'; // Sembunyikan baris jika tidak cocok
+                                }
+                            });
+                        }
+
+                        // Fungsi untuk mengonversi angka bulan ke nama bulan
+                        function getMonthName(monthNumber) {
+                            const monthNames = [
+                                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                            ];
+                            return monthNames[monthNumber - 1];
+                        }
+
+                        // Apply filter ketika tombol ditekan
+                        applyFilterButton.addEventListener('click', applyFilter);
+                    });
+
+                        </script>
+                        
                     </div>
                 </div>
                 {{-- Tabel --}}
@@ -575,4 +639,5 @@
                 </nav>
             </div>
         </div> 
+        
 </x-app-layout>

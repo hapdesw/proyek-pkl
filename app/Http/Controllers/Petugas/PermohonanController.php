@@ -32,22 +32,55 @@ class PermohonanController extends Controller
     
     public function filter(Request $request)
     {
+        Log::info('masuk fungsi filter');
         $months = explode(',', $request->query('months'));
-
+        $year = $request->query('year');
+    
         // Mapping nama bulan ke angka (1-12)
         $monthNumbers = [
             'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
             'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8,
             'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12
         ];
-
+    
         // Konversi nama bulan ke angka
         $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
-
-        // Ambil permohonan berdasarkan bulan yang dipilih
-        $permohonan = Permohonan::whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths)->get();
-
+    
+        // Query untuk filter
+        $query = Permohonan::query();
+    
+        // Filter berdasarkan bulan jika ada
+        Log::info('filter bulan masuk');
+        if (!empty($selectedMonths)) {
+            $query->whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths);
+        }
+    
+        // Filter berdasarkan tahun jika ada
+        if ($year) {
+            
+            $query->whereYear('tanggal_diajukan', $year);
+        }
+    
+        $permohonan = $query->get();
+    
         return response()->json($permohonan);
+    }
+    
+    
+    // Controller untuk mendapatkan daftar tahun yang ada di database
+    public function getAvailableYears()
+    {
+        Log::info('getAvailableYears dipanggil'); // Log saat method ini dipanggil
+        // dd('Controller getAvailableYears dipanggil');
+
+        $years = Permohonan::selectRaw('DISTINCT YEAR(tanggal_diajukan) AS year')
+            ->orderBy('year', 'DESC')
+            ->pluck('year')
+            ->toArray();
+
+        Log::info('Data tahun yang ditemukan:', $years); // Log hasil query
+
+        return response()->json($years);
     }
 
 
