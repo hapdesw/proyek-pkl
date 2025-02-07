@@ -173,11 +173,9 @@
                                     </td>  
                                     <td class="px-4 py-3 w-32">
                                         @if($pm->hasilLayanan)
-                                            <a href="{{ asset('storage/' . $pm->hasilLayanan->path_file_hasil) }}" 
-                                            class="btn btn-primary text-blue-700"
-                                            target="_blank">
+                                            <button onclick="window.open('{{ asset('storage/' . $pm->hasilLayanan->path_file_hasil) }}', '_blank')" class="px-2.5 py-0.5 bg-blue-700 text-white text-xs rounded hover:bg-blue-800 transition duration-300">
                                                 Lihat File
-                                            </a>
+                                            </button>
                                             <span class="text-xs text-gray-600">Diunggah oleh: </span>
                                             <span class="text-xs font-medium">{{ $pm->hasilLayanan->pegawai->nama }}</span>
                                         @else
@@ -193,22 +191,13 @@
                                         <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pm->id }}">
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex items-center px-4 py-1" >
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
-                                                        </svg>
-
-                                                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detail</a>
-                                                    </li>
-                                                </div>
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex items-center px-4 py-1">
                                                     @if($pm->hasilLayanan && $pm->hasilLayanan->path_file_hasil)
 
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                         </svg>
-                                                        <a href="#" 
+                                                        <a href="{{ route('analis.hasil-layanan.edit', ['id' => $pm->id]) }}" 
                                                         class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                         Edit
                                                         </a>
@@ -223,6 +212,46 @@
                                                     @endif
                                                     </li>
                                                 </div>
+                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <li class="flex items-center px-4 py-1">
+                                                        <form id="delete-form-{{ $pm->id }}" 
+                                                            action="{{ route('analis.hasil-layanan.destroy', $pm->id) }}" 
+                                                            method="POST" 
+                                                            class="flex items-center">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                                            </svg>
+                                                            
+                                                            <button type="button" 
+                                                                    onclick="confirmDelete({{ $pm->id }})" 
+                                                                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                                Hapus
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </div>
+
+                                                <script>
+                                                function confirmDelete(id) {
+                                                    Swal.fire({
+                                                        title: 'Apakah Anda yakin?',
+                                                        text: "Hasil layanan akan dihapus secara permanen!",
+                                                        icon: 'warning',
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: '#3085d6',
+                                                        cancelButtonColor: '#d33',
+                                                        confirmButtonText: 'Ya, hapus!',
+                                                        cancelButtonText: 'Batal'
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            document.getElementById('delete-form-' + id).submit();
+                                                        }
+                                                    });
+                                                }
+                                                </script>
                                             </ul>
                                         </div>
                                     </td>
