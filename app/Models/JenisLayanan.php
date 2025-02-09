@@ -17,7 +17,7 @@ class JenisLayanan extends Model
     protected $fillable = ['nama_jenis_layanan'];
 
     public function permohonan(){
-        return $this->hasMany(Permohonan::class, 'id_jenis_layanan', 'id')->withTrashed();
+        return $this->hasMany(Permohonan::class, 'id_jenis_layanan', 'id');
     }
 
 }

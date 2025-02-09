@@ -64,7 +64,11 @@
                                             <div class="grid grid-cols-1 gap-4">
                                                 <!-- Nama Layanan-->
                                                 <div>
-                                                    <label for="nama_jenis_layanan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Layanan</label>
+                                                    <label for="nama_jenis_layanan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                        Nama Layanan
+                                                        <span class="text-redNew !important">*</span>
+                                                    </label>
+                                                   
                                                     <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_jenis_layanan" name="nama_jenis_layanan" required>
                                                 </div>
                                             </div>
@@ -85,7 +89,7 @@
             {{-- Tabel --}}
             <div class="overflow-x-auto  min-h-screen">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-4 py-3">No.</th>
                             <th scope="col" class="px-4 py-3">Nama Jenis Layanan</th> 
@@ -93,10 +97,11 @@
                         </tr>
                     </thead>
                     <tbody id="table-body">
-                        @forelse ($jenislayanan as $layanan)
+                        @forelse ($jenislayanan as  $index => $layanan)
 
                             <tr class="border-b dark:border-gray-700 text-darkKnight">
-                                <td class="px-4 py-3">{{ $loop->iteration }}</td>
+                               
+                                <td class="px-4 py-3">{{ $jenislayanan->firstItem() + $index }}</td>
                                 <td class="px-4 py-3">{{ $layanan->nama_jenis_layanan }}</td>
                                 <td class="px-4 py-3 flex items-center">
                                     <button id="actions-dropdown-button-{{ $layanan->id }}" data-dropdown-toggle="actions-dropdown-{{ $layanan->id }}" class="inline-flex items-start p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
@@ -151,7 +156,11 @@
                                                     <div class="grid grid-cols-1 gap-4">
                                                         <!-- Nama Layanan-->
                                                         <div>
-                                                            <label for="nama_jenis_layanan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Layanan</label>
+                                                            <label for="nama_jenis_layanan" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                                Nama Layanan
+                                                                <span class="text-redNew !important">*</span>
+                                                            </label>
+                                                            
                                                             <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_jenis_layanan" name="nama_jenis_layanan" value="{{ $layanan->nama_jenis_layanan }}" required>
                                                         </div>
                                                     </div>
@@ -194,46 +203,55 @@
                     
                 </table>
             </div>
-            <nav class="flex flex-col  md:flex-row  justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    Showing
-                    <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4">
+                <span class="text-sm font-normal text-gray-500">
+                    Showing 
+                    <span class="font-semibold text-gray-900">
+                        {{ $jenislayanan->firstItem() }}-{{$jenislayanan->lastItem() }} 
+                    </span>
                     of
-                    <span class="font-semibold text-gray-900 dark:text-white">1000</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">
+                    {{ $jenislayanan->total() }}
+                    </span>
                 </span>
+                
+                @if ($jenislayanan->hasPages())
                 <ul class="inline-flex items-stretch -space-x-px">
                     <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <a href="{{ $jenislayanan->previousPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $jenislayanan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
                             <span class="sr-only">Previous</span>
-                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
                             </svg>
                         </a>
                     </li>
+
+                    @foreach ($jenislayanan->getUrlRange(1, $jenislayanan->lastPage()) as $page => $url)
+                        @if ($page == 1 || $page == $jenislayanan->lastPage() || ($page >= $jenislayanan->currentPage() - 1 && $page <= $jenislayanan->currentPage() + 1))
+                            <li>
+                                <a href="{{ $url }}" 
+                                class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
+                                {{ $jenislayanan->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
+                                    {{ $page }}
+                                </a>
+                            </li>
+                        @elseif ($page == $jenislayanan->currentPage() - 2 || $page == $jenislayanan->currentPage() + 2)
+                            <li>
+                                <a class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">...</a>
+                            </li>
+                        @endif
+                    @endforeach
+
                     <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                    </li>
-                    <li>
-                        <a href="#" aria-current="page" class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <a href="{{ $jenislayanan->nextPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$jenislayanan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
                             <span class="sr-only">Next</span>
-                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
                             </svg>
                         </a>
                     </li>
                 </ul>
+                @endif
             </nav>
         </div>
     </div> 

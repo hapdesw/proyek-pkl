@@ -13,7 +13,8 @@ class JenisLayananController extends Controller
      */
     public function index()
     {
-        $jenislayanan = JenisLayanan::all();
+       
+        $jenislayanan = JenisLayanan::paginate(15); 
         return view('petugas.kelola-jenis-layanan', compact('jenislayanan'));
     }
 

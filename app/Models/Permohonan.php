@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Permohonan extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $table = 'permohonan';
     protected $primaryKey = 'id';
@@ -21,6 +20,8 @@ class Permohonan extends Model
         'status_permohonan',
         'tanggal_selesai',
         'tanggal_diambil',
+        'tanggal_rencana',
+        'tanggal_pengumpulan',
         'id_pemohon'];
 
     public function pemohon(){

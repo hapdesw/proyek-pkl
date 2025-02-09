@@ -14,7 +14,7 @@ class Disposisi extends Model
     protected $fillable = ['id_permohonan', 'nip_pegawai1', 'nip_pegawai2', 'nip_pegawai3', 'nip_pegawai4', 'tanggal_disposisi'];
 
     public function permohonan(){
-        return $this->belongsTo(Permohonan::class, 'id_permohonan', 'id')->withTrashed();
+        return $this->belongsTo(Permohonan::class, 'id_permohonan', 'id');
     }
 
     public function pegawai1(){

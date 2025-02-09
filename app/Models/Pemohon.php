@@ -14,6 +14,6 @@ class Pemohon extends Model
     protected $fillable = ['nama_pemohon', 'instansi', 'no_kontak', 'email'];
 
     public function permohonan(){
-        return $this->hasMany(Permohonan::class, 'id_pemohon', 'id')->withTrashed();
+        return $this->hasMany(Permohonan::class, 'id_pemohon', 'id');
     }
 }

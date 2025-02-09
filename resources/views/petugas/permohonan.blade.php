@@ -99,92 +99,8 @@
                             </div>            
                         </div>
                         <script>
-                        // document.addEventListener('DOMContentLoaded', function () {
-                        //     console.log("Script dimulai!");
-                        
-                        //     // Deklarasi elemen yang dibutuhkan
-                        //     const filterButton = document.getElementById('filterButton');
-                        //     const filterDropdown = document.getElementById('dropdownFilters');
-                        //     const applyFilterButton = document.getElementById('applyFilter');
-                        //     const monthCheckboxes = document.querySelectorAll('.month-filter');
-                        //     const yearSelect = document.getElementById('yearFilter');
-                        //     const tableBody = document.getElementById('table-body');
-                        
-                        //     // Toggle filter dropdown
-                        //     filterButton.addEventListener('click', function () {
-                        //         filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
-                        //     });
-                        
-                        //     document.addEventListener('click', function (event) {
-                        //         if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
-                        //             filterDropdown.classList.add('hidden');
-                        //         }
-                        //     });
-                        
-                        //     // Fetch available years
-                        //     fetch('/permohonan/available-years')
-                        //         .then(response => response.json())
-                        //         .then(years => {
-                        //             yearSelect.innerHTML = '<option value="">Pilih Tahun</option>';
-                        //             years.forEach(year => {
-                        //                 yearSelect.innerHTML += `<option value="${year}">${year}</option>`;
-                        //             });
-                        //         })
-                        //         .catch(error => console.error('Error fetching years:', error));
-                        
-                        //     // Function to get selected months
-                        //     function getSelectedMonths() {
-                        //         let selectedMonths = [];
-                        //         monthCheckboxes.forEach(checkbox => {
-                        //             if (checkbox.checked) {
-                        //                 selectedMonths.push(checkbox.value);
-                        //             }
-                        //         });
-                        //         return selectedMonths;
-                        //     }
-                        
-                        //     // Function to get selected year
-                        //     function getSelectedYear() {
-                        //         return yearSelect.value;
-                        //     }
-                        
-                        //     // Apply filter
-                        //     function applyFilter() {
-                        //         const selectedMonths = getSelectedMonths();
-                        //         const selectedYear = getSelectedYear();
-                        //         fetch(`/permohonan/filter?months=${selectedMonths.join(',')}&year=${selectedYear}`)
-                        //             .then(response => response.json())
-                        //             .then(data => {
-                        //                 updateTable(data);
-                        //             })
-                        //             .catch(error => console.error('Error:', error));
-                        //     }
-                        
-                        //     // Update table with filtered data
-                        //     function updateTable(data) {
-                        //         const tableBody = document.getElementById('table-body');
-                        //         tableBody.innerHTML = ''; // Clear table first
-                        //         data.forEach((pm, index) => {
-                        //             let row = `
-                        //                 <tr>
-                        //                     <td class="px-4 py-3">${index + 1}</td>
-                        //                     <td class="px-4 py-3">${pm.id}</td>
-                        //                     <td class="px-4 py-3">${pm.tanggal_diajukan}</td>
-                        //                     <td class="px-4 py-3">${pm.kategori_berbayar}</td>
-                                           
-                        //                     <td class="px-4 py-3">${pm.deskripsi_keperluan}</td>
-                        //                     <td class="px-4 py-3">${pm.status_permohonan}</td>
-                        //                 </tr>
-                        //             `;
-                        //             tableBody.innerHTML += row;
-                        //         });
-                        //     }
-                        
-                        //     // Apply filter when the button is clicked
-                        //     applyFilterButton.addEventListener('click', applyFilter);
-                        // });
 
-                        // ini versi 2
+                        // ini script untuk filter
                         document.addEventListener('DOMContentLoaded', function () {
                         console.log("Script dimulai!");
 
@@ -217,6 +133,11 @@
                                 });
                             })
                             .catch(error => console.error('Error fetching years:', error));
+                            
+                            fetch('/permohonan/filter?months=Januari,Februari&year=2024')
+                                .then(response => response.json())
+                                .then(data => console.log(data))
+                                .catch(error => console.error('Error:', error));
 
                         // Function to get selected months
                         function getSelectedMonths() {
@@ -292,11 +213,11 @@
                             </tr>
                         </thead>
                         <tbody id="table-body">
-                            @forelse ($permohonan as $pm)
+                            @forelse ($permohonan as $index => $pm)
 
                                 <tr class="border-b dark:border-gray-700 text-darkKnight">
-                                    <td class="px-4 py-3">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-3">{{ $pm->id }}</td>
+                                    <td class="px-4 py-3">{{ $permohonan->firstItem() + $index }}</td>
+                                    <td class="px-4 py-3">{{ $pm->id}}</td> <!-- ID berdasarkan urutan -->
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
                                     <td class="px-4 py-3">{{ $pm->jenisLayanan->nama_jenis_layanan}}</td>
@@ -404,7 +325,7 @@
                                                         function confirmDelete(id) {
                                                             Swal.fire({
                                                                 title: 'Apakah Anda yakin?',
-                                                                text: "Data permohonan dengan ID {{$pm->id}} akan dihapus secara permanen!",
+                                                                text: "Data permohonan akan dihapus secara permanen!",
                                                                 icon: 'warning',
                                                                 showCancelButton: true,
                                                                 confirmButtonColor: '#3085d6',
@@ -438,18 +359,22 @@
                                             <button onclick="showDetail({{ $pm->id }})"></button>
                                             <!-- Simpan data dalam atribut data- -->
                                             @php
-                                                $tanggalSelesai = $pm->tanggal_selesai;
-                                                $tanggalDiambil = $pm->tanggal_diambil;
+                                                $tanggalDiajukan = \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y');
+                                                $tanggalSelesai =\Carbon\Carbon::parse($pm->tanggal_selesai)->format('d/m/Y');
+                                                $tanggalDiambil = \Carbon\Carbon::parse($pm->tanggal_diambil)->format('d/m/Y');
+                                                $tanggalRencana = \Carbon\Carbon::parse($pm->tanggal_rencana)->format('d/m/Y');
+                                                $tanggalPengumpulan = \Carbon\Carbon::parse($pm->tanggal_pengumpulan)->format('d/m/Y');
                                             @endphp
                                             <div id="permohonan-{{ $pm->id }}" class="hidden"
-                                                data-id="{{ $pm->id }}"
-                                                data-tgl-diajukan="{{ $pm->tanggal_diajukan }}"
+                                                data-id="{{ $pm->id}}"
+                                                data-tgl-diajukan="{{ $tanggalDiajukan }}"
                                                 data-kategori="{{ $pm->kategori_berbayar }}"
                                                 data-jenis-layanan="{{ $pm->jenisLayanan->nama_jenis_layanan ?? 'Tidak Diketahui' }}"
                                                 data-deskripsi="{{ $pm->deskripsi_keperluan }}"
                                                 data-disposisi1="{{$pm->disposisi->pegawai1->nama ?? 'Belum diatur' }}"
                                                 data-disposisi2="{{ $pm->disposisi->pegawai2->nama ?? 'Belum diatur' }}"
                                                 data-disposisi3="{{ $pm->disposisi->pegawai3->nama ?? 'Belum diatur' }}"
+                                                data-disposisi4="{{ $pm->disposisi->pegawai4->nama ?? 'Belum diatur' }}"
                                                 data-tgl-disposisi="{{ $pm->disposisi->tanggal_disposisi ?? 'Belum Diatur' }}"
                                                 data-pemohon="{{ $pm->pemohon->nama_pemohon ?? 'Tidak Diketahui' }}"
                                                 data-instansi="{{ $pm->pemohon->instansi ?? 'Tidak Diketahui' }}"
@@ -457,38 +382,87 @@
                                                 data-email="{{ $pm->pemohon->email ?? 'Tidak Ada' }}"
                                                 data-tgl-selesai="{{ $tanggalSelesai ?? 'Belum Diatur' }}"
                                                 data-tgl-diambil="{{ $tanggalDiambil ?? 'Belum Diatur' }}"
+                                                data-tgl-rencana="{{ $tanggalRencana ?? 'Belum Diatur' }}"
+                                                data-tgl-pengumpulan="{{ $tanggalPengumpulan ?? 'Belum Diatur' }}"
                                                 data-status="{{ $pm->status_permohonan }}">
                                             </div>
                                            
-                                                {{-- <div class="relative bg-yellow-400 w-auto h-auto max-w-screen-xl mx-auto"> --}}
-                                                    <div class="relative bg-white p-5 mt-10 w-full max-h-fit max-w-fit rounded-lg shadow-lg">
-                                                        <button type="button" class="absolute top-3 right-2.5 text-gray-400" data-modal-toggle="add-modal">✖</button>
-                                                        <div class="border-b border-gray-200 dark:border-gray-700">
-                                                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
-                                                                Detail Permohonan
-                                                            </h3>
-                                                        </div>
-                                                       
-                                                        <!-- ID Permohonan-->
-                                                        <p class="mb-2"><strong>ID Permohonan:</strong> <span id="detail-id"></span></p>
-                                                        <p class="mb-2"><strong>Tanggal Diajukan:</strong> <span id="detail-tgl-diajukan"></span></p>
-                                                        <p class="mb-2"><strong>Kategori Layanan:</strong> <span id="detail-kategori"></span></p>
-                                                        <p class="mb-2"><strong>Jenis Layanan:</strong> <span id="detail-jenis-layanan"></span></p>
-                                                        <p class="mb-2"><strong>Deskripsi Keperluan:</strong> <span id="detail-deskripsi"></span></p>
-                                                        <p class="mb-2"><strong>Disposisi 1:</strong> <span id="detail-disposisi1"></span></p>
-                                                        <p class="mb-2"><strong>Disposisi 2:</strong> <span id="detail-disposisi2"></span></p>
-                                                        <p class="mb-2"><strong>Disposisi 3:</strong> <span id="detail-disposisi3"></span></p>
-                                                        <p class="mb-2"><strong>Tanggal Disposisi:</strong> <span id="detail-tgl-disposisi"></span></p>
-                                                        <p class="mb-2"><strong>Pemohon:</strong> <span id="detail-pemohon"></span></p>
-                                                        <p class="mb-2"><strong>Instansi:</strong> <span id="detail-instansi"></span></p>
-                                                        <p class="mb-2"><strong>No HP:</strong> <span id="detail-hp"></span></p>
-                                                        <p class="mb-2"><strong>Email:</strong> <span id="detail-email"></span></p>
-                                                        <p class="mb-2"><strong>Tanggal Selesai:</strong> <span id="detail-tgl-selesai"></span>
-                                                        <p class="mb-2"><strong>Tanggal Diambil:</strong> <span id="detail-tgl-diambil"></span>
-                                                        <p class="mb-2"><strong>Status Permohonan:</strong> <span id="detail-status"></span></p>
-                                                      
+                                            <div class="fixed inset-0 flex items-center justify-center p-4">
+                                                <div class="relative bg-white p-5 w-full max-w-3xl rounded-lg shadow-lg max-h-screen overflow-y-auto">
+                                                    <button type="button" class="absolute top-3 right-2.5 text-gray-400" data-modal-toggle="add-modal">✖</button>
+                                            
+                                                    <div class="border-b border-gray-200 dark:border-gray-700 pb-3">
+                                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
+                                                            Detail Permohonan
+                                                        </h3>
                                                     </div>
-                                                {{-- </div>  --}}
+                                            
+                                                    <div class="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 p-4 text-gray-700">
+                                                        <p class="font-semibold text-gray-600 self-start">ID Permohonan</p>
+                                                        <p id="detail-id" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Diajukan</p>
+                                                        <p id="detail-tgl-diajukan" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Kategori Layanan</p>
+                                                        <p id="detail-kategori" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Jenis Layanan</p>
+                                                        <p id="detail-jenis-layanan" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Deskripsi Keperluan</p>
+                                                        <p id="detail-deskripsi" class="text-gray-800 break-words"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Disposisi 1</p>
+                                                        <p id="detail-disposisi1" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Disposisi 2</p>
+                                                        <p id="detail-disposisi2" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Disposisi 3</p>
+                                                        <p id="detail-disposisi3" class="text-gray-800"></p>
+
+                                                        <p class="font-semibold text-gray-600 self-start">Disposisi 4</p>
+                                                        <p id="detail-disposisi4" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Disposisi</p>
+                                                        <p id="detail-tgl-disposisi" class="text-gray-800"></p>
+
+                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Selesai</p>
+                                                        <p id="detail-tgl-selesai" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Diambil</p>
+                                                        <p id="detail-tgl-diambil" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Rencana Pengumpulan Skripsi</p>
+                                                        <p id="detail-tgl-rencana" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Pengumpulan Skripsi</p>
+                                                        <p id="detail-tgl-pengumpulan" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Status Permohonan</p>
+                                                        <p id="detail-status" class="text-gray-800"></p>
+                                            
+                                                        <!-- Garis Pemisah -->
+                                                        <div class="border-b-2 border-gray-300 my-2 col-span-2"></div>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Pemohon</p>
+                                                        <p id="detail-pemohon" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Instansi</p>
+                                                        <p id="detail-instansi" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">No HP</p>
+                                                        <p id="detail-hp" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-600 self-start">Email</p>
+                                                        <p id="detail-email" class="text-gray-800"></p>
+                                            
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
                                             </div>
                                         </div> 
                                         <script>
@@ -508,6 +482,7 @@
                                                 document.getElementById('detail-disposisi1').textContent = permohonan.getAttribute('data-disposisi1');
                                                 document.getElementById('detail-disposisi2').textContent = permohonan.getAttribute('data-disposisi2');
                                                 document.getElementById('detail-disposisi3').textContent = permohonan.getAttribute('data-disposisi3');
+                                                document.getElementById('detail-disposisi4').textContent = permohonan.getAttribute('data-disposisi4');
                                                 document.getElementById('detail-tgl-disposisi').textContent = permohonan.getAttribute('data-tgl-disposisi');
                                                 document.getElementById('detail-pemohon').textContent = permohonan.getAttribute('data-pemohon');
                                                 document.getElementById('detail-instansi').textContent = permohonan.getAttribute('data-instansi');
@@ -515,13 +490,37 @@
                                                 document.getElementById('detail-email').textContent = permohonan.getAttribute('data-email');
                                                 document.getElementById('detail-tgl-selesai').textContent = permohonan.getAttribute('data-tgl-selesai');
                                                 document.getElementById('detail-tgl-diambil').textContent = permohonan.getAttribute('data-tgl-diambil');
+                                                document.getElementById('detail-tgl-rencana').textContent = permohonan.getAttribute('data-tgl-rencana');
+                                                document.getElementById('detail-tgl-pengumpulan').textContent = permohonan.getAttribute('data-tgl-pengumpulan');
                                                 document.getElementById('detail-status').textContent = permohonan.getAttribute('data-status');
                                                 
+                                                const status = permohonan.getAttribute('data-status');
+                                                const statusElement = document.getElementById('detail-status');
+
+                                                // Mapping status ke warna dan gaya yang sesuai
+                                                let statusHTML = '';
+                                                if (status === 'Diproses') {
+                                                    statusHTML = '<span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300 inline-block">' + status + '</span>';
+                                                } else if (status === 'Selesai Dibuat') {
+                                                    statusHTML = '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 inline-block">' + status + '</span>';
+                                                } else if (status === 'Selesai Diambil') {
+                                                    statusHTML = '<span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 inline-block">' + status + '</span>';
+                                                } else if (status === 'Batal') {
+                                                    statusHTML = '<span class="bg-red-100 text-red-800 text-xs font-medium px-3 py-1 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400 inline-block">' + status + '</span>';
+                                                } else {
+                                                    statusHTML = '<span class="text-gray-500">Status Tidak Diketahui</span>';
+                                                }
+
+                                                statusElement.innerHTML = statusHTML;
+                                                
+
                                                 // Tampilkan modal
                                                 document.getElementById('add-modal').classList.remove('hidden');
                                                
                                             }
                                             
+                                            
+
                                       
                                             function updateStatus(id, status) {
                                                 Swal.fire({
@@ -580,7 +579,7 @@
                                 </tr> 
                             @empty
                             <tr>
-                                <td colspan="10" class="text-center align-middle h-20">Tidak ada permohonan</td>
+                                <td colspan="10" class="text-center align-middle h-20">Tidak ada data permohonan</td>
                             </tr>
                             @endforelse
 

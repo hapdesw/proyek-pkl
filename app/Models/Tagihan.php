@@ -13,7 +13,7 @@ class Tagihan extends Model
     protected $fillable = ['id_permohonan', 'nama_file_tagihan', 'path_file_tagihan'];
 
     public function permohonan(){
-        return $this->belongsTo(Permohonan::class, 'id_permohonan', 'id')->withTrashed();
+        return $this->belongsTo(Permohonan::class, 'id_permohonan', 'id');
     }
 
     public function kuitansi(){

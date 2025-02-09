@@ -84,8 +84,6 @@ class PermohonanController extends Controller
     }
 
 
-
-
     /**
      * Show the form for creating a new resource.
      */
@@ -114,6 +112,8 @@ class PermohonanController extends Controller
                 'deskripsi' => 'required|string',
                 'tgl_selesai' => 'nullable|date',
                 'tgl_diambil' => 'nullable|date',
+                'tgl_rencana' => 'nullable|date',
+                'tgl_pengumpulan' => 'nullable|date',
                 'nama_pemohon' => 'required|string',
                 'instansi' => 'required|string',
                 'no_hp' => 'required|string',
@@ -142,6 +142,8 @@ class PermohonanController extends Controller
                 'deskripsi_keperluan' => $request->deskripsi,
                 'tanggal_selesai' => $request->tgl_selesai,
                 'tanggal_diambil' => $request->tgl_diambil,
+                'tanggal_rencana' => $request->tgl_rencana,
+                'tanggal_pengumpulan' => $request->tgl_pengumpulan,
                 'id_pemohon' => $pemohon->id,
             ]);
     
@@ -176,10 +178,12 @@ class PermohonanController extends Controller
         $permohonan = Permohonan::find($id); 
         $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
         $nextID = $permohonanIDLast + 1;
+        // $permohonanList = Permohonan::orderBy('id')->get();
+        // $nextID = $permohonanList->count() + 1; // Hitung jumlah permohonan yang ada dan tambah 1
         $jenisLayanan = JenisLayanan::all();
         $pemohon = Pemohon::all();
 
-        return view('petugas.edit-permohonan', compact('permohonan', 'nextID', 'jenisLayanan', 'pemohon'));
+        return view('petugas.edit-permohonan', compact('permohonan', 'nextID','jenisLayanan', 'pemohon'));
     }
 
     /**
@@ -200,6 +204,8 @@ class PermohonanController extends Controller
                 'deskripsi' => 'required|string',
                 'tgl_selesai_dibuat' => 'nullable|date',
                 'tgl_selesai_diambil' => 'nullable|date',
+                'rencana_pengumpulan' => 'nullable|date',
+                'tgl_pengumpulan' => 'nullable|date',
                 
                 // Validasi data pemohon
                 'nama_pemohon' => 'required|string',
@@ -241,6 +247,8 @@ class PermohonanController extends Controller
                 'deskripsi_keperluan' => $request->deskripsi,
                 'tanggal_selesai' => $request->tgl_selesai_dibuat,
                 'tanggal_diambil' => $request->tgl_selesai_diambil,
+                'tanggal_rencana' => $request->rencana_pengumpulan,
+                'tanggal_pengumpulan' => $request->tgl_pengumpulan,
             ]);
 
             // Tentukan status permohonan

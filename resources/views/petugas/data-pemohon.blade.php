@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="mx-auto max-w-screen-xl px-4 lg:px-12"> 
-        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-24 mr-24 flex flex-col">
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-16 mr-16 flex flex-col">
             @if ($message = Session::get('success'))
                 <script>
                     Swal.fire({
@@ -86,75 +86,101 @@
             </div>
             {{-- Tabel --}}
             <div class="overflow-x-auto  min-h-screen">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-4 py-3">No.</th>
-                            <th scope="col" class="px-4 py-3">Nama Pemohon</th>
-                            <th scope="col" class="px-4 py-3">Instansi</th> 
-                            <th scope="col" class="px-4 py-3">No. Hp</th> 
-                            <th scope="col" class="px-4 py-3">Email</th> 
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        @forelse ($pemohon as $pmh)
-                            <tr class="border-b dark:border-gray-700 text-darkKnight">
-                                <td class="px-4 py-3">{{ $loop->iteration }}</td>
-                                <td class="px-4 py-3">{{ $pmh->nama_pemohon}}</td>
-                                <td class="px-4 py-3">{{ $pmh->instansi}}</td>
-                                <td class="px-4 py-3">{{ $pmh->no_kontak}}</td>
-                                <td class="px-4 py-3">{{ $pmh->email}}</td>
-                                
-                            </tr> 
-                        @empty
+                @php
+                $displayedNames = [];
+            @endphp
+            
+            <table class="w-full text-sm text-left">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">No.</th>
+                        <th scope="col" class="px-4 py-3">Nama Pemohon</th>
+                        <th scope="col" class="px-4 py-3">Instansi</th> 
+                        <th scope="col" class="px-4 py-3">No. Hp</th> 
+                        <th scope="col" class="px-4 py-3">Email</th> 
+                        <th scope="col" class="px-4 py-3">Total Permohonan</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($pemohon as $index => $pmh)
+                        <tr class="border-b dark:border-gray-700 text-darkKnight">
+                            <td class="px-4 py-3">{{ $pemohon->firstItem() + $index }}</td>
+                            <td class="px-4 py-3">{{ $pmh->nama_pemohon }}</td>
+                            <td class="px-4 py-3">{{ $pmh->instansi }}</td>
+                            <td class="px-4 py-3">
+                                @if($pmh->no_kontak)
+                                    {{ $pmh->no_kontak }}
+                                @else
+                                    <span class="text-red-500">Tidak ada</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3">
+                                @if($pmh->email)
+                                    {{ $pmh->email }}
+                                @else
+                                    <span class="text-red-500">Tidak ada</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-3">{{ $pmh->total_permohonan }}</td>
+                        </tr> 
+                    @empty
                         <tr>
                             <td colspan="10" class="text-center align-middle h-20">Tidak ada data pemohon</td>
                         </tr>
-                        @endforelse
-                    </tbody>
-                    
-                </table>
+                    @endforelse
+                </tbody>
+            </table>
+          
             </div>
-            <nav class="flex flex-col  md:flex-row  justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
-                <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                    Showing
-                    <span class="font-semibold text-gray-900 dark:text-white">1-10</span>
+            <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4">
+                <span class="text-sm font-normal text-gray-500">
+                    Showing 
+                    <span class="font-semibold text-gray-900">
+                        {{ $pemohon->firstItem() }}-{{ $pemohon->lastItem() }} 
+                    </span>
                     of
-                    <span class="font-semibold text-gray-900 dark:text-white">1000</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">
+                    {{ $pemohon->total() }}
+                    </span>
                 </span>
+                
+                @if ($pemohon->hasPages())
                 <ul class="inline-flex items-stretch -space-x-px">
                     <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <a href="{{ $pemohon->previousPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $pemohon->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
                             <span class="sr-only">Previous</span>
-                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
                             </svg>
                         </a>
                     </li>
+
+                    @foreach ($pemohon->getUrlRange(1, $pemohon->lastPage()) as $page => $url)
+                        @if ($page == 1 || $page == $pemohon->lastPage() || ($page >= $pemohon->currentPage() - 1 && $page <= $pemohon->currentPage() + 1))
+                            <li>
+                                <a href="{{ $url }}" 
+                                class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
+                                {{ $pemohon->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
+                                    {{ $page }}
+                                </a>
+                            </li>
+                        @elseif ($page == $pemohon->currentPage() - 2 || $page == $pemohon->currentPage() + 2)
+                            <li>
+                                <a class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">...</a>
+                            </li>
+                        @endif
+                    @endforeach
+
                     <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                    </li>
-                    <li>
-                        <a href="#" aria-current="page" class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-                    </li>
-                    <li>
-                        <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                        <a href="{{ $pemohon->nextPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$pemohon->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
                             <span class="sr-only">Next</span>
-                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
                             </svg>
                         </a>
                     </li>
                 </ul>
+                @endif
             </nav>
         </div>
     </div> 

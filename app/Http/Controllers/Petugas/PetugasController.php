@@ -27,13 +27,35 @@ class PetugasController extends Controller
             $rekapPerBulan['permohonan'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)->count();
         }
 
-        // Menghitung jumlah pemohon per bulan
-        for ($bulan = 1; $bulan <= 12; $bulan++) {
-            $rekapPerBulan['pemohon'][$bulan - 1] = Pemohon::whereHas('permohonan', function ($query) use ($bulan) {
-                $query->whereMonth('tanggal_diajukan', $bulan);
-            })->count();
-        }
+       // Menyiapkan set untuk menyimpan pemohon unik yang sudah terhitung
+        $uniquePemohon = [];
 
+        // Loop setiap bulan untuk menghitung permohonan dan pemohon unik
+        for ($bulan = 1; $bulan <= 12; $bulan++) {
+            // Hitung jumlah permohonan di bulan ini
+            $rekapPerBulan['permohonan'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)->count();
+
+            // Ambil daftar pemohon yang mengajukan permohonan di bulan ini
+            $pemohonBulanIni = Pemohon::whereHas('permohonan', function ($query) use ($bulan) {
+                $query->whereMonth('tanggal_diajukan', $bulan);
+            })->get();
+
+            // Hitung hanya pemohon yang belum pernah muncul sebelumnya
+            $newPemohonCount = 0;
+            foreach ($pemohonBulanIni as $pemohon) {
+                // Gunakan kombinasi nama & instansi sebagai identitas unik pemohon
+                $identifier = strtolower(trim($pemohon->nama)) . '|' . strtolower(trim($pemohon->instansi));
+
+                if (!in_array($identifier, $uniquePemohon)) {
+                    $uniquePemohon[] = $identifier;
+                    $newPemohonCount++;
+                }
+            }
+
+            // Simpan jumlah pemohon baru di bulan ini
+            $rekapPerBulan['pemohon'][$bulan - 1] = $newPemohonCount;
+        }
+        
        // Menghitung jumlah jenis layanan per bulan
         for ($bulan = 1; $bulan <= 12; $bulan++) {
             $rekapPerBulan['jenis_layanan_berbayar'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
