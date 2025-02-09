@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Permohonan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 
 class HasilLayananController extends Controller
 {
@@ -63,23 +66,31 @@ class HasilLayananController extends Controller
             'file_hasil' => 'required|mimes:pdf|max:10240', 
         ]);
 
-        if ($request->hasFile('file_hasil') && $request->file('file_hasil')->isValid()) {
-            $file = $request->file('file_hasil');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            
-            $path = $file->storeAs('hasil_layanan', $filename, 'public');
+        DB::beginTransaction();
 
-            HasilLayanan::create([
-                'id_permohonan' => $request->id_permohonan,
-                'nama_file_hasil' => $filename,
-                'path_file_hasil' => $path,
-                'pengunggah' => Auth::user()->pegawai->nip,
-                'created_at' => now()
-            ]);
+        try{
+            if ($request->hasFile('file_hasil') && $request->file('file_hasil')->isValid()) {
+                $file = $request->file('file_hasil');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                
+                $path = $file->storeAs('hasil_layanan', $filename, 'public');
+    
+                HasilLayanan::create([
+                    'id_permohonan' => $request->id_permohonan,
+                    'nama_file_hasil' => $filename,
+                    'path_file_hasil' => $path,
+                    'pengunggah' => Auth::user()->pegawai->nip,
+                    'created_at' => now()
+                ]);
+                
+                DB::commit();
 
-            return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diunggah!');
+                return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diunggah!');
+            }
+        } catch (\Exception $e){
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'File gagal diunggah. ' . $e->getMessage()]);
         }
-        return redirect()->back()->with('error', 'File gagal diunggah. Pastikan file valid.');
     }
 
     public function storeStatusKapokja(Request $request)
@@ -90,49 +101,100 @@ class HasilLayananController extends Controller
             'koreksi' => 'nullable|required_if:status,revisi|max:500',
         ]);
         
-        $hasilLayanan = HasilLayanan::where('id_permohonan', $request->id_permohonan)->first();
+        DB::beginTransaction();
 
-        if (!$hasilLayanan) {
-            return redirect()->back()->with('error', 'Data hasil layanan tidak ditemukan.');
+        try{
+            $hasilLayanan = HasilLayanan::where('id_permohonan', $request->id_permohonan)->first();
+    
+            if (!$hasilLayanan) {
+                return redirect()->back()->with('error', 'Data hasil layanan tidak ditemukan.');
+            }
+    
+            $hasilLayanan->update([
+                'status' => $request->status,
+                'koreksi' => $request->status == 'revisi' ? $request->koreksi : null,
+            ]);
+            
+            DB::commit();
+
+            return redirect()->route('kapokja.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
+        }catch (\Exception $e){
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Gagal mengatur status. ' . $e->getMessage()]);
         }
-
-        $hasilLayanan->update([
-            'status' => $request->status,
-            'koreksi' => $request->status == 'revisi' ? $request->koreksi : null,
-        ]);
-
-        return redirect()->route('kapokja.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(HasilLayanan $hasilLayanan)
-    {
-        //
-    }
-
+    
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(HasilLayanan $hasilLayanan)
+    public function edit($id)
     {
-        //
+        $permohonan = Permohonan::findOrFail($id);
+        return view('analis.edit-hasil-layanan', compact('permohonan'));
     }
-
+    
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, HasilLayanan $hasilLayanan)
+    public function update(Request $request, $id)
     {
-        //
-    }
+        $request->validate([
+            'file_hasil' => 'required|mimes:pdf|max:10240', 
+        ]);
 
+        DB::beginTransaction();
+
+        try{
+            $hasilLayanan = HasilLayanan::where('id_permohonan', $id)->firstOrFail();
+    
+            if ($request->hasFile('file_hasil') && $request->file('file_hasil')->isValid()) {
+                if ($hasilLayanan->path_file_hasil && Storage::disk('public')->exists($hasilLayanan->path_file_hasil)) {
+                    Storage::disk('public')->delete($hasilLayanan->path_file_hasil);
+                }
+    
+                $file = $request->file('file_hasil');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('hasil_layanan', $filename, 'public');
+    
+                $hasilLayanan->update([
+                    'nama_file_hasil' => $filename,
+                    'path_file_hasil' => $path,
+                    'pengunggah' => Auth::user()->pegawai->nip,
+                    'updated_at' => now()
+                ]);
+
+                DB::commit();
+
+                return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diperbarui!');
+            }
+        }catch (\Exception $e){
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'File gagal diperbarui. ' . $e->getMessage()]);
+        }
+    }
+    
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(HasilLayanan $hasilLayanan)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $hasilLayanan = HasilLayanan::where('id_permohonan', $id)->firstOrFail();
+
+            if ($hasilLayanan->path_file_hasil && Storage::disk('public')->exists($hasilLayanan->path_file_hasil)) {
+                Storage::disk('public')->delete($hasilLayanan->path_file_hasil);
+            }
+
+            $hasilLayanan->delete();
+
+            DB::commit();
+
+            return redirect()->route('analis.hasil-layanan')->with('success', 'Hasil layanan berhasil dihapus!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Gagal menghapus hasil layanan. ' . $e->getMessage()]);
+        }
     }
 }

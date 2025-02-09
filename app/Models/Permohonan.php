@@ -47,9 +47,4 @@ class Permohonan extends Model
     public function kuitansi(){
         return $this->hasOne(Kuitansi::class, 'id_permohonan', 'id');
     }
-
-    public function canUploadKuitansi()
-    {
-        return $this->tagihan()->exists();
-    }
 }

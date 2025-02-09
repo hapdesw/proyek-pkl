@@ -6,6 +6,8 @@ use App\Models\Tagihan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Permohonan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class TagihanController extends Controller
 {
@@ -36,53 +38,102 @@ class TagihanController extends Controller
             'file_tagihan' => 'required|mimes:pdf|max:10240',
         ]);
 
-        if ($request->hasFile('file_tagihan') && $request->file('file_tagihan')->isValid()) {
-            $file = $request->file('file_tagihan');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            
-            $path = $file->storeAs('tagihan', $filename, 'public');
+        DB::beginTransaction();
 
-            Tagihan::create([
-                'id_permohonan' => $request->id_permohonan,
-                'nama_file_tagihan' => $filename,
-                'path_file_tagihan' => $path,
-                'created_at' => now()
-            ]);
+        try{
+            if ($request->hasFile('file_tagihan') && $request->file('file_tagihan')->isValid()) {
+                $file = $request->file('file_tagihan');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                
+                $path = $file->storeAs('tagihan', $filename, 'public');
+    
+                Tagihan::create([
+                    'id_permohonan' => $request->id_permohonan,
+                    'nama_file_tagihan' => $filename,
+                    'path_file_tagihan' => $path,
+                    'created_at' => now()
+                ]);
 
-            return redirect()->route('bendahara.tagihan')->with('success', 'File berhasil diunggah!');
+                DB::commit();
+    
+                return redirect()->route('bendahara.tagihan')->with('success', 'File berhasil diunggah!');
+            }
+        }catch (\Exception $e){
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'File gagal diunggah. ' . $e->getMessage()]);
         }
-        return redirect()->back()->with('error', 'File gagal diunggah. Pastikan file valid.');
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Tagihan $tagihan)
-    {
-        //
-    }
-
+    
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Tagihan $tagihan)
+    public function edit($id)
     {
-        //
+        $permohonan = Permohonan::findOrFail($id);
+        return view('bendahara.edit-tagihan', compact('permohonan'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Tagihan $tagihan)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'file_tagihan' => 'required|mimes:pdf|max:10240',
+        ]);
+
+        DB::beginTransaction();
+
+        try{
+            $tagihan = Tagihan::where('id_permohonan', $id)->firstOrFail();
+
+            if ($request->hasFile('file_tagihan') && $request->file('file_tagihan')->isValid()) {
+                if ($tagihan->path_file_tagihan && Storage::disk('public')->exists($tagihan->path_file_tagihan)) {
+                    Storage::disk('public')->delete($tagihan->path_file_tagihan);
+                }
+                
+                $file = $request->file('file_tagihan');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                
+                $path = $file->storeAs('tagihan', $filename, 'public');
+    
+                $tagihan->update([
+                    'nama_file_tagihan' => $filename,
+                    'path_file_tagihan' => $path,
+                    'updated_at' => now()
+                ]);
+
+                DB::commit();
+    
+                return redirect()->route('bendahara.tagihan')->with('success', 'File berhasil diperbarui!');
+            }
+        }catch (\Exception $e){
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'File gagal diperbarui. ' . $e->getMessage()]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Tagihan $tagihan)
+    public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $tagihan = Tagihan::where('id_permohonan', $id)->firstOrFail();
+
+            if ($tagihan->path_file_tagihan && Storage::disk('public')->exists($tagihan->path_file_tagihan)) {
+                Storage::disk('public')->delete($tagihan->path_file_tagihan);
+            }
+
+            $tagihan->delete();
+
+            DB::commit();
+
+            return redirect()->route('bendahara.tagihan')->with('success', 'Tagihan berhasil dihapus!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Gagal menghapus tagihan. ' . $e->getMessage()]);
+        }
     }
 }

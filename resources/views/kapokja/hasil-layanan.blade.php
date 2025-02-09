@@ -173,11 +173,9 @@
                                     </td>  
                                     <td class="px-4 py-3 w-32">
                                         @if($pm->hasilLayanan)
-                                            <a href="{{ asset('storage/' . $pm->hasilLayanan->path_file_hasil) }}" 
-                                            class="btn btn-primary text-blue-700"
-                                            target="_blank">
+                                            <button onclick="window.open('{{ asset('storage/' . $pm->hasilLayanan->path_file_hasil) }}', '_blank')" class="px-2.5 py-0.5 bg-blue-700 text-white text-xs rounded hover:bg-blue-800 transition duration-300">
                                                 Lihat File
-                                            </a>
+                                            </button>
                                             <span class="text-xs text-gray-600">Diunggah oleh: </span>
                                             <span class="text-xs font-medium">{{ $pm->hasilLayanan->pegawai->nama }}</span>
                                         @else

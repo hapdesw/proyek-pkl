@@ -61,15 +61,25 @@ Route::middleware(['auth', 'Analis_0010'])->group(function () {
     Route::get('/analis/hasil-layanan', [HasilLayananController::class, 'index'])->name('analis.hasil-layanan'); 
     Route::get('/analis/hasil-layanan/create/{id}', [HasilLayananController::class, 'create'])->name('analis.hasil-layanan.create');
     Route::post('/analis/hasil-layanan/store/{id}', [HasilLayananController::class, 'store'])->name('analis.hasil-layanan.store');  
+    Route::get('/analis/hasil-layanan/edit/{id}', [HasilLayananController::class, 'edit'])->name('analis.hasil-layanan.edit');
+    Route::put('/analis/hasil-layanan/update/{id}', [HasilLayananController::class, 'update'])->name('analis.hasil-layanan.update');
+    Route::delete('/analis/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroy'])->name('analis.hasil-layanan.destroy');
 }); 
 
 Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
     Route::get('/bendahara/tagihan', [TagihanController::class, 'index'])->name('bendahara.tagihan'); 
     Route::get('/bendahara/kuitansi', [KuitansiController::class, 'index'])->name('bendahara.kuitansi'); 
     Route::get('/bendahara/tagihan/create/{id}', [TagihanController::class, 'create'])->name('bendahara.tagihan.create');
-    Route::post('/bendahara/tagihan/store/{id}', [TagihanController::class, 'store'])->name('bendahara.tagihan.store');  
+    Route::post('/bendahara/tagihan/store/{id}', [TagihanController::class, 'store'])->name('bendahara.tagihan.store');
+    Route::get('/bendahara/tagihan/edit/{id}', [TagihanController::class, 'edit'])->name('bendahara.tagihan.edit');
+    Route::put('/bendahara/tagihan/update/{id}', [TagihanController::class, 'update'])->name('bendahara.tagihan.update');
+    Route::delete('/bendahara/tagihan/destroy/{id}', [TagihanController::class, 'destroy'])->name('bendahara.tagihan.destroy');
+
     Route::get('/bendahara/kuitansi/create/{id}', [KuitansiController::class, 'create'])->name('bendahara.kuitansi.create');
-    Route::post('/bendahara/kuitansi/store/{id}', [KuitansiController::class, 'store'])->name('bendahara.kuitansi.store');  
+    Route::post('/bendahara/kuitansi/store/{id}', [KuitansiController::class, 'store'])->name('bendahara.kuitansi.store');
+    Route::get('/bendahara/kuitansi/edit/{id}', [KuitansiController::class, 'edit'])->name('bendahara.kuitansi.edit');
+    Route::put('/bendahara/kuitansi/update/{id}', [KuitansiController::class, 'update'])->name('bendahara.kuitansi.update');
+    Route::delete('/bendahara/kuitansi/destroy/{id}', [KuitansiController::class, 'destroy'])->name('bendahara.kuitansi.destroy'); 
 }); 
 
 Route::middleware(['auth', 'PetugasKapokja_1100'])->group(function () {
