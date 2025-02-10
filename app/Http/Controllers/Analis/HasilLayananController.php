@@ -75,13 +75,14 @@ class HasilLayananController extends Controller
                 
                 $path = $file->storeAs('hasil_layanan', $filename, 'public');
     
-                HasilLayanan::create([
+                DB::table('hasil_layanan')->insert([
                     'id_permohonan' => $request->id_permohonan,
                     'nama_file_hasil' => $filename,
                     'path_file_hasil' => $path,
                     'pengunggah' => Auth::user()->pegawai->nip,
-                    'created_at' => now()
-                ]);
+                    'created_at' => now(),
+                    'updated_at' => null 
+                ]);                
                 
                 DB::commit();
 
@@ -110,9 +111,12 @@ class HasilLayananController extends Controller
                 return redirect()->back()->with('error', 'Data hasil layanan tidak ditemukan.');
             }
     
-            $hasilLayanan->update([
+            DB::table('hasil_layanan')
+            ->where('id_permohonan', $request->id_permohonan)
+            ->update([
                 'status' => $request->status,
                 'koreksi' => $request->status == 'revisi' ? $request->koreksi : null,
+                'updated_at' => null
             ]);
             
             DB::commit();
@@ -132,6 +136,12 @@ class HasilLayananController extends Controller
     {
         $permohonan = Permohonan::findOrFail($id);
         return view('analis.edit-hasil-layanan', compact('permohonan'));
+    }
+
+    public function editStatusKapokja($id)
+    {
+        $permohonan = Permohonan::with('hasilLayanan')->findOrFail($id);
+        return view('kapokja.edit-status-hasil', compact('permohonan'));
     }
     
     /**
@@ -173,6 +183,39 @@ class HasilLayananController extends Controller
             return redirect()->back()->withErrors(['error' => 'File gagal diperbarui. ' . $e->getMessage()]);
         }
     }
+
+    public function updateStatusKapokja(Request $request)
+    {
+        $request->validate([
+            'id_permohonan' => 'required|exists:permohonan,id',
+            'status' => 'required|in:revisi,disetujui',
+            'koreksi' => 'nullable|required_if:status,revisi|max:500',
+        ]);
+        
+        DB::beginTransaction();
+
+        try{
+            $hasilLayanan = HasilLayanan::where('id_permohonan', $request->id_permohonan)->first();
+    
+            if (!$hasilLayanan) {
+                return redirect()->back()->with('error', 'Data hasil layanan tidak ditemukan.');
+            }
+    
+            DB::table('hasil_layanan')
+            ->where('id_permohonan', $request->id_permohonan)
+            ->update([
+                'status' => $request->status,
+                'koreksi' => $request->status == 'revisi' ? $request->koreksi : null,
+            ]);
+            
+            DB::commit();
+
+            return redirect()->route('kapokja.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
+        }catch (\Exception $e){
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Gagal mengatur status. ' . $e->getMessage()]);
+        }
+    }
     
     /**
      * Remove the specified resource from storage.
@@ -197,4 +240,31 @@ class HasilLayananController extends Controller
             return redirect()->back()->withErrors(['error' => 'Gagal menghapus hasil layanan. ' . $e->getMessage()]);
         }
     }
+
+    public function destroyStatusKapokja($id)
+    {
+        DB::beginTransaction();
+        try {
+            $hasilLayanan = DB::table('hasil_layanan')->where('id_permohonan', $id)->first();
+
+            if (!$hasilLayanan) {
+                return redirect()->back()->withErrors(['error' => 'Data hasil layanan tidak ditemukan.']);
+            }
+
+            DB::table('hasil_layanan')
+                ->where('id_permohonan', $id)
+                ->update([
+                    'status' => 'pending',
+                    'koreksi' => null,
+                ]);
+
+            DB::commit();
+
+            return redirect()->route('kapokja.hasil-layanan')->with('success', 'Status dan koreksi berhasil dihapus!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['error' => 'Gagal menghapus status dan koreksi. ' . $e->getMessage()]);
+        }
+    }
+
 }

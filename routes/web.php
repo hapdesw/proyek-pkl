@@ -54,7 +54,10 @@ Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
     Route::delete('/kapokja/kelola-pegawai/destroy/{nip}', [PegawaiController::class, 'destroy'])->name('kapokja.kelola-pegawai.destroy');
     Route::get('/kapokja/hasil-layanan', [HasilLayananController::class, 'indexKapokja'])->name('kapokja.hasil-layanan');
     Route::get('/kapokja/hasil-layanan/create/{id}', [HasilLayananController::class, 'createStatusKapokja'])->name('kapokja.hasil-layanan.create');
-    Route::post('/kapokja/hasil-layanan/store/{id}', [HasilLayananController::class, 'storeStatusKapokja'])->name('kapokja.hasil-layanan.store');  
+    Route::post('/kapokja/hasil-layanan/store/{id}', [HasilLayananController::class, 'storeStatusKapokja'])->name('kapokja.hasil-layanan.store');
+    Route::get('/kapokja/hasil-layanan/edit/{id}', [HasilLayananController::class, 'editStatusKapokja'])->name('kapokja.hasil-layanan.edit');
+    Route::put('/kapokja/hasil-layanan/update/{id}', [HasilLayananController::class, 'updateStatusKapokja'])->name('kapokja.hasil-layanan.update');
+    Route::delete('/kapokja/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroyStatusKapokja'])->name('kapokja.hasil-layanan.destroy'); 
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {
