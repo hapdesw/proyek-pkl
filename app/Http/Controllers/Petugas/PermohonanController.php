@@ -286,27 +286,30 @@ class PermohonanController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id)
-    {
-        Log::Info('Masuk ke method destroy');
-        try {
-            $permohonan = Permohonan::findOrFail($id);
-            $permohonan->delete();
-            Log::info('Berhasil hapus permohonan');
-            Log::info('Flash message:', session()->all());
+{
+    Log::Info('Masuk ke method destroy');
+    try {
+        $permohonan = Permohonan::findOrFail($id);
+        $pemohon = $permohonan->pemohon; // Ambil pemohon yang terkait sebelum menghapus permohonan
 
-            return redirect()->route('petugas.permohonan')->with('success', 'Permohonan berhasil dihapus!');
-        } catch (ModelNotFoundException $e) {
-            Log::error('Tidak ditemukan permohonan. Penghapusan gagal: ' . $e->getMessage());
-            Log::info('Redirecting with flash message:', session()->all());
-            // return redirect()->back()->withInput()->withErrors(['error' => 'Gagal menghapus permohonan. ' . $e->getMessage()]);
-            return redirect()->route('petugas.permohonan')->with('error', 'Permohonan tidak ditemukan.');
-        } catch (\Exception $e) {
-            Log::error('Gagal menghapus permohonan: ' . $e->getMessage());
-            Log::info('Flash message:', session()->all());
-
-            return redirect()->route('petugas.permohonan')->with('error', 'Terjadi kesalahan saat menghapus permohonan.');
+        if ($pemohon) {
+            $pemohon->delete(); // Hapus pemohon terkait
         }
+
+        $permohonan->delete(); // Hapus permohonan
+
+        Log::info('Berhasil hapus permohonan dan pemohon terkait.');
+
+        return redirect()->route('petugas.permohonan')->with('success', 'Permohonan dan pemohon terkait berhasil dihapus!');
+    } catch (ModelNotFoundException $e) {
+        Log::error('Permohonan tidak ditemukan: ' . $e->getMessage());
+        return redirect()->route('petugas.permohonan')->with('error', 'Permohonan tidak ditemukan.');
+    } catch (\Exception $e) {
+        Log::error('Gagal menghapus permohonan: ' . $e->getMessage());
+        return redirect()->route('petugas.permohonan')->with('error', 'Terjadi kesalahan saat menghapus permohonan.');
     }
+}
+
 
     public function updateStatus(Request $request, $id)
     {

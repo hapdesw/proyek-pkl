@@ -4,7 +4,7 @@
             <h2 class="text-center mb-10 mt-6 text-lg font-semibold">Rekap Layanan Tahunan</h2>
 
             <!-- Kotak untuk Total -->
-            <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6 ml-6 mr-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6 ml-6 mr-6">
                 <button id="totalPermohonanBtn" class="p-4 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600" onclick="toggleTable('permohonan')">
                     <p class="text-center">Rekap Total Permohonan</p>
                     <p class="text-center">{{ array_sum($rekapPerBulan['permohonan']) }}</p>
@@ -120,7 +120,7 @@
                     <tbody>
                         @foreach($rekapPerBulan['disposisi_per_pegawai'] as $pegawai => $disposisi)
                             <tr>
-                                <td>Disposisi - {{ $pegawai }}</td>
+                                <td>{{ $pegawai }}</td>
                                 @foreach($disposisi as $bulan)
                                     <td>{{ $bulan }}</td>
                                 @endforeach
