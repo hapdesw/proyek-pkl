@@ -23,7 +23,7 @@
                 </button>
                 <button id="jenisLayananBtn" class="p-4 bg-orange-500 text-white rounded-lg shadow-md hover:bg-orange-600" onclick="toggleTable('jenislayanan')">
                     <p class="text-center">Rekap Jenis Layanan</p>
-                    <p class="text-center">{{ array_sum($rekapPerBulan['jenis_layanan_berbayar']) + array_sum($rekapPerBulan['jenis_layanan_nol']) }}</p>
+                    <p class="text-center">{{ array_sum(array_merge(...array_values($rekapPerBulan['jenis_layanan_nama']))) }}</p>
                 </button>
                 <button id="statusBtn" class="p-4 bg-pink-500 text-white rounded-lg shadow-md hover:bg-pink-600" onclick="toggleTable('status')">
                     <p class="text-center">Rekap Status Permohonan</p>
@@ -193,20 +193,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>SKC</td>
-                            @foreach($rekapPerBulan['jenis_layanan_berbayar'] as $bulan)
-                                <td>{{ $bulan }}</td>
-                            @endforeach
-                            <td>{{ array_sum($rekapPerBulan['jenis_layanan_berbayar']) }}</td>
-                        </tr>
-                        <tr>
-                            <td>Data Iklim</td>
-                            @foreach($rekapPerBulan['jenis_layanan_nol'] as $bulan)
-                                <td>{{ $bulan }}</td>
-                            @endforeach
-                            <td>{{ array_sum($rekapPerBulan['jenis_layanan_nol']) }}</td>
-                        </tr>
+                        @foreach($rekapPerBulan['jenis_layanan_nama'] as $layanan => $permohonan)
+                            <tr>
+                                <td>{{ $layanan }}</td>
+                                @foreach($permohonan as $bulan)
+                                    <td>{{ $bulan }}</td>
+                                @endforeach
+                                <td>{{ array_sum($permohonan) }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -269,7 +264,7 @@
     
     <script>
         function toggleTable(tableId) {
-            const tables = ['permohonan', 'pemohon', 'disposisi', 'layanan', 'jenisLayanan', 'status'];
+            const tables = ['permohonan', 'pemohon', 'disposisi', 'layanan', 'jenislayanan', 'status'];
             
             tables.forEach(id => {
                 const table = document.getElementById(id + 'Table');

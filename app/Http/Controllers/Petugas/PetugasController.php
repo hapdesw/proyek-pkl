@@ -19,7 +19,12 @@ class PetugasController extends Controller
             'pemohon' => array_fill(0, 12, 0),
             'jenis_layanan_berbayar' => array_fill(0, 12, 0),
             'jenis_layanan_nol' => array_fill(0, 12, 0),
-            'disposisi_per_pegawai' => []
+            'disposisi_per_pegawai' => [],
+            'jenis_layanan_nama' => [],
+            'status_diproses' => array_fill(0, 12, 0), 
+            'status_selesai_dibuat' => array_fill(0, 12, 0),
+            'status_selesai_diambil' => array_fill(0, 12, 0),
+            'status_batal' => array_fill(0, 12, 0),
         ];
 
         // Menghitung jumlah permohonan per bulan
@@ -66,6 +71,8 @@ class PetugasController extends Controller
                 ->where('kategori_berbayar', 'Nolrupiah')
                 ->count();
         }
+
+        // Menghitung disposisi
         $pegawaiList = Pegawai::all(); // Ambil seluruh pegawai
         foreach ($pegawaiList as $pegawai) {
             $disposisiPerPegawai = [];
@@ -79,6 +86,32 @@ class PetugasController extends Controller
                     ->count();
             }
             $rekapPerBulan['disposisi_per_pegawai'][$pegawai->nama] = $disposisiPerPegawai; // Menyimpan berdasarkan nama pegawai
+        }
+
+        // Menghitung nama jenis layanan
+        $namaLayanan = JenisLayanan::all();
+        foreach ($namaLayanan as $layanan) {
+            $namaPerLayanan = [];
+            for ($bulan = 1; $bulan <= 12; $bulan++) {
+                $namaPerLayanan[$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
+                    ->where(function($query) use ($layanan) {
+                        $query->where('id_jenis_layanan', $layanan-> id);
+                           
+                    })
+                    ->count();
+            }
+            $rekapPerBulan['jenis_layanan_nama'][$layanan->nama_jenis_layanan] = $namaPerLayanan;
+        }
+
+         // Menghitung jumlah status permohonan
+         for ($bulan = 1; $bulan <= 12; $bulan++) {
+            $rekapPerBulan['jenis_layanan_berbayar'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
+                ->where('kategori_berbayar', 'Berbayar')
+                ->count();
+            
+            $rekapPerBulan['jenis_layanan_nol'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
+                ->where('kategori_berbayar', 'Nolrupiah')
+                ->count();
         }
 
 
