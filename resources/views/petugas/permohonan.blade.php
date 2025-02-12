@@ -99,100 +99,51 @@
                             </div>            
                         </div>
                         <script>
-
                         // ini script untuk filter
                         document.addEventListener('DOMContentLoaded', function () {
-                        console.log("Script dimulai!");
 
-                        // Deklarasi elemen yang dibutuhkan
-                        const filterButton = document.getElementById('filterButton');
-                        const filterDropdown = document.getElementById('dropdownFilters');
-                        const applyFilterButton = document.getElementById('applyFilter');
-                        const monthCheckboxes = document.querySelectorAll('.month-filter');
-                        const yearSelect = document.getElementById('yearFilter');
-                        const tableRows = document.querySelectorAll('#table-body tr');
+                            const filterButton = document.getElementById('filterButton');
+                            const filterDropdown = document.getElementById('dropdownFilters');
+                            const applyFilterButton = document.getElementById('applyFilter');
+                            const monthCheckboxes = document.querySelectorAll('.month-filter');
+                            const yearSelect = document.getElementById('yearFilter');
 
-                        // Toggle filter dropdown
-                        filterButton.addEventListener('click', function () {
-                            filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
-                        });
+                            filterButton.addEventListener('click', function () {
+                                filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
+                            });
 
-                        document.addEventListener('click', function (event) {
-                            if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
-                                filterDropdown.classList.add('hidden');
-                            }
-                        });
+                            document.addEventListener('click', function (event) {
+                                if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
+                                    filterDropdown.style.display = 'none';
+                                }
+                            });
 
-                        // Fetch available years
-                        fetch('/permohonan/available-years')
-                            .then(response => response.json())
-                            .then(years => {
-                                yearSelect.innerHTML = '<option value="">Pilih Tahun</option>';
-                                years.forEach(year => {
-                                    yearSelect.innerHTML += `<option value="${year}">${year}</option>`;
-                                });
-                            })
-                            .catch(error => console.error('Error fetching years:', error));
-                            
-                            fetch('/permohonan/filter?months=Januari,Februari&year=2024')
+                            fetch('/petugas/permohonan/available-years')
                                 .then(response => response.json())
-                                .then(data => console.log(data))
-                                .catch(error => console.error('Error:', error));
+                                .then(years => {
+                                    yearSelect.innerHTML = '<option value="">Semua Tahun</option>';
 
-                        // Function to get selected months
-                        function getSelectedMonths() {
-                            let selectedMonths = [];
-                            monthCheckboxes.forEach(checkbox => {
-                                if (checkbox.checked) {
-                                    selectedMonths.push(checkbox.value.toLowerCase());
-                                }
+                                    years.forEach(year => {
+                                        const option = document.createElement('option');
+                                        option.value = year;
+                                        option.textContent = year;
+                                        yearSelect.appendChild(option);
+                                    });
+                                })
+                                .catch(error => console.error('Error fetching years:', error));
+
+                            applyFilterButton.addEventListener('click', function () {
+                                const selectedMonths = Array.from(monthCheckboxes)
+                                    .filter(checkbox => checkbox.checked)
+                                    .map(checkbox => checkbox.value);
+                                const selectedYear = yearSelect.value;
+                                const url = new URL(window.location.href);
+                                url.searchParams.set('months', selectedMonths.join(','));
+                                url.searchParams.set('year', selectedYear);
+                                window.location.href = url.toString();
                             });
-                            return selectedMonths;
-                        }
-
-                        // Function to get selected year
-                        function getSelectedYear() {
-                            return yearSelect.value;
-                        }
-
-                        // Apply filter
-                        function applyFilter() {
-                            const selectedMonths = getSelectedMonths();
-                            const selectedYear = getSelectedYear();
-
-                            tableRows.forEach(row => {
-                                const tanggalCell = row.children[2]?.innerText.trim(); // Ambil teks dari kolom tanggal
-                                if (!tanggalCell) return;
-
-                                const [day, month, year] = tanggalCell.split('/'); // Format: "dd/mm/yyyy"
-                                const bulanText = getMonthName(parseInt(month)); // Konversi angka ke teks
-
-                                const bulanMatch = selectedMonths.length === 0 || selectedMonths.includes(bulanText.toLowerCase());
-                                const tahunMatch = !selectedYear || selectedYear === year;
-
-                                if (bulanMatch && tahunMatch) {
-                                    row.style.display = ''; // Tampilkan baris jika cocok
-                                } else {
-                                    row.style.display = 'none'; // Sembunyikan baris jika tidak cocok
-                                }
-                            });
-                        }
-
-                        // Fungsi untuk mengonversi angka bulan ke nama bulan
-                        function getMonthName(monthNumber) {
-                            const monthNames = [
-                                'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-                            ];
-                            return monthNames[monthNumber - 1];
-                        }
-
-                        // Apply filter ketika tombol ditekan
-                        applyFilterButton.addEventListener('click', applyFilter);
-                    });
-
+                        });
                         </script>
-                        
                     </div>
                 </div>
                 {{-- Tabel --}}
@@ -601,7 +552,7 @@
                     @if ($permohonan->hasPages())
                     <ul class="inline-flex items-stretch -space-x-px">
                         <li>
-                            <a href="{{ $permohonan->previousPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $permohonan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
+                            <a href="{{ $permohonan->previousPageUrl() }}{{ request('months') || request('year') ? '&months=' . request('months') . '&year=' . request('year') : '' }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $permohonan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
                                 <span class="sr-only">Previous</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
@@ -612,7 +563,7 @@
                         @foreach ($permohonan->getUrlRange(1, $permohonan->lastPage()) as $page => $url)
                             @if ($page == 1 || $page == $permohonan->lastPage() || ($page >= $permohonan->currentPage() - 1 && $page <= $permohonan->currentPage() + 1))
                                 <li>
-                                    <a href="{{ $url }}" 
+                                    <a href="{{ $url }}{{ request('months') || request('year') ? '&months=' . request('months') . '&year=' . request('year') : '' }}" 
                                     class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
                                     {{ $permohonan->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
                                         {{ $page }}
@@ -626,7 +577,7 @@
                         @endforeach
 
                         <li>
-                            <a href="{{ $permohonan->nextPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$permohonan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
+                            <a href="{{ $permohonan->nextPageUrl() }}{{ request('months') || request('year') ? '&months=' . request('months') . '&year=' . request('year') : '' }}" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$permohonan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
                                 <span class="sr-only">Next</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />

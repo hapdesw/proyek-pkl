@@ -36,6 +36,8 @@ Route::middleware(['auth', 'Petugas_1000'])->group(function () {
     Route::delete('/petugas-layanan/permohonan/destroy/{id}', [PermohonanController::class, 'destroy'])->name('petugas.permohonan.destroy');
     Route::post('/petugas-layanan/permohonan/update-status/{id}', [PermohonanController::class, 'updateStatus'])->name('petugas.permohonan.update-status');
     Route::get('/petugas-layanan/pemohon', [PemohonController::class, 'index'])->name('petugas.kelola-pemohon'); 
+
+    Route::get('/petugas/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
 }); 
 
 Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
