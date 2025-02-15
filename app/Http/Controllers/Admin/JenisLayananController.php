@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Petugas;
+namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
@@ -15,7 +15,7 @@ class JenisLayananController extends Controller
     {
        
         $jenislayanan = JenisLayanan::paginate(15); 
-        return view('petugas.kelola-jenis-layanan', compact('jenislayanan'));
+        return view('admin.kelola-jenis-layanan', compact('jenislayanan'));
     }
 
     /**
@@ -24,7 +24,7 @@ class JenisLayananController extends Controller
     public function create()
     {
         $jenislayanan = JenisLayanan::all();
-        return view('petugas.kelola-jenis-layanan', compact('jenislayanan'));
+        return view('admin.kelola-jenis-layanan', compact('jenislayanan'));
     }
 
     /**
@@ -40,7 +40,7 @@ class JenisLayananController extends Controller
             'nama_jenis_layanan' => $request->nama_jenis_layanan,
         ]);
         // route ke halaman index-nya 
-        return redirect()->route('petugas.kelola-layanan')->with('success', 'Layanan berhasil ditambahkan!');
+        return redirect()->route('admin.kelola-layanan')->with('success', 'Layanan berhasil ditambahkan!');
     }
 
     /**
@@ -75,7 +75,7 @@ class JenisLayananController extends Controller
         ]);
 
         //route ke halaman index-nya
-        return redirect()->route('petugas.kelola-layanan')->with('success', 'Layanan berhasil diperbarui!');
+        return redirect()->route('admin.kelola-layanan')->with('success', 'Layanan berhasil diperbarui!');
     }
 
     /**
@@ -86,11 +86,11 @@ class JenisLayananController extends Controller
         try {
             $jenislayanan = JenisLayanan::findOrFail($id);
             $jenislayanan->delete();
-            return redirect()->route('petugas.kelola-layanan')->with('success', 'Layanan berhasil dihapus!');
+            return redirect()->route('admin.kelola-layanan')->with('success', 'Layanan berhasil dihapus!');
         } catch (ModelNotFoundException $e) {
-            return redirect()->route('petugas.kelola-layanan')->with('error', 'Layanan tidak ditemukan.');
+            return redirect()->route('admin.kelola-layanan')->with('error', 'Layanan tidak ditemukan.');
         } catch (\Exception $e) {
-            return redirect()->route('petugas.kelola-layanan')->with('error', 'Terjadi kesalahan saat menghapus layanan.');
+            return redirect()->route('admin.kelola-layanan')->with('error', 'Terjadi kesalahan saat menghapus layanan.');
         }
     }
 

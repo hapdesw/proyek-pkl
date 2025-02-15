@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Petugas;
+namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Pemohon;
 use App\Models\Permohonan;
@@ -42,7 +42,7 @@ class PemohonController extends Controller
             ];
         });
     
-        return view('petugas.data-pemohon', compact('pemohon'));
+        return view('admin.data-pemohon', compact('pemohon'));
     }
     
     

@@ -88,7 +88,7 @@
                                 Export
                             </button>
                             <div>
-                                <a href="{{ route('petugas.permohonan.create') }}">
+                                <a href="{{ route('admin.permohonan.create') }}">
                                     <button class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none dark:focus:ring-primary-800">
                                         <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                             <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
@@ -118,7 +118,7 @@
                                 }
                             });
 
-                            fetch('/petugas/permohonan/available-years')
+                            fetch('/admin/permohonan/available-years')
                                 .then(response => response.json())
                                 .then(years => {
                                     yearSelect.innerHTML = '<option value="">Semua Tahun</option>';
@@ -168,7 +168,7 @@
 
                                 <tr class="border-b dark:border-gray-700 text-darkKnight">
                                     <td class="px-4 py-3">{{ $permohonan->firstItem() + $index }}</td>
-                                    <td class="px-4 py-3">{{ $pm->id}}</td> <!-- ID berdasarkan urutan -->
+                                    <td class="px-4 py-3">{{ $pm->id}}</td>
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
                                     <td class="px-4 py-3">{{ $pm->jenisLayanan->nama_jenis_layanan}}</td>
@@ -254,13 +254,13 @@
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                         </svg>
                                                                                             
-                                                        <a href="{{ route('petugas.permohonan.edit', $pm->id) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Permohonan</a>
+                                                        <a href="{{ route('admin.permohonan.edit', $pm->id) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Permohonan</a>
                                                     </li>
                                                 </div>
                                                
                                                 <div class="block px-0 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex items-center px-2 py-1">
-                                                        <form id="delete-form-{{$pm->id}}" action="{{ route('petugas.permohonan.destroy', $pm->id) }}" method="POST">
+                                                        <form id="delete-form-{{$pm->id}}" action="{{ route('admin.permohonan.destroy', $pm->id) }}" method="POST">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="button" onclick="confirmDelete({{$pm->id}})" class="flex items-center gap-6 py-2 px-3 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
@@ -349,64 +349,64 @@
                                                     </div>
                                             
                                                     <div class="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 p-4 text-gray-700">
-                                                        <p class="font-semibold text-gray-600 self-start">ID Permohonan</p>
+                                                        <p class="font-semibold text-gray-900 self-start">ID Permohonan</p>
                                                         <p id="detail-id" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Diajukan</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Diajukan</p>
                                                         <p id="detail-tgl-diajukan" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Kategori Layanan</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Kategori Layanan</p>
                                                         <p id="detail-kategori" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Jenis Layanan</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Jenis Layanan</p>
                                                         <p id="detail-jenis-layanan" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Deskripsi Keperluan</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Deskripsi Keperluan</p>
                                                         <p id="detail-deskripsi" class="text-gray-800 break-words"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Disposisi 1</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Disposisi 1</p>
                                                         <p id="detail-disposisi1" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Disposisi 2</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Disposisi 2</p>
                                                         <p id="detail-disposisi2" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Disposisi 3</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Disposisi 3</p>
                                                         <p id="detail-disposisi3" class="text-gray-800"></p>
 
-                                                        <p class="font-semibold text-gray-600 self-start">Disposisi 4</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Disposisi 4</p>
                                                         <p id="detail-disposisi4" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Disposisi</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Disposisi</p>
                                                         <p id="detail-tgl-disposisi" class="text-gray-800"></p>
 
-                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Selesai</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Selesai</p>
                                                         <p id="detail-tgl-selesai" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Diambil</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Diambil</p>
                                                         <p id="detail-tgl-diambil" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Rencana Pengumpulan Skripsi</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Rencana Pengumpulan Skripsi</p>
                                                         <p id="detail-tgl-rencana" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Tanggal Pengumpulan Skripsi</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Pengumpulan Skripsi</p>
                                                         <p id="detail-tgl-pengumpulan" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Status Permohonan</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Status Permohonan</p>
                                                         <p id="detail-status" class="text-gray-800"></p>
                                             
                                                         <!-- Garis Pemisah -->
                                                         <div class="border-b-2 border-gray-300 my-2 col-span-2"></div>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Pemohon</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Pemohon</p>
                                                         <p id="detail-pemohon" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Instansi</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Instansi</p>
                                                         <p id="detail-instansi" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">No HP</p>
+                                                        <p class="font-semibold text-gray-900 self-start">No HP</p>
                                                         <p id="detail-hp" class="text-gray-800"></p>
                                             
-                                                        <p class="font-semibold text-gray-600 self-start">Email</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Email</p>
                                                         <p id="detail-email" class="text-gray-800"></p>
                                             
                                                         
@@ -470,9 +470,6 @@
                                                
                                             }
                                             
-                                            
-
-                                      
                                             function updateStatus(id, status) {
                                                 Swal.fire({
                                                     title: "Memproses...",
@@ -485,7 +482,7 @@
                                                     }
                                                 });
 
-                                                fetch(`/petugas-layanan/permohonan/update-status/${id}`, {
+                                                fetch(`/admin-layanan/permohonan/update-status/${id}`, {
                                                     method: "POST",
                                                     headers: {
                                                         "Content-Type": "application/json",

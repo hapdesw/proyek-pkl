@@ -24,7 +24,7 @@
         <!-- Header -->
         @include('layouts.header')
         @if(Auth::check() && Auth::user()->peran === '1000')
-            @include('layouts.header-petugas')
+            @include('layouts.header-admin')
         @elseif(Auth::check() && Auth::user()->peran === '0100')
             @include('layouts.header-kapokja')
         @elseif(Auth::check() && Auth::user()->peran === '0010')

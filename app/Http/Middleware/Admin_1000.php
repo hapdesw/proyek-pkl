@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
-class Petugas_1000
+class Admin_1000
 {
     /**
      * Handle an incoming request.

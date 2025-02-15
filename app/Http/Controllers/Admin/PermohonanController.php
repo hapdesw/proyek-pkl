@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Petugas;
+namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Permohonan;
 use App\Models\Pemohon;
@@ -45,7 +45,7 @@ class PermohonanController extends Controller
     $permohonan = $query->paginate(15);
     $pemohon = Pemohon::all();
 
-    return view('petugas.permohonan', compact('permohonan', 'pemohon'));
+    return view('admin.permohonan', compact('permohonan', 'pemohon'));
 }
 
     
@@ -112,7 +112,7 @@ class PermohonanController extends Controller
         $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
         $nextID = $permohonanIDLast + 1;
         $jenisLayanan = JenisLayanan::all();
-        return view('petugas.create-permohonan', compact('nextID', 'jenisLayanan'));
+        return view('admin.create-permohonan', compact('nextID', 'jenisLayanan'));
     }
 
     /**
@@ -173,7 +173,7 @@ class PermohonanController extends Controller
             return redirect()->back()->withInput();
         }
     
-        return redirect()->route('petugas.permohonan');
+        return redirect()->route('admin.permohonan');
     }
     
 
@@ -202,7 +202,7 @@ class PermohonanController extends Controller
         $jenisLayanan = JenisLayanan::all();
         $pemohon = Pemohon::all();
 
-        return view('petugas.edit-permohonan', compact('permohonan', 'nextID','jenisLayanan', 'pemohon'));
+        return view('admin.edit-permohonan', compact('permohonan', 'nextID','jenisLayanan', 'pemohon'));
     }
 
     /**
@@ -291,7 +291,7 @@ class PermohonanController extends Controller
             ]);
 
             Log::info('Berhasil update data permohonan');
-            return redirect()->route('petugas.permohonan')->with('success', 'Permohonan berhasil diperbarui!');
+            return redirect()->route('admin.permohonan')->with('success', 'Permohonan berhasil diperbarui!');
         } catch (\Exception $e) {
             Log::error('Gagal memperbarui data: ' . $e->getMessage());
             return redirect()->back()
@@ -319,13 +319,13 @@ class PermohonanController extends Controller
 
         Log::info('Berhasil hapus permohonan dan pemohon terkait.');
 
-        return redirect()->route('petugas.permohonan')->with('success', 'Permohonan dan pemohon terkait berhasil dihapus!');
+        return redirect()->route('admin.permohonan')->with('success', 'Permohonan dan pemohon terkait berhasil dihapus!');
     } catch (ModelNotFoundException $e) {
         Log::error('Permohonan tidak ditemukan: ' . $e->getMessage());
-        return redirect()->route('petugas.permohonan')->with('error', 'Permohonan tidak ditemukan.');
+        return redirect()->route('admin.permohonan')->with('error', 'Permohonan tidak ditemukan.');
     } catch (\Exception $e) {
         Log::error('Gagal menghapus permohonan: ' . $e->getMessage());
-        return redirect()->route('petugas.permohonan')->with('error', 'Terjadi kesalahan saat menghapus permohonan.');
+        return redirect()->route('admin.permohonan')->with('error', 'Terjadi kesalahan saat menghapus permohonan.');
     }
 }
 

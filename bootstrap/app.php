@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'Petugas_1000' => \App\Http\Middleware\Petugas_1000::class,
+            'Admin_1000' => \App\Http\Middleware\Admin_1000::class,
             'Kapokja_0100' => \App\Http\Middleware\Kapokja_0100::class,
             'Analis_0010' => \App\Http\Middleware\Analis_0010::class,
             'Bendahara_0001' => \App\Http\Middleware\Bendahara_0001::class,

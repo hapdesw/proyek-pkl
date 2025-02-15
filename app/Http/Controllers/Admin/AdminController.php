@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Petugas;
+namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Permohonan;
 use App\Models\Pemohon;
@@ -9,7 +9,7 @@ use App\Models\JenisLayanan;
 use App\Models\Disposisi;
 use Illuminate\Http\Request;
 
-class PetugasController extends Controller
+class AdminController extends Controller
 {
     public function index()
     {
@@ -105,16 +105,24 @@ class PetugasController extends Controller
 
          // Menghitung jumlah status permohonan
          for ($bulan = 1; $bulan <= 12; $bulan++) {
-            $rekapPerBulan['jenis_layanan_berbayar'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
-                ->where('kategori_berbayar', 'Berbayar')
+            $rekapPerBulan['status_diproses'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
+                ->where('status_permohonan', 'Diproses')
                 ->count();
             
-            $rekapPerBulan['jenis_layanan_nol'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
-                ->where('kategori_berbayar', 'Nolrupiah')
+            $rekapPerBulan['status_selesai_dibuat'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
+                ->where('status_permohonan', 'Selesai Dibuat')
+                ->count();
+            
+            $rekapPerBulan['status_selesai_diambil'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
+                ->where('status_permohonan', 'Selesai Diambil')
+                ->count();
+
+            $rekapPerBulan['status_batal'][$bulan - 1] = Permohonan::whereMonth('tanggal_diajukan', $bulan)
+                ->where('status_permohonan', 'Batal')
                 ->count();
         }
 
 
-        return view('petugas.beranda-petugas', compact('rekapPerBulan'));
+        return view('admin.beranda-admin', compact('rekapPerBulan'));
     }
 }

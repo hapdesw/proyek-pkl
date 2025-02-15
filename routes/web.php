@@ -3,11 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Petugas\PetugasController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Kapokja\KapokjaController;
-use App\Http\Controllers\Petugas\PermohonanController;
-use App\Http\Controllers\Petugas\JenisLayananController;
-use App\Http\Controllers\Petugas\PemohonController;
+use App\Http\Controllers\Admin\PermohonanController;
+use App\Http\Controllers\Admin\JenisLayananController;
+use App\Http\Controllers\Admin\PemohonController;
 use App\Http\Controllers\Bendahara\TagihanController;
 use App\Http\Controllers\Bendahara\KuitansiController;
 use App\Http\Controllers\Kapokja\DisposisiController;
@@ -19,25 +19,24 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Route::middleware(['auth', 'Petugas_1000'])->group(function () {
-    Route::get('/petugas-layanan/beranda', [PetugasController::class, 'index'])->name('petugas.beranda'); 
-    Route::get('/petugas-layanan/kelola-layanan', [JenisLayananController::class, 'index'])->name('petugas.kelola-layanan');
-    Route::get('/petugas-layanan/kelola-layanan/create', [JenisLayananController::class, 'create'])->name('petugas.kelola-layanan.create');
-    Route::post('/petugas-layanan/kelola-layanan/store', [JenisLayananController::class, 'store'])->name('petugas.kelola-layanan.store'); 
-    Route::put('/petugas-layanan/kelola-layanan/update/{id}', [JenisLayananController::class, 'update'])->name('petugas.kelola-layanan.update'); 
-    Route::delete('/petugas-layanan/kelola-layanan/destroy/{id}', [JenisLayananController::class, 'destroy'])->name('petugas.kelola-layanan.destroy'); 
+Route::middleware(['auth', 'Admin_1000'])->group(function () {
+    Route::get('/admin-layanan/beranda', [AdminController::class, 'index'])->name('admin.beranda'); 
+    Route::get('/admin-layanan/kelola-layanan', [JenisLayananController::class, 'index'])->name('admin.kelola-layanan');
+    Route::get('/admin-layanan/kelola-layanan/create', [JenisLayananController::class, 'create'])->name('admin.kelola-layanan.create');
+    Route::post('/admin-layanan/kelola-layanan/store', [JenisLayananController::class, 'store'])->name('admin.kelola-layanan.store'); 
+    Route::put('/admin-layanan/kelola-layanan/update/{id}', [JenisLayananController::class, 'update'])->name('admin.kelola-layanan.update'); 
+    Route::delete('/admin-layanan/kelola-layanan/destroy/{id}', [JenisLayananController::class, 'destroy'])->name('admin.kelola-layanan.destroy'); 
     Route::get('/permohonan/filter', [PermohonanController::class, 'filter']);
     Route::get('/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
-    Route::get('/petugas-layanan/permohonan', [PermohonanController::class, 'index'])->name('petugas.permohonan'); 
-    Route::get('/petugas-layanan/permohonan/create', [PermohonanController::class, 'create'])->name('petugas.permohonan.create'); 
-    Route::get('/petugas-layanan/permohonan/edit/{id}', [PermohonanController::class, 'edit'])->name('petugas.permohonan.edit'); 
-    Route::put('/petugas-layanan/permohonan/update/{id}', [PermohonanController::class, 'update'])->name('petugas.permohonan.update'); 
-    Route::post('/petugas-layanan/permohonan/store', [PermohonanController::class, 'store'])->name('petugas.permohonan.store'); 
-    Route::delete('/petugas-layanan/permohonan/destroy/{id}', [PermohonanController::class, 'destroy'])->name('petugas.permohonan.destroy');
-    Route::post('/petugas-layanan/permohonan/update-status/{id}', [PermohonanController::class, 'updateStatus'])->name('petugas.permohonan.update-status');
-    Route::get('/petugas-layanan/pemohon', [PemohonController::class, 'index'])->name('petugas.kelola-pemohon'); 
-
-    Route::get('/petugas/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
+    Route::get('/admin-layanan/permohonan', [PermohonanController::class, 'index'])->name('admin.permohonan'); 
+    Route::get('/admin-layanan/permohonan/create', [PermohonanController::class, 'create'])->name('admin.permohonan.create'); 
+    Route::get('/admin-layanan/permohonan/edit/{id}', [PermohonanController::class, 'edit'])->name('admin.permohonan.edit'); 
+    Route::put('/admin-layanan/permohonan/update/{id}', [PermohonanController::class, 'update'])->name('admin.permohonan.update'); 
+    Route::post('/admin-layanan/permohonan/store', [PermohonanController::class, 'store'])->name('admin.permohonan.store'); 
+    Route::delete('/admin-layanan/permohonan/destroy/{id}', [PermohonanController::class, 'destroy'])->name('admin.permohonan.destroy');
+    Route::post('/admin-layanan/permohonan/update-status/{id}', [PermohonanController::class, 'updateStatus'])->name('admin.permohonan.update-status');
+    Route::get('/admin-layanan/pemohon', [PemohonController::class, 'index'])->name('admin.kelola-pemohon'); 
+    Route::get('/admin/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
 }); 
 
 Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
@@ -90,7 +89,7 @@ Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
 Route::middleware(['auth', 'PetugasKapokja_1100'])->group(function () {
     Route::get('/PK/petugas-kapokja/transisi', [TransisiController::class, 'transisiPetugasKapokja'])->name('transisi.petugas-kapokja'); 
     Route::get('/PK/kapokja/beranda', [KapokjaController::class, 'index'])->name('PK.kapokja.beranda');
-    Route::get('/PK/petugas-layanan/beranda', [PetugasController::class, 'index'])->name('PK.petugas.beranda'); 
+    Route::get('/PK/petugas-layanan/beranda', [AdminController::class, 'index'])->name('PK.petugas.beranda'); 
 }); 
 
 Route::middleware('auth')->group(function () {

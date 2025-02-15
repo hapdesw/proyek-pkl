@@ -59,7 +59,7 @@
                                             </h3>
                                         </div>
                                         
-                                        <form action="{{route ('petugas.kelola-layanan.store') }}" method="POST" class="space-y-4">
+                                        <form action="{{route ('admin.kelola-layanan.store') }}" method="POST" class="space-y-4">
                                             @csrf
                                             <div class="grid grid-cols-1 gap-4">
                                                 <!-- Nama Layanan-->
@@ -125,7 +125,7 @@
                                             {{-- Untuk Hapus data per layanan --}}
                                             <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                 <li class=" flex items-center px-2 py-1">
-                                                    <form id="delete-form-{{$layanan->id}}" action="{{ route('petugas.kelola-layanan.destroy', $layanan->id) }}" method="POST">
+                                                    <form id="delete-form-{{$layanan->id}}" action="{{ route('admin.kelola-layanan.destroy', $layanan->id) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" onclick="confirmDelete({{$layanan->id}})" class="flex items-center gap-2 py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
@@ -150,7 +150,7 @@
                                                     </h3>
                                                 </div>
                                                 
-                                                <form action="{{route ('petugas.kelola-layanan.update', $layanan->id) }}" method="POST" class="space-y-4">
+                                                <form action="{{route ('admin.kelola-layanan.update', $layanan->id) }}" method="POST" class="space-y-4">
                                                     @csrf
                                                     @method('PUT')
                                                     <div class="grid grid-cols-1 gap-4">
