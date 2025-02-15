@@ -58,7 +58,9 @@ Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
     Route::post('/kapokja/hasil-layanan/store/{id}', [HasilLayananController::class, 'storeStatusKapokja'])->name('kapokja.hasil-layanan.store');
     Route::get('/kapokja/hasil-layanan/edit/{id}', [HasilLayananController::class, 'editStatusKapokja'])->name('kapokja.hasil-layanan.edit');
     Route::put('/kapokja/hasil-layanan/update/{id}', [HasilLayananController::class, 'updateStatusKapokja'])->name('kapokja.hasil-layanan.update');
-    Route::delete('/kapokja/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroyStatusKapokja'])->name('kapokja.hasil-layanan.destroy'); 
+    Route::delete('/kapokja/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroyStatusKapokja'])->name('kapokja.hasil-layanan.destroy');
+
+    Route::get('/kapokja/disposisi/available-years', [DisposisiController::class, 'getAvailableYears']);
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {
