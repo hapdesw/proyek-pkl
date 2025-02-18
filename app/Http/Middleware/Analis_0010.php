@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class Analis_0010
 {
@@ -16,9 +17,11 @@ class Analis_0010
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->peran == '0010')
-        {
-            return $next($request);
+        $peran = Auth::user()->peran; 
+
+        if ($peran[2] === '1') {
+            View::share('userRole', 'analis');
+            return $next($request); 
         }
         return redirect('/');
     }

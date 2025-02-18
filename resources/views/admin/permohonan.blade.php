@@ -117,7 +117,7 @@
                                 }
                             });
 
-                            fetch('/admin/permohonan/available-years')
+                            fetch('/admin-layanan/permohonan/available-years')
                                 .then(response => response.json())
                                 .then(years => {
                                     yearSelect.innerHTML = '<option value="">Semua Tahun</option>';

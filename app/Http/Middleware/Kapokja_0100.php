@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class Kapokja_0100
 {
@@ -16,9 +17,10 @@ class Kapokja_0100
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->peran == '0100')
-        {
-            return $next($request);
+        $peran = Auth::user()->peran; 
+
+        if ($peran[1] === '1') {
+            return $next($request); 
         }
         return redirect('/');
     }

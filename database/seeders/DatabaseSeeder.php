@@ -103,11 +103,16 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('dian123'),
             'peran' => '0001'
         ]);
+        User::create([
+            'username' => 'caca123',
+            'password' => bcrypt('caca123'),
+            'peran' => '0011'
+        ]);
 
         $this->call([
             PegawaiSeeder::class,
             JenisLayananSeeder::class,
-            // ImportSeeder::class,
+            ImportSeeder::class,
         ]);
     }
 }
