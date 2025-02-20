@@ -11,6 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->web([
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        ]);
         $middleware->alias([
             'Admin_1000' => \App\Http\Middleware\Admin_1000::class,
             'Kapokja_0100' => \App\Http\Middleware\Kapokja_0100::class,

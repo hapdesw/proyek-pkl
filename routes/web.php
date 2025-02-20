@@ -19,6 +19,8 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::post('/pilih-role', [AuthenticatedSessionController::class, 'pilihRole'])->name('pilih-role');
+
 Route::middleware(['auth', 'KapokjaAnalis_0110'])->group(function () {
     Route::get('/KA/kapokja-analis/transisi', [TransisiController::class, 'transisiKapokjaAnalis'])->name('transisi.kapokja-analis'); 
 }); 

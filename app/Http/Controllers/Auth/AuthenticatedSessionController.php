@@ -8,6 +8,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -25,8 +27,9 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
+
+        $request->session()->put('active_role', $request->user()->peran);
 
         if($request->user()->peran === '1000')
         {
@@ -69,6 +72,46 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('login');
+    }
+
+    public function pilihRole(Request $request)
+    {
+        $request->validate([
+            'role' => 'required|in:1000,0100,0010,0001',
+        ]);
+
+        Log::info('Pre-Session Data:', [
+            'requested_role' => $request->role,
+            'user_id' => Auth::user()->id,
+            'current_user_role' => Auth::user()->peran,
+            'current_session' => $request->session()->all()
+        ]);
+
+        $request->session()->put('active_role', $request->role);
+        
+        DB::table('sessions')
+            ->where('id', $request->session()->getId())
+            ->update([
+                'active_role' => $request->role,
+                'last_activity' => time()
+            ]);
+
+        Log::info('Post-Session Data:', [
+            'active_role_in_session' => $request->session()->get('active_role'),
+            'all_session_data' => $request->session()->all(),
+            'database_session' => DB::table('sessions')
+                ->where('id', $request->session()->getId())
+                ->first()
+        ]);
+
+        $routes = [
+            '1000' => 'admin.beranda',
+            '0100' => 'kapokja.beranda',
+            '0010' => 'analis.hasil-layanan',
+            '0001' => 'bendahara.tagihan',
+        ];
+
+        return redirect()->route($routes[$request->role]);
     }
     
 }
