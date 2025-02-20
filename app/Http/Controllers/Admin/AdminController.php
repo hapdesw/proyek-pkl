@@ -125,4 +125,6 @@ class AdminController extends Controller
 
         return view('admin.beranda-admin', compact('rekapPerBulan'));
     }
+    
+    
 }

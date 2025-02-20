@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Kapokja\KapokjaController;
 use App\Http\Controllers\Admin\PermohonanController;
 use App\Http\Controllers\Admin\JenisLayananController;
-use App\Http\Controllers\Admin\PemohonController;
+use App\Http\Controllers\Pemohon\PemohonController;
 use App\Http\Controllers\Bendahara\TagihanController;
 use App\Http\Controllers\Bendahara\KuitansiController;
 use App\Http\Controllers\Kapokja\DisposisiController;
@@ -17,6 +17,12 @@ use App\Http\Controllers\TransisiController;
 
 Route::get('/', function () {
     return view('auth.login');
+});
+
+Route::group(['prefix' => 'pemohon'], function() {
+    Route::get('/beranda', [PemohonController::class, 'berandaPemohon'])->name('pemohon.beranda');
+    Route::get('/permohonan/create', [PemohonController::class, 'create'])->name('pemohon.permohonan.create'); 
+    Route::post('/permohonan/store', [PemohonController::class, 'store'])->name('pemohon.permohonan.store');
 });
 
 Route::middleware(['auth', 'Admin_1000'])->group(function () {
@@ -37,6 +43,7 @@ Route::middleware(['auth', 'Admin_1000'])->group(function () {
     Route::post('/admin-layanan/permohonan/update-status/{id}', [PermohonanController::class, 'updateStatus'])->name('admin.permohonan.update-status');
     Route::get('/admin-layanan/pemohon', [PemohonController::class, 'index'])->name('admin.kelola-pemohon'); 
     Route::get('/admin/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
+    
 }); 
 
 Route::middleware(['auth', 'Kapokja_0100'])->group(function () {

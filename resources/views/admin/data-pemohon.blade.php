@@ -20,10 +20,13 @@
                     });
                 </script>
             @endif
-            <div class="border-b border-gray-200 dark:border-gray-700">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
+            <div class="border-b border-gray-200 dark:border-gray-700 p-4 pb-3 flex justify-between items-center">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                     Kelola Pemohon
                 </h3>
+                <p class="text-sm text-gray-500">
+                    Total Pemohon: <span class="font-medium">{{ $totalPemohon }}</span>
+                </p>
             </div>
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">

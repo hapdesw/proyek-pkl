@@ -17,36 +17,41 @@ class PermohonanController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $query = Permohonan::with([
-        'disposisi.pegawai1', 
-        'disposisi.pegawai2', 
-        'disposisi.pegawai3', 
-        'disposisi.pegawai4', 
-    ]);
-
-    // Filter berdasarkan bulan jika ada
-    if ($request->has('months')) {
-        $months = explode(',', $request->query('months'));
-        $monthNumbers = [
-            'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
-            'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8,
-            'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12
-        ];
-        $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
-        $query->whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths);
+    {
+        $query = Permohonan::with([
+            'disposisi.pegawai1', 
+            'disposisi.pegawai2', 
+            'disposisi.pegawai3', 
+            'disposisi.pegawai4', 
+        ]);
+    
+        // Filter berdasarkan bulan jika ada
+        if ($request->has('months')) {
+            $months = explode(',', $request->query('months'));
+            $monthNumbers = [
+                'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
+                'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8,
+                'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12
+            ];
+            $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
+            $query->whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths);
+        }
+    
+        // Filter berdasarkan tahun jika ada
+        if ($request->has('year')) {
+            $query->whereYear('tanggal_diajukan', $request->query('year'));
+        }
+    
+        // Ambil jumlah total permohonan (tanpa pagination)
+        $totalPermohonan = $query->count();
+    
+        // Ambil data dengan pagination
+        $permohonan = $query->paginate(15);
+        $pemohon = Pemohon::all();
+    
+        return view('admin.permohonan', compact('permohonan', 'pemohon', 'totalPermohonan'));
     }
-
-    // Filter berdasarkan tahun jika ada
-    if ($request->has('year')) {
-        $query->whereYear('tanggal_diajukan', $request->query('year'));
-    }
-
-    $permohonan = $query->paginate(15);
-    $pemohon = Pemohon::all();
-
-    return view('admin.permohonan', compact('permohonan', 'pemohon'));
-}
+    
 
     
     public function filter(Request $request)
@@ -172,12 +177,20 @@ class PermohonanController extends Controller
             session()->flash('error', 'Terjadi kesalahan saat membuat permohonan. ' . $e->getMessage());
             return redirect()->back()->withInput();
         }
-    
+         // Ubah redirect berdasarkan asal route
+        
+        // if (str_contains($request->route()->getName(), 'pemohon')) {
+        //     Log::info('Masuk sebagai Pemohon: Berhasil buat permohonan');
+        //     return redirect()->route('pemohon.beranda')->with('success', 'Permohonan berhasil dibuat!');
+        // }
+        
         return redirect()->route('admin.permohonan');
+        
+       
     }
     
 
-
+   
 
     /**
      * Display the specified resource.
@@ -197,8 +210,6 @@ class PermohonanController extends Controller
         $permohonan = Permohonan::find($id); 
         $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
         $nextID = $permohonanIDLast + 1;
-        // $permohonanList = Permohonan::orderBy('id')->get();
-        // $nextID = $permohonanList->count() + 1; // Hitung jumlah permohonan yang ada dan tambah 1
         $jenisLayanan = JenisLayanan::all();
         $pemohon = Pemohon::all();
 
