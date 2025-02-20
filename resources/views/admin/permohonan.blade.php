@@ -24,9 +24,7 @@
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                         Permohonan
                     </h3>
-                    <p class="text-sm text-gray-500">
-                        Total Permohonan: <span class="font-medium">{{ $totalPermohonan }}</span>
-                    </p>
+                   
                 </div>
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
@@ -100,7 +98,7 @@
                                 {{-- Modal content --}}
                                 <div class="relative bg-white rounded-lg shadow-lg p-6 w-96 m-4">
                                     <p class="text-lg font-semibold text-gray-800 mb-4">
-                                        Permohonan berjumlah {{ $totalPermohonan }} akan di-export
+                                        Permohonan berjumlah  akan di-export
                                     </p>
                                     <div class="flex justify-center gap-5 mb-6">
                                         {{-- Tombol Export PDF --}}
