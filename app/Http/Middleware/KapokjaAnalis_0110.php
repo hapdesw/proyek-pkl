@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class KapokjaAnalis_0110
 {
@@ -16,10 +17,10 @@ class KapokjaAnalis_0110
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->peran == '0110')
+        if (Auth::user()->peran != '0110')
         {
-            return $next($request);
+            return redirect('/');
         }
-        return redirect('/');
+        return $next($request);
     }
 }

@@ -24,9 +24,9 @@ class PermohonanController extends Controller
             'disposisi.pegawai3', 
             'disposisi.pegawai4', 
         ]);
-    
+
         // Filter berdasarkan bulan jika ada
-        if ($request->has('months')) {
+        if ($request->has('months') && !empty($request->query('months'))) {
             $months = explode(',', $request->query('months'));
             $monthNumbers = [
                 'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
@@ -36,60 +36,17 @@ class PermohonanController extends Controller
             $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
             $query->whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths);
         }
-    
+
         // Filter berdasarkan tahun jika ada
-        if ($request->has('year')) {
+        if ($request->has('year') && !empty($request->query('year'))) {
             $query->whereYear('tanggal_diajukan', $request->query('year'));
         }
-    
-        // Ambil jumlah total permohonan (tanpa pagination)
-        $totalPermohonan = $query->count();
-    
-        // Ambil data dengan pagination
+
         $permohonan = $query->paginate(15);
         $pemohon = Pemohon::all();
-    
-        return view('admin.permohonan', compact('permohonan', 'pemohon', 'totalPermohonan'));
-    }
-    
 
-    
-    public function filter(Request $request)
-    {
-        Log::info('masuk fungsi filter');
-        $months = explode(',', $request->query('months'));
-        $year = $request->query('year');
-    
-        // Mapping nama bulan ke angka (1-12)
-        $monthNumbers = [
-            'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
-            'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8,
-            'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12
-        ];
-    
-        // Konversi nama bulan ke angka
-        $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
-    
-        // Query untuk filter
-        $query = Permohonan::query();
-    
-        // Filter berdasarkan bulan jika ada
-        Log::info('filter bulan masuk');
-        if (!empty($selectedMonths)) {
-            $query->whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths);
-        }
-    
-        // Filter berdasarkan tahun jika ada
-        if ($year) {
-            
-            $query->whereYear('tanggal_diajukan', $year);
-        }
-    
-        $permohonan = $query->get();
-    
-        return response()->json($permohonan);
+        return view('admin.permohonan', compact('permohonan', 'pemohon'));
     }
-    
     
     // Controller untuk mendapatkan daftar tahun yang ada di database
     public function getAvailableYears()

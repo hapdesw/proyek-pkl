@@ -19,6 +19,16 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::post('/pilih-role', [AuthenticatedSessionController::class, 'pilihRole'])->name('pilih-role');
+
+Route::middleware(['auth', 'KapokjaAnalis_0110'])->group(function () {
+    Route::get('/KA/kapokja-analis/transisi', [TransisiController::class, 'transisiKapokjaAnalis'])->name('transisi.kapokja-analis'); 
+}); 
+
+Route::middleware(['auth', 'AnalisBendahara_0011'])->group(function () {
+    Route::get('/AB/analis-bendahara/transisi', [TransisiController::class, 'transisiAnalisBendahara'])->name('transisi.analis-bendahara'); 
+}); 
+
 Route::group(['prefix' => 'pemohon'], function() {
     Route::get('/beranda', [PemohonController::class, 'berandaPemohon'])->name('pemohon.beranda');
     Route::get('/permohonan/create', [PemohonController::class, 'create'])->name('pemohon.permohonan.create'); 
@@ -33,7 +43,7 @@ Route::middleware(['auth', 'Admin_1000'])->group(function () {
     Route::put('/admin-layanan/kelola-layanan/update/{id}', [JenisLayananController::class, 'update'])->name('admin.kelola-layanan.update'); 
     Route::delete('/admin-layanan/kelola-layanan/destroy/{id}', [JenisLayananController::class, 'destroy'])->name('admin.kelola-layanan.destroy'); 
     Route::get('/permohonan/filter', [PermohonanController::class, 'filter']);
-    Route::get('/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
+    Route::get('/admin-layanan/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
     Route::get('/admin-layanan/permohonan', [PermohonanController::class, 'index'])->name('admin.permohonan'); 
     Route::get('/admin-layanan/permohonan/create', [PermohonanController::class, 'create'])->name('admin.permohonan.create'); 
     Route::get('/admin-layanan/permohonan/edit/{id}', [PermohonanController::class, 'edit'])->name('admin.permohonan.edit'); 
@@ -65,7 +75,9 @@ Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
     Route::post('/kapokja/hasil-layanan/store/{id}', [HasilLayananController::class, 'storeStatusKapokja'])->name('kapokja.hasil-layanan.store');
     Route::get('/kapokja/hasil-layanan/edit/{id}', [HasilLayananController::class, 'editStatusKapokja'])->name('kapokja.hasil-layanan.edit');
     Route::put('/kapokja/hasil-layanan/update/{id}', [HasilLayananController::class, 'updateStatusKapokja'])->name('kapokja.hasil-layanan.update');
-    Route::delete('/kapokja/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroyStatusKapokja'])->name('kapokja.hasil-layanan.destroy'); 
+    Route::delete('/kapokja/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroyStatusKapokja'])->name('kapokja.hasil-layanan.destroy');
+
+    Route::get('/kapokja/disposisi/available-years', [DisposisiController::class, 'getAvailableYears']);
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {
@@ -93,11 +105,8 @@ Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
     Route::delete('/bendahara/kuitansi/destroy/{id}', [KuitansiController::class, 'destroy'])->name('bendahara.kuitansi.destroy'); 
 }); 
 
-Route::middleware(['auth', 'PetugasKapokja_1100'])->group(function () {
-    Route::get('/PK/petugas-kapokja/transisi', [TransisiController::class, 'transisiPetugasKapokja'])->name('transisi.petugas-kapokja'); 
-    Route::get('/PK/kapokja/beranda', [KapokjaController::class, 'index'])->name('PK.kapokja.beranda');
-    Route::get('/PK/petugas-layanan/beranda', [AdminController::class, 'index'])->name('PK.petugas.beranda'); 
-}); 
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

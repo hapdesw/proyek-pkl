@@ -172,7 +172,6 @@
                         <script>
                         // ini script untuk filter
                         document.addEventListener('DOMContentLoaded', function () {
-
                             const filterButton = document.getElementById('filterButton');
                             const filterDropdown = document.getElementById('dropdownFilters');
                             const applyFilterButton = document.getElementById('applyFilter');
@@ -189,7 +188,7 @@
                                 }
                             });
 
-                            fetch('/admin/permohonan/available-years')
+                            fetch('/admin-layanan/permohonan/available-years')
                                 .then(response => response.json())
                                 .then(years => {
                                     yearSelect.innerHTML = '<option value="">Semua Tahun</option>';
@@ -208,9 +207,25 @@
                                     .filter(checkbox => checkbox.checked)
                                     .map(checkbox => checkbox.value);
                                 const selectedYear = yearSelect.value;
+
+                                // Buat URL dengan parameter filter
                                 const url = new URL(window.location.href);
-                                url.searchParams.set('months', selectedMonths.join(','));
-                                url.searchParams.set('year', selectedYear);
+
+                                // Hanya tambahkan parameter `months` jika ada bulan yang dipilih
+                                if (selectedMonths.length > 0) {
+                                    url.searchParams.set('months', selectedMonths.join(','));
+                                } else {
+                                    url.searchParams.delete('months'); // Hapus parameter `months` jika tidak ada bulan yang dipilih
+                                }
+
+                                // Hanya tambahkan parameter `year` jika tahun dipilih
+                                if (selectedYear) {
+                                    url.searchParams.set('year', selectedYear);
+                                } else {
+                                    url.searchParams.delete('year'); // Hapus parameter `year` jika tidak ada tahun yang dipilih
+                                }
+
+                                // Redirect ke URL dengan parameter filter
                                 window.location.href = url.toString();
                             });
                         });
@@ -636,14 +651,16 @@
                         </span>
                         of
                         <span class="font-semibold text-gray-900 dark:text-white">
-                        {{ $permohonan->total() }}
+                            {{ $permohonan->total() }}
                         </span>
                     </span>
                     
                     @if ($permohonan->hasPages())
                     <ul class="inline-flex items-stretch -space-x-px">
+                        <!-- Previous Page Link -->
                         <li>
-                            <a href="{{ $permohonan->previousPageUrl() }}{{ request('months') || request('year') ? '&months=' . request('months') . '&year=' . request('year') : '' }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $permohonan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
+                            <a href="{{ $permohonan->previousPageUrl() }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                            class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $permohonan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
                                 <span class="sr-only">Previous</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
@@ -651,10 +668,11 @@
                             </a>
                         </li>
 
+                        <!-- Pagination Links -->
                         @foreach ($permohonan->getUrlRange(1, $permohonan->lastPage()) as $page => $url)
                             @if ($page == 1 || $page == $permohonan->lastPage() || ($page >= $permohonan->currentPage() - 1 && $page <= $permohonan->currentPage() + 1))
                                 <li>
-                                    <a href="{{ $url }}{{ request('months') || request('year') ? '&months=' . request('months') . '&year=' . request('year') : '' }}" 
+                                    <a href="{{ $url }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
                                     class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
                                     {{ $permohonan->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
                                         {{ $page }}
@@ -662,13 +680,15 @@
                                 </li>
                             @elseif ($page == $permohonan->currentPage() - 2 || $page == $permohonan->currentPage() + 2)
                                 <li>
-                                    <a class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">...</a>
+                                    <span class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300">...</span>
                                 </li>
                             @endif
                         @endforeach
 
+                        <!-- Next Page Link -->
                         <li>
-                            <a href="{{ $permohonan->nextPageUrl() }}{{ request('months') || request('year') ? '&months=' . request('months') . '&year=' . request('year') : '' }}" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$permohonan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
+                            <a href="{{ $permohonan->nextPageUrl() }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                            class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$permohonan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
                                 <span class="sr-only">Next</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />

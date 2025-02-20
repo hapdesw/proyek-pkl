@@ -16,7 +16,9 @@ class Admin_1000
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->peran == '1000')
+        $peran = Auth::user()->peran; 
+
+        if ($peran[0] === '1') 
         {
             return $next($request);
         }

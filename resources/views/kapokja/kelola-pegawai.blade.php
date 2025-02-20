@@ -67,35 +67,52 @@
                             </tr>
                         </thead>
                         <tbody id="table-body" class="text-darkKnight">
-                        @forelse ($pegawai as $pegawai)
+                        @forelse ($pegawai as $pgw)
 
                                 <tr class="border-b dark:border-gray-700">
-                                    <td class="px-4 py-3">{{ $loop->iteration }}</td>
-                                    <td class="px-4 py-3">{{ $pegawai->nip }}</td>
-                                    <td class="px-4 py-3">{{ $pegawai->nama }}</td>
-                                    <td class="px-4 py-3">{{ $pegawai->peran_pegawai }}</td>
-                                    
+                                <td class="px-3 py-3">{{ ($pegawai->currentPage() - 1) * $pegawai->perPage() + $loop->iteration }}</td>
+                                    <td class="px-4 py-3">{{ $pgw->nip }}</td>
+                                    <td class="px-4 py-3">{{ $pgw->nama }}</td>
+                                    <td class="px-4 py-3">
+                                        @if ($pgw->peran_pegawai == '1000')
+                                            Admin
+                                        @elseif ($pgw->peran_pegawai == '0100')
+                                            Kapokja
+                                        @elseif ($pgw->peran_pegawai == '0010')
+                                            Analis
+                                        @elseif ($pgw->peran_pegawai == '0001')
+                                            Bendahara
+                                        @elseif ($pgw->peran_pegawai == '0110')
+                                            Kapokja dan Analis
+                                        @elseif ($pgw->peran_pegawai == '0011')
+                                            Analis dan Bendahara
+                                        @elseif ($pgw->peran_pegawai == '0101')
+                                            Kapokja dan Bendahara
+                                        @else
+                                            Tidak Diketahui
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-3 flex items-center">
-                                        <button id="actions-dropdown-button-{{ $pegawai->nip }}" data-dropdown-toggle="actions-dropdown-{{ $pegawai->nip }}" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
+                                        <button id="actions-dropdown-button-{{ $pgw->nip }}" data-dropdown-toggle="actions-dropdown-{{ $pgw->nip }}" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
                                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
                                             </svg>
                                         </button>
-                                        <div id="actions-dropdown-{{ $pegawai->nip }}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pegawai->nip }}">
+                                        <div id="actions-dropdown-{{ $pgw->nip }}" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
+                                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pgw->nip }}">
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex px-4 py-1">
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                         </svg>
                                                           
-                                                        <a href="{{ route('kapokja.kelola-pegawai.edit', $pegawai->nip) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
+                                                        <a href="{{ route('kapokja.kelola-pegawai.edit', $pgw->nip) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
                                                     </li>
                                                 </div>
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex px-4 py-1">
-                                                    <form id="delete-form-{{ $pegawai->nip }}" 
-                                                            action="{{ route('kapokja.kelola-pegawai.destroy', $pegawai->nip) }}" 
+                                                    <form id="delete-form-{{ $pgw->nip }}" 
+                                                            action="{{ route('kapokja.kelola-pegawai.destroy', $pgw->nip) }}" 
                                                             method="POST" 
                                                             class="flex items-center">
                                                             @csrf
@@ -106,7 +123,7 @@
                                                             </svg>
                                                             
                                                             <button type="button" 
-                                                                    onclick="confirmDelete('{{  $pegawai->nip }}')" 
+                                                                    onclick="confirmDelete('{{  $pgw->nip }}')" 
                                                                     class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                                                                 Hapus
                                                             </button>
@@ -144,6 +161,56 @@
                         </tbody>
                     </table>
                 </div>
+                <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4">
+    <span class="text-sm font-normal text-gray-500">
+        Showing 
+        <span class="font-semibold text-gray-900">
+            {{ $pegawai->firstItem() }}-{{ $pegawai->lastItem() }} 
+        </span>
+        of
+        <span class="font-semibold text-gray-900 dark:text-white">
+            {{ $pegawai->total() }}
+        </span>
+    </span>
+    
+    @if ($pegawai->hasPages())
+    <ul class="inline-flex items-stretch -space-x-px">
+        <li>
+            <a href="{{ $pegawai->previousPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $pegawai->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
+                <span class="sr-only">Previous</span>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
+                </svg>
+            </a>
+        </li>
+
+        @foreach ($pegawai->getUrlRange(1, $pegawai->lastPage()) as $page => $url)
+            @if ($page == 1 || $page == $pegawai->lastPage() || ($page >= $pegawai->currentPage() - 1 && $page <= $pegawai->currentPage() + 1))
+                <li>
+                    <a href="{{ $url }}" 
+                       class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
+                       {{ $pegawai->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
+                        {{ $page }}
+                    </a>
+                </li>
+            @elseif ($page == $pegawai->currentPage() - 2 || $page == $pegawai->currentPage() + 2)
+                <li>
+                    <a class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">...</a>
+                </li>
+            @endif
+        @endforeach
+
+        <li>
+            <a href="{{ $pegawai->nextPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$pegawai->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
+                <span class="sr-only">Next</span>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
+                </svg>
+            </a>
+        </li>
+    </ul>
+    @endif
+</nav>
             </div>
         </div> 
 </x-app-layout>

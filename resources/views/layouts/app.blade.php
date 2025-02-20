@@ -23,16 +23,18 @@
     <div class="flex flex-col min-h-screen" style = "background-color: #E8F5FC">
         <!-- Header -->
         @include('layouts.header')
-        @if(Auth::check() && Auth::user()->peran === '1000')
-            @include('layouts.header-admin')
-        @elseif(Auth::check() && Auth::user()->peran === '0100')
-            @include('layouts.header-kapokja')
-        @elseif(Auth::check() && Auth::user()->peran === '0010')
-            @include('layouts.header-analis')
-        @elseif(Auth::check() && Auth::user()->peran === '0001')
-            @include('layouts.header-bendahara')
+        @if(Auth::check() || session()->has('active_role'))
+            @if(Auth::user()->peran === '1000' || session('active_role') === '1000')
+                @include('layouts.header-admin')
+            @elseif(Auth::user()->peran === '0100' || session('active_role') === '0100')
+                @include('layouts.header-kapokja')
+            @elseif(Auth::user()->peran === '0010' || session('active_role') === '0010')
+                @include('layouts.header-analis')
+            @elseif(Auth::user()->peran === '0001' || session('active_role') === '0001')
+                @include('layouts.header-bendahara')
+            @endif
         @endif
-        
+
         <div class="flex-1">
             <!-- Page Content -->
             {{-- <main class="flex-1 p-6 mb-[40px]">

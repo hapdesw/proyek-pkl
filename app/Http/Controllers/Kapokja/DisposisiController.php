@@ -15,15 +15,48 @@ class DisposisiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $permohonan = Permohonan::with([
+        $query = Permohonan::with([
             'disposisi.pegawai1', 
             'disposisi.pegawai2', 
             'disposisi.pegawai3', 
             'disposisi.pegawai4', 
-            ])->paginate(15);
+        ]);
+
+        // Filter berdasarkan bulan jika ada
+        if ($request->has('months') && !empty($request->query('months'))) {
+            $months = explode(',', $request->query('months'));
+            $monthNumbers = [
+                'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
+                'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8,
+                'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12
+            ];
+            $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
+            $query->whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths);
+        }
+
+        // Filter berdasarkan tahun jika ada
+        if ($request->has('year') && !empty($request->query('year'))) {
+            $query->whereYear('tanggal_diajukan', $request->query('year'));
+        }
+
+        $permohonan = $query->paginate(15);
         return view('kapokja.disposisi', compact('permohonan'));
+    }
+
+    public function getAvailableYears()
+    {
+        Log::info('getAvailableYears dipanggil');
+
+        $years = Permohonan::selectRaw('DISTINCT YEAR(tanggal_diajukan) AS year')
+            ->orderBy('year', 'DESC')
+            ->pluck('year')
+            ->toArray();
+
+        Log::info('Data tahun yang ditemukan:', $years);
+
+        return response()->json($years);
     }
 
     /**

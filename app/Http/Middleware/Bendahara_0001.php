@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class Bendahara_0001
 {
@@ -16,10 +17,12 @@ class Bendahara_0001
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->peran == '0001')
+        $peran = Auth::user()->peran; 
+
+        if ($peran[3] === '1') 
         {
             return $next($request);
         }
-        return redirect('/');
+        return redirect('/')->with('error', 'Anda tidak memiliki akses.');
     }
 }

@@ -15,27 +15,7 @@ class PegawaiController extends Controller
      */
     public function index()
     {
-        $pegawai = Pegawai::all();
-
-        foreach ($pegawai as $p) {
-            if ($p->peran_pegawai == '1000') {
-                $p->peran_pegawai = 'Admin';
-            } elseif ($p->peran_pegawai == '0100') {
-                $p->peran_pegawai = 'Kapokja';
-            } elseif ($p->peran_pegawai == '0010') {
-                $p->peran_pegawai = 'Analis';
-            } elseif ($p->peran_pegawai == '0001') {
-                $p->peran_pegawai = 'Bendahara';
-            } elseif ($p->peran_pegawai == '0110') {
-                $p->peran_pegawai = 'Kapokja dan Analis';
-            } elseif ($p->peran_pegawai == '0011') {
-                $p->peran_pegawai = 'Analis dan Bendahara';
-            } elseif ($p->peran_pegawai == '0101') {
-                $p->peran_pegawai = 'Kapokja dan Bendahara';
-            } else {
-                $p->peran_pegawai = 'Tidak Diketahui';
-            }
-        }
+        $pegawai = Pegawai::paginate(15);
         return view('kapokja.kelola-pegawai', compact('pegawai'));   
     }
 
