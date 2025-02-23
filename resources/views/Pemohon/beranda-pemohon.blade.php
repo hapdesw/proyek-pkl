@@ -19,7 +19,7 @@
 </head>
     <body class="font-sans antialiased" style="font-family: 'Inter', sans-serif;">
         @include('layouts.header-pemohon')
-        <div class="flex items-center justify-center min-h-full"  style = "background-color: #E8F5FC">
+        <div class="flex items-center justify-center min-h-screen"  style = "background-color: #E8F5FC">
             @if ($message = Session::get('success'))
                     <script>
                         Swal.fire({
@@ -39,20 +39,17 @@
                         });
                     </script>
                 @endif
-            <div class="flex m-20">
+            <div class="flex flex-col justify-center items-center">
+                <h1 class="font-bold text-center text-3xl mb-3">Selamat Datang!</h1>
+                <p class="mb-10 text-lg font-normal">Silahkan klik tombol di bawah ini untuk mengajukan permohonan</p>
 
-                <a href="{{ route('pemohon.permohonan.create') }}" class=" hover:bg-blue-300 bg-blue-500 text-white hover:text-blue-950 text-xl font-semibold rounded-lg shadow-lg w-72 h-48 flex flex-col items-center justify-center  transition">
-                    {{-- <div class="flex "> --}}
-                        <svg class="w-16 h-16 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <a href="{{ route('pemohon.permohonan.create') }}" class=" hover:bg-blue-400 bg-blue-300 text-blue-950 hover:text-blue-950 text-xl font-semibold rounded-lg shadow-lg w-72 h-48 flex flex-col items-center justify-center  transition">
+                        <svg class="w-12 h-12 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7h1v12a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h11.5M7 14h6m-6 3h6m0-10h.5m-.5 3h.5M7 7h3v3H7V7Z"/>
-                            
                         </svg> 
                         Form Ajukan Permohonan  
-                                                                           
-                    {{-- </div> --}}
                 </a>
             </div>
-           
         </div>
         <div class="flex-1"></div>
         @include('layouts.footer')

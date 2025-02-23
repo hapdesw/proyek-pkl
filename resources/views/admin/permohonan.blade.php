@@ -76,7 +76,7 @@
                                     </select>
                             
                                     <!-- Tombol Terapkan -->
-                                    <button id="applyFilter" class="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                                    <button id="applyFilter" class="mt-4 w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">
                                         Terapkan
                                     </button>
                                 </div>
@@ -294,7 +294,7 @@
                                                 </ul>
                                             @endif
                                         @else
-                                            <span class="text-redNew !important">Belum diatur</span>
+                                            <span class="text-redNew !important">Belum Diatur</span>
                                         @endif
                                     </td>
                                     
@@ -404,14 +404,14 @@
                                             <div id="permohonan-{{ $pm->id }}" class="hidden"
                                                 data-id="{{ $pm->id}}"
                                                 data-tgl-diajukan="{{ $tanggalDiajukan }}"
-                                                data-kategori="{{ $pm->kategori_berbayar }}"
+                                                data-kategori="{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}"
                                                 data-jenis-layanan="{{ $pm->jenisLayanan->nama_jenis_layanan ?? 'Tidak Diketahui' }}"
                                                 data-deskripsi="{{ $pm->deskripsi_keperluan }}"
-                                                data-disposisi1="{{$pm->disposisi->pegawai1->nama ?? 'Belum diatur' }}"
-                                                data-disposisi2="{{ $pm->disposisi->pegawai2->nama ?? 'Belum diatur' }}"
-                                                data-disposisi3="{{ $pm->disposisi->pegawai3->nama ?? 'Belum diatur' }}"
-                                                data-disposisi4="{{ $pm->disposisi->pegawai4->nama ?? 'Belum diatur' }}"
-                                                data-tgl-disposisi="{{ $pm->disposisi->tanggal_disposisi ?? 'Belum Diatur' }}"
+                                                data-disposisi1="{{$pm->disposisi->pegawai1->nama ?? 'Belum Diatur' }}"
+                                                data-disposisi2="{{ $pm->disposisi->pegawai2->nama ?? 'Belum Diatur' }}"
+                                                data-disposisi3="{{ $pm->disposisi->pegawai3->nama ?? 'Belum Diatur' }}"
+                                                data-disposisi4="{{ $pm->disposisi->pegawai4->nama ?? 'Belum Diatur' }}"
+                                                data-tgl-disposisi="{{ optional($pm->disposisi)->tanggal_disposisi ? \Carbon\Carbon::parse($pm->disposisi->tanggal_disposisi)->format('d/m/Y') : 'Belum Diatur' }}"
                                                 data-pemohon="{{ $pm->pemohon->nama_pemohon ?? 'Tidak Diketahui' }}"
                                                 data-instansi="{{ $pm->pemohon->instansi ?? 'Tidak Diketahui' }}"
                                                 data-hp="{{ $pm->pemohon->no_kontak ?? 'Tidak Ada' }}"
@@ -470,7 +470,7 @@
                                                         <p class="font-semibold text-gray-900 self-start">Tanggal Diambil</p>
                                                         <p id="detail-tgl-diambil" class="text-gray-800"></p>
                                             
-                                                        <!-- Field kondisional untuk skripsi -->
+                                                        <!-- Field kondisional untuk skripsi. Hanya muncul ketika kategori berbayar = nol rupiah -->
                                                         <div id="skripsi-fields" class="contents hidden">
                                                             <p class="font-semibold text-gray-900 self-start">Tanggal Rencana Pengumpulan Skripsi</p>
                                                             <p id="detail-tgl-rencana" class="text-gray-800"></p>
@@ -526,27 +526,41 @@
                                                 skripsiFields.classList.add('hidden');
                                             }
 
+                                            // Fungsi helper untuk mengatur warna teks
+                                            function setTextWithColor(elementId, value) {
+                                                const element = document.getElementById(elementId);
+                                                if (["Belum Diatur", "Tidak Ada", "Tidak Diketahui"].includes(value)) {
+                                                    element.style.color = 'red';  // Teks merah untuk nilai kosong
+                                                } else {
+                                                    element.style.color = ''; // Kembalikan ke warna default
+                                                }
+                                                element.textContent = value;
+                                            }
+
+                                            // Gunakan fungsi helper untuk setiap field
+                                            setTextWithColor('detail-disposisi1', permohonan.getAttribute('data-disposisi1'));
+                                            setTextWithColor('detail-disposisi2', permohonan.getAttribute('data-disposisi2'));
+                                            setTextWithColor('detail-disposisi3', permohonan.getAttribute('data-disposisi3'));
+                                            setTextWithColor('detail-disposisi4', permohonan.getAttribute('data-disposisi4'));
+                                            setTextWithColor('detail-tgl-disposisi', permohonan.getAttribute('data-tgl-disposisi'));
+                                            setTextWithColor('detail-pemohon', permohonan.getAttribute('data-pemohon'));
+                                            setTextWithColor('detail-instansi', permohonan.getAttribute('data-instansi'));
+                                            setTextWithColor('detail-hp', permohonan.getAttribute('data-hp'));
+                                            setTextWithColor('detail-email', permohonan.getAttribute('data-email'));
+                                            setTextWithColor('detail-tgl-selesai', permohonan.getAttribute('data-tgl-selesai'));
+                                            setTextWithColor('detail-tgl-diambil', permohonan.getAttribute('data-tgl-diambil'));
+
+                                             // Untuk field yang tidak perlu diwarnai, gunakan cara biasa
                                             document.getElementById('detail-id').textContent = permohonan.getAttribute('data-id');
                                             document.getElementById('detail-tgl-diajukan').textContent = permohonan.getAttribute('data-tgl-diajukan');
                                             document.getElementById('detail-kategori').textContent = permohonan.getAttribute('data-kategori');
                                             document.getElementById('detail-jenis-layanan').textContent = permohonan.getAttribute('data-jenis-layanan');
                                             document.getElementById('detail-deskripsi').textContent = permohonan.getAttribute('data-deskripsi');
-                                            document.getElementById('detail-disposisi1').textContent = permohonan.getAttribute('data-disposisi1');
-                                            document.getElementById('detail-disposisi2').textContent = permohonan.getAttribute('data-disposisi2');
-                                            document.getElementById('detail-disposisi3').textContent = permohonan.getAttribute('data-disposisi3');
-                                            document.getElementById('detail-disposisi4').textContent = permohonan.getAttribute('data-disposisi4');
-                                            document.getElementById('detail-tgl-disposisi').textContent = permohonan.getAttribute('data-tgl-disposisi');
-                                            document.getElementById('detail-pemohon').textContent = permohonan.getAttribute('data-pemohon');
-                                            document.getElementById('detail-instansi').textContent = permohonan.getAttribute('data-instansi');
-                                            document.getElementById('detail-hp').textContent = permohonan.getAttribute('data-hp');
-                                            document.getElementById('detail-email').textContent = permohonan.getAttribute('data-email');
-                                            document.getElementById('detail-tgl-selesai').textContent = permohonan.getAttribute('data-tgl-selesai');
-                                            document.getElementById('detail-tgl-diambil').textContent = permohonan.getAttribute('data-tgl-diambil');
-                                        
-                                            // Jika kategori Nolrupiah, isi tanggal rencana & pengumpulan
+                                            
+                                             // Untuk field skripsi
                                             if (kategori_berbayar === 'Nolrupiah') {
-                                                document.getElementById('detail-tgl-rencana').textContent = permohonan.dataset.tglRencana || 'Belum Diatur';
-                                                document.getElementById('detail-tgl-pengumpulan').textContent = permohonan.dataset.tglPengumpulan || 'Belum Diatur';
+                                                setTextWithColor('detail-tgl-rencana', permohonan.dataset.tglRencana || 'Belum Diatur');
+                                                setTextWithColor('detail-tgl-pengumpulan', permohonan.dataset.tglPengumpulan || 'Belum Diatur');
                                             } else {
                                                 document.getElementById('detail-tgl-rencana').textContent = '-';
                                                 document.getElementById('detail-tgl-pengumpulan').textContent = '-';

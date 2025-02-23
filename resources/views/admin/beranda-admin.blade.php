@@ -2,17 +2,76 @@
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
         <div class="overflow-x-auto min-h-screen">
             <div class="relative flex items-center justify-center">
-                <h2 class="mt-6 mb-8 text-lg font-semibold absolute left-1/2 transform -translate-x-1/2">Rekap Layanan Tahunan</h2>
+                <h2 class="mt-6 mb-8 text-lg font-semibold absolute left-1/2 transform -translate-x-1/2">
+                    Rekap Layanan Tahunan {{ $tahun }}
+                </h2>
             
                 <div class="ml-auto mr-6 mt-6 mb-8">
+                    <!-- Filter Button -->
                     <button id="filterButton" data-dropdown-toggle="dropdownFilters" class="py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 flex items-center">
                         <svg class="h-3.5 w-3.5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                             <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z"/>
                         </svg>                                      
                         Pilih Tahun
                     </button>
+            
+                    <!-- Dropdown Filter -->
+                    <div id="dropdownFilters" style="display: none;" class="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-md p-4 z-50">
+                        <h3 class="font-semibold mt-4 mb-2">Pilih Tahun</h3>
+                        <select id="yearFilter" class="w-full p-2 border rounded">
+                            <option value="">Semua Tahun</option>
+                            @foreach($tahunTersedia as $t)
+                                <option value="{{ $t }}" {{ $t == $tahun ? 'selected' : '' }}>
+                                    {{ $t }}
+                                </option>
+                            @endforeach
+                        </select>
+                
+                        <!-- Tombol Terapkan -->
+                        <button id="applyFilter" class="mt-4 w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">
+                            Terapkan
+                        </button>
+                    </div>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const filterButton = document.getElementById('filterButton');
+                        const dropdownFilters = document.getElementById('dropdownFilters');
+                        const yearFilter = document.getElementById('yearFilter');
+                        const applyFilter = document.getElementById('applyFilter');
+                    
+                        // Toggle dropdown when filter button is clicked
+                        filterButton.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            dropdownFilters.style.display = dropdownFilters.style.display === 'none' ? 'block' : 'none';
+                        });
+                    
+                        // Close dropdown when clicking outside
+                        document.addEventListener('click', function(e) {
+                            if (!dropdownFilters.contains(e.target) && !filterButton.contains(e.target)) {
+                                dropdownFilters.style.display = 'none';
+                            }
+                        });
+                    
+                        // Handle apply filter button click
+                        applyFilter.addEventListener('click', function() {
+                            const selectedYear = yearFilter.value;
+                            if (selectedYear) {
+                                const url = new URL(window.location.href);
+                                url.searchParams.set('tahun', selectedYear);
+                                window.location.href = url.toString();
+                            }
+                            dropdownFilters.style.display = 'none';
+                        });
+                    
+                        // Prevent dropdown from closing when clicking inside it
+                        dropdownFilters.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                        });
+                    });
+                    </script>
             </div>
+            
             
 
             <!-- Kotak untuk Total -->

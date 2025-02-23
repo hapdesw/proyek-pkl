@@ -44,6 +44,7 @@ Route::middleware(['auth', 'Admin_1000'])->group(function () {
     Route::delete('/admin-layanan/kelola-layanan/destroy/{id}', [JenisLayananController::class, 'destroy'])->name('admin.kelola-layanan.destroy'); 
     Route::get('/permohonan/filter', [PermohonanController::class, 'filter']);
     Route::get('/admin-layanan/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
+    Route::get('/admin-layanan/beranda/available-years', [AdminController::class, 'getAvailableYears']);
     Route::get('/admin-layanan/permohonan', [PermohonanController::class, 'index'])->name('admin.permohonan'); 
     Route::get('/admin-layanan/permohonan/create', [PermohonanController::class, 'create'])->name('admin.permohonan.create'); 
     Route::get('/admin-layanan/permohonan/edit/{id}', [PermohonanController::class, 'edit'])->name('admin.permohonan.edit'); 
