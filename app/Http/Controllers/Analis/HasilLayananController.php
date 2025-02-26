@@ -8,6 +8,7 @@ use App\Models\Permohonan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -18,28 +19,201 @@ class HasilLayananController extends Controller
      */
     public function index(Request $request)
     {
-        if (Auth::check()) {
-            $nip_analis = Auth::user()->pegawai->nip;
-        } else {
+        // Pastikan pengguna sudah login
+        if (!Auth::check()) {
             return redirect('/login');
         }
-        
-        $permohonan = Permohonan::whereHas('disposisi', function($query) use ($nip_analis) {
+
+        // Ambil NIP analis dari pengguna yang login
+        $nip_analis = Auth::user()->pegawai->nip;
+
+        // Query dasar dengan filter 
+        $query = Permohonan::whereHas('disposisi', function($query) use ($nip_analis) {
             $query->where('nip_pegawai1', $nip_analis)
                 ->orWhere('nip_pegawai2', $nip_analis)
                 ->orWhere('nip_pegawai3', $nip_analis)
                 ->orWhere('nip_pegawai4', $nip_analis);
-        })->with(['jenisLayanan', 'pemohon', 'hasilLayanan', 'disposisi'])->paginate(15);
+        })->with(['jenisLayanan', 'pemohon', 'hasilLayanan', 'disposisi']);
+
+        // Pencarian berdasarkan input search
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                // Cari berdasarkan kolom di tabel permohonan
+                $q->where('id', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('tanggal_diajukan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('deskripsi_keperluan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('kategori_berbayar', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('status_permohonan', 'like', '%' . $searchTerm . '%')
+                  
+                  // Cari berdasarkan data pemohon
+                  ->orWhereHas('pemohon', function($query) use ($searchTerm) {
+                      $query->where('nama_pemohon', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('instansi', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('no_kontak', 'like', '%' . $searchTerm . '%');
+                  })
+                  
+                  // Cari berdasarkan jenis layanan
+                  ->orWhereHas('jenisLayanan', function($query) use ($searchTerm) {
+                      $query->where('nama_jenis_layanan', 'like', '%' . $searchTerm . '%');
+                  })
+                  
+                  // Cari berdasarkan hasil layanan
+                  ->orWhereHas('hasilLayanan', function($query) use ($searchTerm) {
+                    $query->where('status', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('koreksi', 'like', '%' . $searchTerm . '%')
+                        ->orWhereHas('pegawai', function($q) use ($searchTerm) {
+                            $q->where('nama', 'like', '%' . $searchTerm . '%');
+                        });
+                  });
+            });
+        }
+
+        // Filter berdasarkan bulan jika ada
+        if ($request->has('months') && !empty($request->query('months'))) {
+            $months = explode(',', $request->query('months'));
+            $monthNumbers = [
+                'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
+                'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8,
+                'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12
+            ];
+            $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
+            $query->whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths);
+        }
+
+        // Filter berdasarkan tahun jika ada
+        if ($request->has('year') && !empty($request->query('year'))) {
+            $query->whereYear('tanggal_diajukan', $request->query('year'));
+        }
+
+        // Filter berdasarkan status hasil layanan
+        if ($request->has('status') && !empty($request->query('status'))) {
+            $statusFilter = $request->query('status');
+
+            // Filter berdasarkan status di tabel hasil_layanan
+            $query->whereHas('hasilLayanan', function ($q) use ($statusFilter) {
+                $q->where('status', $statusFilter);
+            });
+        }
+
+        // Paginate hasil query
+        $permohonan = $query->paginate(15);
 
         return view('analis.hasil-layanan', compact('permohonan'));
     }
 
     public function indexKapokja(Request $request)
     {
-        $permohonan = Permohonan::whereHas('disposisi')
-            ->with(['jenisLayanan', 'pemohon', 'hasilLayanan', 'disposisi'])
-            ->paginate(15);
+        // Query dasar dengan filter 
+        $query = Permohonan::whereHas('disposisi')
+            ->with(['jenisLayanan', 'pemohon', 'hasilLayanan', 'disposisi']);
+
+        // Pencarian berdasarkan input search
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                // Cari berdasarkan kolom di tabel permohonan
+                $q->where('id', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('tanggal_diajukan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('deskripsi_keperluan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('kategori_berbayar', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('status_permohonan', 'like', '%' . $searchTerm . '%')
+                  
+                  // Cari berdasarkan data pemohon
+                  ->orWhereHas('pemohon', function($query) use ($searchTerm) {
+                      $query->where('nama_pemohon', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('instansi', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('no_kontak', 'like', '%' . $searchTerm . '%');
+                  })
+                  
+                  // Cari berdasarkan jenis layanan
+                  ->orWhereHas('jenisLayanan', function($query) use ($searchTerm) {
+                      $query->where('nama_jenis_layanan', 'like', '%' . $searchTerm . '%');
+                  })
+                  
+                  // Cari berdasarkan hasil layanan
+                  ->orWhereHas('hasilLayanan', function($query) use ($searchTerm) {
+                    $query->where('status', 'like', '%' . $searchTerm . '%')
+                        ->orWhere('koreksi', 'like', '%' . $searchTerm . '%')
+                        ->orWhereHas('pegawai', function($q) use ($searchTerm) {
+                            $q->where('nama', 'like', '%' . $searchTerm . '%');
+                        });
+                  });
+            });
+        }
+
+        // Filter berdasarkan bulan jika ada
+        if ($request->has('months') && !empty($request->query('months'))) {
+            $months = explode(',', $request->query('months'));
+            $monthNumbers = [
+                'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
+                'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8,
+                'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12
+            ];
+            $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
+            $query->whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths);
+        }
+
+        // Filter berdasarkan tahun jika ada
+        if ($request->has('year') && !empty($request->query('year'))) {
+            $query->whereYear('tanggal_diajukan', $request->query('year'));
+        }
+
+        // Filter berdasarkan status hasil layanan
+        if ($request->has('status') && !empty($request->query('status'))) {
+            $statusFilter = $request->query('status');
+
+            // Filter berdasarkan status di tabel hasil_layanan
+            $query->whereHas('hasilLayanan', function ($q) use ($statusFilter) {
+                $q->where('status', $statusFilter);
+            });
+        }
+
+        // Paginate hasil query
+        $permohonan = $query->paginate(15);
+
         return view('kapokja.hasil-layanan', compact('permohonan'));
+    }
+
+    public function getAvailableYears()
+    {
+        // Pastikan pengguna sudah login
+        if (!Auth::check()) {
+            return response()->json([]); 
+        }
+
+        // Ambil NIP analis dari pengguna yang login
+        $nip_analis = Auth::user()->pegawai->nip;
+
+        // Query untuk mengambil tahun yang unik dari permohonan yang terkait dengan nip_analis
+        $years = Permohonan::whereHas('disposisi', function($query) use ($nip_analis) {
+            $query->where('nip_pegawai1', $nip_analis)
+                ->orWhere('nip_pegawai2', $nip_analis)
+                ->orWhere('nip_pegawai3', $nip_analis)
+                ->orWhere('nip_pegawai4', $nip_analis);
+        })
+        ->selectRaw('DISTINCT YEAR(tanggal_diajukan) AS year')
+        ->orderBy('year', 'DESC')
+        ->pluck('year') 
+        ->toArray();
+
+        Log::info('Data tahun yang ditemukan untuk nip_analis ' . $nip_analis . ':', $years);
+
+        return response()->json($years);
+    }
+
+    public function getAvailableYearsKapokja()
+    {
+        // Query untuk mengambil tahun yang unik dari permohonan 
+        $years = Permohonan::whereHas('disposisi')
+        ->selectRaw('DISTINCT YEAR(tanggal_diajukan) AS year')
+        ->orderBy('year', 'DESC')
+        ->pluck('year') 
+        ->toArray();
+
+        Log::info('Data tahun yang ditemukan' . ':', $years);
+
+        return response()->json($years);
     }
 
     /**

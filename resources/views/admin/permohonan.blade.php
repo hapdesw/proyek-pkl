@@ -27,8 +27,8 @@
                    
                 </div>
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-                    <div class="w-full md:w-1/2">
-                        <form class="flex items-center">
+                    <div class="w-full md:w-1/3">
+                        <form action="{{ route('admin.permohonan') }}" method="GET" class="flex items-center">
                             <label for="simple-search" class="sr-only">Search</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -36,7 +36,14 @@
                                         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
+                                <input 
+                                    type="text" 
+                                    id="simple-search" 
+                                    name="search" 
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 
+                                    placeholder="Search" 
+                                    value="{{ request('search') }}" 
+                                >
                             </div>
                         </form>
                     </div>
@@ -74,6 +81,16 @@
                                         <option value="">Semua Tahun</option>
                                         <!-- Tahun akan diisi dengan JavaScript -->
                                     </select>
+
+                                    <!-- Filter Status Permohonan -->
+                                    <h3 class="font-semibold mt-4 mb-2">Pilih Status Permohonan</h3>
+                                    <select id="statusPermohonanFilter" class="w-full p-2 border rounded">
+                                        <option value="">Semua</option>
+                                        <option value="Diproses">Diproses</option>
+                                        <option value="Selesai Dibuat">Selesai Dibuat</option>
+                                        <option value="Selesai Diambil">Selesai Diambil</option>
+                                        <option value="Batal">Batal</option>
+                                    </select>
                             
                                     <!-- Tombol Terapkan -->
                                     <button id="applyFilter" class="mt-4 w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">
@@ -81,6 +98,81 @@
                                     </button>
                                 </div>
                             </div>
+
+                            <script>
+                            // ini script untuk filter
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const filterButton = document.getElementById('filterButton');
+                                const filterDropdown = document.getElementById('dropdownFilters');
+                                const applyFilterButton = document.getElementById('applyFilter');
+                                const monthCheckboxes = document.querySelectorAll('.month-filter');
+                                const yearSelect = document.getElementById('yearFilter');
+                                const statusPermohonanSelect = document.getElementById('statusPermohonanFilter');
+
+                                // Toggle dropdown filter
+                                filterButton.addEventListener('click', function () {
+                                    filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
+                                });
+
+                                // Tutup dropdown saat klik di luar
+                                document.addEventListener('click', function (event) {
+                                    if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
+                                        filterDropdown.style.display = 'none';
+                                    }
+                                });
+
+                                // Ambil data tahun dari backend
+                                fetch('/admin-layanan/permohonan/available-years')
+                                    .then(response => response.json())
+                                    .then(years => {
+                                        yearSelect.innerHTML = '<option value="">Semua Tahun</option>';
+
+                                        years.forEach(year => {
+                                            const option = document.createElement('option');
+                                            option.value = year;
+                                            option.textContent = year;
+                                            yearSelect.appendChild(option);
+                                        });
+                                    })
+                                    .catch(error => console.error('Error fetching years:', error));
+
+                                // Terapkan filter saat tombol "Terapkan" diklik
+                                applyFilterButton.addEventListener('click', function () {
+                                    const selectedMonths = Array.from(monthCheckboxes)
+                                        .filter(checkbox => checkbox.checked)
+                                        .map(checkbox => checkbox.value);
+                                    const selectedYear = yearSelect.value;
+                                    const selectedStatusPermohonan = statusPermohonanSelect.value;
+
+                                    // Buat URL dengan parameter filter
+                                    const url = new URL(window.location.href);
+
+                                    // Hanya tambahkan parameter `months` jika ada bulan yang dipilih
+                                    if (selectedMonths.length > 0) {
+                                        url.searchParams.set('months', selectedMonths.join(','));
+                                    } else {
+                                        url.searchParams.delete('months'); // Hapus parameter `months` jika tidak ada bulan yang dipilih
+                                    }
+
+                                    // Hanya tambahkan parameter `year` jika tahun dipilih
+                                    if (selectedYear) {
+                                        url.searchParams.set('year', selectedYear);
+                                    } else {
+                                        url.searchParams.delete('year'); // Hapus parameter `year` jika tidak ada tahun yang dipilih
+                                    }
+
+                                    // Hanya tambahkan parameter `status_permohonan` jika status dipilih
+                                    if (selectedStatusPermohonan) {
+                                        url.searchParams.set('status_permohonan', selectedStatusPermohonan);
+                                    } else {
+                                        url.searchParams.delete('status_permohonan'); // Hapus parameter `status_permohonan` jika tidak ada status yang dipilih
+                                    }
+
+                                    // Redirect ke URL dengan parameter filter
+                                    window.location.href = url.toString();
+                                });
+                            });
+                            </script>
 
                             {{-- Tombol Export --}}
                             <button id="exportButton" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
@@ -167,67 +259,6 @@
                                 </a>    
                             </div>            
                         </div>
-                        <script>
-                        // ini script untuk filter
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const filterButton = document.getElementById('filterButton');
-                            const filterDropdown = document.getElementById('dropdownFilters');
-                            const applyFilterButton = document.getElementById('applyFilter');
-                            const monthCheckboxes = document.querySelectorAll('.month-filter');
-                            const yearSelect = document.getElementById('yearFilter');
-
-                            filterButton.addEventListener('click', function () {
-                                filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
-                            });
-
-                            document.addEventListener('click', function (event) {
-                                if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
-                                    filterDropdown.style.display = 'none';
-                                }
-                            });
-
-                            fetch('/admin-layanan/permohonan/available-years')
-                                .then(response => response.json())
-                                .then(years => {
-                                    yearSelect.innerHTML = '<option value="">Semua Tahun</option>';
-
-                                    years.forEach(year => {
-                                        const option = document.createElement('option');
-                                        option.value = year;
-                                        option.textContent = year;
-                                        yearSelect.appendChild(option);
-                                    });
-                                })
-                                .catch(error => console.error('Error fetching years:', error));
-
-                            applyFilterButton.addEventListener('click', function () {
-                                const selectedMonths = Array.from(monthCheckboxes)
-                                    .filter(checkbox => checkbox.checked)
-                                    .map(checkbox => checkbox.value);
-                                const selectedYear = yearSelect.value;
-
-                                // Buat URL dengan parameter filter
-                                const url = new URL(window.location.href);
-
-                                // Hanya tambahkan parameter `months` jika ada bulan yang dipilih
-                                if (selectedMonths.length > 0) {
-                                    url.searchParams.set('months', selectedMonths.join(','));
-                                } else {
-                                    url.searchParams.delete('months'); // Hapus parameter `months` jika tidak ada bulan yang dipilih
-                                }
-
-                                // Hanya tambahkan parameter `year` jika tahun dipilih
-                                if (selectedYear) {
-                                    url.searchParams.set('year', selectedYear);
-                                } else {
-                                    url.searchParams.delete('year'); // Hapus parameter `year` jika tidak ada tahun yang dipilih
-                                }
-
-                                // Redirect ke URL dengan parameter filter
-                                window.location.href = url.toString();
-                            });
-                        });
-                        </script>
                     </div>
                 </div>
                 {{-- Tabel --}}
@@ -669,7 +700,7 @@
                     <ul class="inline-flex items-stretch -space-x-px">
                         <!-- Previous Page Link -->
                         <li>
-                            <a href="{{ $permohonan->previousPageUrl() }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                            <a href="{{ $permohonan->previousPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
                             class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $permohonan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
                                 <span class="sr-only">Previous</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -682,7 +713,7 @@
                         @foreach ($permohonan->getUrlRange(1, $permohonan->lastPage()) as $page => $url)
                             @if ($page == 1 || $page == $permohonan->lastPage() || ($page >= $permohonan->currentPage() - 1 && $page <= $permohonan->currentPage() + 1))
                                 <li>
-                                    <a href="{{ $url }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                                    <a href="{{ $url }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
                                     class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
                                     {{ $permohonan->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
                                         {{ $page }}
@@ -697,7 +728,7 @@
 
                         <!-- Next Page Link -->
                         <li>
-                            <a href="{{ $permohonan->nextPageUrl() }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                            <a href="{{ $permohonan->nextPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
                             class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$permohonan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
                                 <span class="sr-only">Next</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

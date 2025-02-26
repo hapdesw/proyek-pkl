@@ -21,9 +21,52 @@ class DisposisiController extends Controller
             'disposisi.pegawai1', 
             'disposisi.pegawai2', 
             'disposisi.pegawai3', 
-            'disposisi.pegawai4', 
+            'disposisi.pegawai4',
+            'pemohon',
+            'jenisLayanan' 
         ]);
-
+        
+        // Pencarian berdasarkan input search
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                // Cari berdasarkan kolom di tabel permohonan
+                $q->where('id', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('tanggal_diajukan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('deskripsi_keperluan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('kategori_berbayar', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('status_permohonan', 'like', '%' . $searchTerm . '%')
+                  
+                  // Cari berdasarkan data pemohon
+                  ->orWhereHas('pemohon', function($query) use ($searchTerm) {
+                      $query->where('nama_pemohon', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('instansi', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('no_kontak', 'like', '%' . $searchTerm . '%');
+                  })
+                  
+                  // Cari berdasarkan jenis layanan
+                  ->orWhereHas('jenisLayanan', function($query) use ($searchTerm) {
+                      $query->where('nama_jenis_layanan', 'like', '%' . $searchTerm . '%');
+                  })
+                  
+                  // Cari berdasarkan disposisi (pegawai1, pegawai2, pegawai3, pegawai4)
+                  ->orWhereHas('disposisi', function($query) use ($searchTerm) {
+                      $query->whereHas('pegawai1', function($q) use ($searchTerm) {
+                          $q->where('nama', 'like', '%' . $searchTerm . '%');
+                      })
+                      ->orWhereHas('pegawai2', function($q) use ($searchTerm) {
+                          $q->where('nama', 'like', '%' . $searchTerm . '%');
+                      })
+                      ->orWhereHas('pegawai3', function($q) use ($searchTerm) {
+                          $q->where('nama', 'like', '%' . $searchTerm . '%');
+                      })
+                      ->orWhereHas('pegawai4', function($q) use ($searchTerm) {
+                          $q->where('nama', 'like', '%' . $searchTerm . '%');
+                      });
+                  });
+            });
+        }
+        
         // Filter berdasarkan bulan jika ada
         if ($request->has('months') && !empty($request->query('months'))) {
             $months = explode(',', $request->query('months'));
@@ -39,6 +82,24 @@ class DisposisiController extends Controller
         // Filter berdasarkan tahun jika ada
         if ($request->has('year') && !empty($request->query('year'))) {
             $query->whereYear('tanggal_diajukan', $request->query('year'));
+        }
+
+        // Filter berdasarkan disposisi
+        if ($request->has('disposisi') && !empty($request->query('disposisi'))) {
+            $disposisiFilter = $request->query('disposisi');
+
+            if ($disposisiFilter === 'sudah') {
+                // Hanya tampilkan permohonan yang sudah memiliki disposisi
+                $query->whereHas('disposisi', function ($q) {
+                    $q->whereNotNull('nip_pegawai1')
+                    ->orWhereNotNull('nip_pegawai2')
+                    ->orWhereNotNull('nip_pegawai3')
+                    ->orWhereNotNull('nip_pegawai4');
+                });
+            } elseif ($disposisiFilter === 'belum') {
+                // Hanya tampilkan permohonan yang belum memiliki disposisi
+                $query->whereDoesntHave('disposisi');
+            }
         }
 
         $permohonan = $query->paginate(15);
