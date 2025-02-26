@@ -102,11 +102,11 @@
                                     </p>
                                     <div class="flex justify-center gap-5 mb-6">
                                         {{-- Tombol Export PDF --}}
-                                        <a href="#" class="bg-orange-700 hover:bg-orange-300 text-white hover:text-orange-700 font-bold py-2 px-4 rounded">
+                                        <a href="#" class="bg-orange-500 hover:bg-orange-300 text-white hover:text-orange-700 font-bold py-2 px-4 rounded">
                                             PDF
                                         </a>
                                         {{-- Tombol Export Excel --}}
-                                        <a href="#" class="bg-green-700 hover:bg-green-300 text-white hover:text-green-700 font-bold py-2 px-4 rounded">
+                                        <a href="#" class="bg-green-500 hover:bg-green-300 text-white hover:text-green-700 font-bold py-2 px-4 rounded">
                                             Excel
                                         </a>
                                     </div>
