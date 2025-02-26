@@ -82,6 +82,7 @@ Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
     Route::delete('/kapokja/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroyStatusKapokja'])->name('kapokja.hasil-layanan.destroy');
 
     Route::get('/kapokja/disposisi/available-years', [DisposisiController::class, 'getAvailableYears']);
+    Route::get('/kapokja/hasil-layanan/available-years', [HasilLayananController::class, 'getAvailableYearsKapokja']);
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {
@@ -91,6 +92,7 @@ Route::middleware(['auth', 'Analis_0010'])->group(function () {
     Route::get('/analis/hasil-layanan/edit/{id}', [HasilLayananController::class, 'edit'])->name('analis.hasil-layanan.edit');
     Route::put('/analis/hasil-layanan/update/{id}', [HasilLayananController::class, 'update'])->name('analis.hasil-layanan.update');
     Route::delete('/analis/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroy'])->name('analis.hasil-layanan.destroy');
+    Route::get('/analis/hasil-layanan/available-years', [HasilLayananController::class, 'getAvailableYears']);
 }); 
 
 Route::middleware(['auth', 'Bendahara_0001'])->group(function () {

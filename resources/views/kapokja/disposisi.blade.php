@@ -27,7 +27,7 @@
                 </div>
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/3">
-                        <form class="flex items-center">
+                        <form action="{{ route('kapokja.disposisi') }}" method="GET" class="flex items-center">
                             <label for="simple-search" class="sr-only">Search</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -35,7 +35,14 @@
                                         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                     </svg>
                                 </div>
-                                <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
+                                <input 
+                                    type="text" 
+                                    id="simple-search" 
+                                    name="search" 
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 
+                                    placeholder="Search" 
+                                    value="{{ request('search') }}" 
+                                >
                             </div>
                         </form>
                     </div>
@@ -71,6 +78,14 @@
                                     <select id="yearFilter" class="w-full p-2 border rounded">
                                         <option value="">Semua Tahun</option>
                                     </select>
+
+                                    <!-- Filter Disposisi -->
+                                    <h3 class="font-semibold mt-4 mb-2">Status Disposisi</h3>
+                                    <select id="disposisiFilter" class="w-full p-2 border rounded">
+                                        <option value="">Semua</option>
+                                        <option value="sudah">Sudah Disposisi</option>
+                                        <option value="belum">Belum Disposisi</option>
+                                    </select>
                             
                                     <!-- Tombol Terapkan -->
                                     <button id="applyFilter" class="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
@@ -86,6 +101,7 @@
                             const applyFilterButton = document.getElementById('applyFilter');
                             const monthCheckboxes = document.querySelectorAll('.month-filter');
                             const yearSelect = document.getElementById('yearFilter');
+                            const disposisiSelect = document.getElementById('disposisiFilter');
 
                             filterButton.addEventListener('click', function () {
                                 filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
@@ -116,6 +132,7 @@
                                     .filter(checkbox => checkbox.checked)
                                     .map(checkbox => checkbox.value);
                                 const selectedYear = yearSelect.value;
+                                const selectedDisposisi = disposisiSelect.value;
 
                                 // Buat URL dengan parameter filter
                                 const url = new URL(window.location.href);
@@ -124,14 +141,21 @@
                                 if (selectedMonths.length > 0) {
                                     url.searchParams.set('months', selectedMonths.join(','));
                                 } else {
-                                    url.searchParams.delete('months'); // Hapus parameter `months` jika tidak ada bulan yang dipilih
+                                    url.searchParams.delete('months'); 
                                 }
 
                                 // Hanya tambahkan parameter `year` jika tahun dipilih
                                 if (selectedYear) {
                                     url.searchParams.set('year', selectedYear);
                                 } else {
-                                    url.searchParams.delete('year'); // Hapus parameter `year` jika tidak ada tahun yang dipilih
+                                    url.searchParams.delete('year'); 
+                                }
+
+                                // Hanya tambahkan parameter `disposisi` jika status disposisi dipilih
+                                if (selectedDisposisi) {
+                                    url.searchParams.set('disposisi', selectedDisposisi);
+                                } else {
+                                    url.searchParams.delete('disposisi');
                                 }
 
                                 // Redirect ke URL dengan parameter filter
@@ -242,70 +266,73 @@
                                                         <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detail</a>
                                                     </li>
                                                 </div>
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex items-center px-4 py-1">
-                                                    @if($pm->disposisi && ($pm->disposisi->pegawai1 || $pm->disposisi->pegawai2 || $pm->disposisi->pegawai3 || $pm->disposisi->pegawai4))
-
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
-                                                        </svg>
-                                                        <a href="{{ route('kapokja.disposisi.edit', ['id' => $pm->id]) }}" 
-                                                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        Edit Disposisi
-                                                        </a>
-                                                    @else
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                                        </svg>
-                                                        <a href="{{ route('kapokja.disposisi.create', ['id' => $pm->id]) }}" 
-                                                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        Atur Disposisi
-                                                        </a>
-                                                    @endif
-                                                    </li>
-                                                </div>
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class="flex items-center px-4 py-1">
-                                                        <form id="delete-form-{{ $pm->id }}" 
-                                                            action="{{ route('kapokja.disposisi.destroy', $pm->id) }}" 
-                                                            method="POST" 
-                                                            class="flex items-center">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            
+                                                @if(isset($pm->disposisi) && ($pm->disposisi->pegawai1 || $pm->disposisi->pegawai2 || $pm->disposisi->pegawai3 || $pm->disposisi->pegawai4))
+                                                    <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                        <li class=" flex items-center px-4 py-1">
                                                             <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                             </svg>
-                                                            
-                                                            <button type="button" 
-                                                                    onclick="confirmDelete({{ $pm->id }})" 
-                                                                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                                                Hapus Disposisi
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                </div>
+                                                            <a href="{{ route('kapokja.disposisi.edit', ['id' => $pm->id]) }}" 
+                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            Edit Disposisi
+                                                            </a>
+                                                        </li>
+                                                    </div>
 
-                                                <script>
-                                                function confirmDelete(id) {
-                                                    Swal.fire({
-                                                        title: 'Apakah Anda yakin?',
-                                                        text: "Data disposisi akan dihapus secara permanen!",
-                                                        icon: 'warning',
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: '#3085d6',
-                                                        cancelButtonColor: '#d33',
-                                                        confirmButtonText: 'Ya, hapus!',
-                                                        cancelButtonText: 'Batal'
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            document.getElementById('delete-form-' + id).submit();
-                                                        }
-                                                    });
-                                                }
-                                                </script>   
+                                                    <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                        <li class="flex items-center px-4 py-1">
+                                                            <form id="delete-form-{{ $pm->id }}" 
+                                                                action="{{ route('kapokja.disposisi.destroy', $pm->id) }}" 
+                                                                method="POST" 
+                                                                class="flex items-center">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                
+                                                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                                                </svg>
+                                                                
+                                                                <button type="button" 
+                                                                        onclick="confirmDelete({{ $pm->id }})" 
+                                                                        class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                                    Hapus Disposisi
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    </div>
+                                                @else
+                                                    <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                        <li class="flex items-center px-4 py-1">
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                            </svg>
+                                                            <a href="{{ route('kapokja.disposisi.create', ['id' => $pm->id]) }}" 
+                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            Atur Disposisi
+                                                            </a>
+                                                        </li>
+                                                    </div>
+                                                @endif
                                             </ul>
                                         </div>
+                                        <script>
+                                            function confirmDelete(id) {
+                                                Swal.fire({
+                                                    title: 'Apakah Anda yakin?',
+                                                    text: "Data disposisi akan dihapus secara permanen!",
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#3085d6',
+                                                    cancelButtonColor: '#d33',
+                                                    confirmButtonText: 'Ya, hapus!',
+                                                    cancelButtonText: 'Batal'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        document.getElementById('delete-form-' + id).submit();
+                                                    }
+                                                });
+                                            }
+                                        </script>  
                                     </td>
                                 </tr> 
                             @empty
@@ -333,7 +360,7 @@
                     <ul class="inline-flex items-stretch -space-x-px">
                         <!-- Previous Page Link -->
                         <li>
-                            <a href="{{ $permohonan->previousPageUrl() }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                            <a href="{{ $permohonan->previousPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
                             class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $permohonan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
                                 <span class="sr-only">Previous</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -346,7 +373,7 @@
                         @foreach ($permohonan->getUrlRange(1, $permohonan->lastPage()) as $page => $url)
                             @if ($page == 1 || $page == $permohonan->lastPage() || ($page >= $permohonan->currentPage() - 1 && $page <= $permohonan->currentPage() + 1))
                                 <li>
-                                    <a href="{{ $url }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                                    <a href="{{ $url }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
                                     class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
                                     {{ $permohonan->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
                                         {{ $page }}
@@ -361,7 +388,7 @@
 
                         <!-- Next Page Link -->
                         <li>
-                            <a href="{{ $permohonan->nextPageUrl() }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                            <a href="{{ $permohonan->nextPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
                             class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$permohonan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
                                 <span class="sr-only">Next</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
