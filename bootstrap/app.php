@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'Bendahara_0001' => \App\Http\Middleware\Bendahara_0001::class,
             'KapokjaAnalis_0110' => \App\Http\Middleware\KapokjaAnalis_0110::class,
             'AnalisBendahara_0011' => \App\Http\Middleware\AnalisBendahara_0011::class,
+            'KapokjaBendahara_0101' => \App\Http\Middleware\KapokjaBendahara_0101::class,
             
         ]);
     })

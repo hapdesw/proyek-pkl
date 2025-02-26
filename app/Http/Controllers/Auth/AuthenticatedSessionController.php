@@ -55,6 +55,10 @@ class AuthenticatedSessionController extends Controller
         {
             return redirect('/AB/analis-bendahara/transisi');
         }
+        elseif($request->user()->peran === '0101')
+        {
+            return redirect('/KB/kapokja-bendahara/transisi');
+        }
         
 
         return redirect()->intended(route('login'));
