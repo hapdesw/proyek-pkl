@@ -319,36 +319,34 @@
                                         </button>
                                         <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pm->id }}">
-                                                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-start hover:bg-gray-100 md:space-x-3 flex-shrink-0">                  
-                                                    <div class="flex items-center space-x-3 w-auto md:w-auto">
-                                                        <div x-data="{ open: false }" class="block px-2">
-                                                            <button data-modal-target="add-modal"  data-modal-toggle="add-modal" class="flex items-center gap-6 px-2 py-2 text-sm" onclick="showDetail({{ $pm->id }})">
-                                                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
-                                                                </svg>
-                                                                Detail Permohonan
-                                                            </button>     
-                                                        </div>
+                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <div x-data="{ open: false }" class="block px-2">
+                                                        <button data-modal-target="add-modal"  data-modal-toggle="add-modal" class="flex items-center gap-6 px-2 py-2 text-sm" onclick="showDetail({{ $pm->id }})">
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+                                                            </svg>
+                                                            Detail Permohonan
+                                                        </button>     
                                                     </div>
                                                 </div>
                         
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class="flex items-center px-4 py-1" >
+                                                    <li class="flex items-center px-5" >
                                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                         </svg>
                                                                                             
-                                                        <a href="{{ route('admin.permohonan.edit', $pm->id) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Permohonan</a>
+                                                        <a href="{{ route('admin.permohonan.edit', $pm->id) }}" class="block py-2 px-5 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit Permohonan</a>
                                                     </li>
                                                 </div>
                                                
-                                                <div class="block px-0 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex items-center px-2 py-1">
+                                                <div class="block px-1 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <li class=" flex items-center px-2">
                                                         <form id="delete-form-{{$pm->id}}" action="{{ route('admin.permohonan.destroy', $pm->id) }}" method="POST">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="button" onclick="confirmDelete({{$pm->id}})" class="flex items-center gap-6 py-2 px-3 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                                                <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
                                                                 </svg>
                                                                Hapus Permohonan
@@ -376,10 +374,10 @@
                                                         </script>   
                                                 </div>   
                                                 
-                                                <div class="block px-0 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex items-center px-2 py-1">
+                                                <div class="block px-1 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <li class=" flex items-center px-2">
                                                         <button onclick="updateStatus({{ $pm->id }}, 'Batal')" class="flex items-center gap-6 py-2 px-3 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                                            <svg class="w-5 h-5 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 9H8a5 5 0 0 0 0 10h9m4-10-4-4m4 4-4 4"/>
                                                             </svg>
                                                             Batalkan Permohonan
@@ -436,7 +434,7 @@
                                                     <div class="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 p-4 text-gray-700">
                                                         <p class="font-semibold text-gray-900 self-start">ID Permohonan</p>
                                                         <p id="detail-id" class="text-gray-800"></p>
-                                            
+
                                                         <p class="font-semibold text-gray-900 self-start">Tanggal Diajukan</p>
                                                         <p id="detail-tgl-diajukan" class="text-gray-800"></p>
                                             
@@ -520,7 +518,7 @@
                                             console.log("Kategori Berbayar:", kategori_berbayar);
 
                                             // Tampilkan/sembunyikan field skripsi berdasarkan kategori
-                                            if (kategori_berbayar === 'Nolrupiah') {
+                                            if (kategori_berbayar === 'Nol Rupiah') {
                                                 skripsiFields.classList.remove('hidden');
                                             } else {
                                                 skripsiFields.classList.add('hidden');
@@ -558,7 +556,7 @@
                                             document.getElementById('detail-deskripsi').textContent = permohonan.getAttribute('data-deskripsi');
                                             
                                              // Untuk field skripsi
-                                            if (kategori_berbayar === 'Nolrupiah') {
+                                            if (kategori_berbayar === 'Nol Rupiah') {
                                                 setTextWithColor('detail-tgl-rencana', permohonan.dataset.tglRencana || 'Belum Diatur');
                                                 setTextWithColor('detail-tgl-pengumpulan', permohonan.dataset.tglPengumpulan || 'Belum Diatur');
                                             } else {

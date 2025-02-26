@@ -234,13 +234,14 @@
                                         <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pm->id }}">
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex items-center px-4 py-1" >
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
-                                                        </svg>
-
-                                                        <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detail</a>
-                                                    </li>
+                                                    <div x-data="{ open: false }" class="block px-2">
+                                                        <button data-modal-target="add-modal"  data-modal-toggle="add-modal" class="flex items-center gap-4 px-2 py-2 text-sm" onclick="showDetail({{ $pm->id }})">
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 3v4a1 1 0 0 1-1 1H5m4 8h6m-6-4h6m4-8v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1Z"/>
+                                                            </svg>
+                                                            Detail Permohonan
+                                                        </button>     
+                                                    </div>
                                                 </div>
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex items-center px-4 py-1">
@@ -306,6 +307,207 @@
                                                 </script>   
                                             </ul>
                                         </div>
+                                         {{-- Modal untuk detail permohonan --}}
+                                         <div id="add-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                                            <button onclick="showDetail({{ $pm->id }})"></button>
+                                            <!-- Simpan data dalam atribut data- -->
+                                            @php
+                                                $tanggalDiajukan = \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y');
+                                                $tanggalSelesai = $pm->tanggal_selesai ? \Carbon\Carbon::parse($pm->tanggal_selesai)->format('d/m/Y') : 'Belum Diatur';
+                                                $tanggalDiambil =  $pm->tanggal_diambil ? \Carbon\Carbon::parse($pm->tanggal_diambil)->format('d/m/Y') : 'Belum Diatur' ;
+                                                $tanggalRencana =  $pm->tanggal_rencana ? \Carbon\Carbon::parse($pm->tanggal_rencana)->format('d/m/Y') : 'Belum Diatur' ;
+                                                $tanggalPengumpulan = $pm->tanggal_pengumpulan ? \Carbon\Carbon::parse($pm->tanggal_pengumpulan)->format('d/m/Y') : 'Belum Diatur' ;
+
+                                            @endphp
+                                            <div id="permohonan-{{ $pm->id }}" class="hidden"
+                                                data-id="{{ $pm->id}}"
+                                                data-tgl-diajukan="{{ $tanggalDiajukan }}"
+                                                data-kategori="{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}"
+                                                data-jenis-layanan="{{ $pm->jenisLayanan->nama_jenis_layanan ?? 'Tidak Diketahui' }}"
+                                                data-deskripsi="{{ $pm->deskripsi_keperluan }}"
+                                                data-disposisi1="{{$pm->disposisi->pegawai1->nama ?? 'Belum Diatur' }}"
+                                                data-disposisi2="{{ $pm->disposisi->pegawai2->nama ?? 'Belum Diatur' }}"
+                                                data-disposisi3="{{ $pm->disposisi->pegawai3->nama ?? 'Belum Diatur' }}"
+                                                data-disposisi4="{{ $pm->disposisi->pegawai4->nama ?? 'Belum Diatur' }}"
+                                                data-tgl-disposisi="{{ optional($pm->disposisi)->tanggal_disposisi ? \Carbon\Carbon::parse($pm->disposisi->tanggal_disposisi)->format('d/m/Y') : 'Belum Diatur' }}"
+                                                data-pemohon="{{ $pm->pemohon->nama_pemohon ?? 'Tidak Diketahui' }}"
+                                                data-instansi="{{ $pm->pemohon->instansi ?? 'Tidak Diketahui' }}"
+                                                data-hp="{{ $pm->pemohon->no_kontak ?? 'Tidak Ada' }}"
+                                                data-email="{{ $pm->pemohon->email ?? 'Tidak Ada' }}"
+                                                data-tgl-selesai="{{ $tanggalSelesai}}"
+                                                data-tgl-diambil="{{ $tanggalDiambil}}"
+                                                data-tgl-rencana="{{ $tanggalRencana}}"
+                                                data-tgl-pengumpulan="{{ $tanggalPengumpulan}}"
+                                                data-status="{{ $pm->status_permohonan }}">
+                                            </div>
+                                           
+                                            <div class="fixed inset-0 flex items-center justify-center p-4">
+                                                <div class="relative bg-white p-5 w-full max-w-3xl rounded-lg shadow-lg max-h-screen overflow-y-auto">
+                                                    <button type="button" class="absolute top-3 right-2.5 text-gray-400" data-modal-toggle="add-modal">✖</button>
+                                            
+                                                    <div class="border-b border-gray-200 dark:border-gray-700 pb-3">
+                                                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
+                                                            Detail Permohonan
+                                                        </h3>
+                                                    </div>
+                                            
+                                                    <div class="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 p-4 text-gray-700">
+                                                        <p class="font-semibold text-gray-900 self-start">ID Permohonan</p>
+                                                        <p id="detail-id" class="text-gray-800"></p>
+
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Diajukan</p>
+                                                        <p id="detail-tgl-diajukan" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Kategori Layanan</p>
+                                                        <p id="detail-kategori" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Jenis Layanan</p>
+                                                        <p id="detail-jenis-layanan" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Deskripsi Keperluan</p>
+                                                        <p id="detail-deskripsi" class="text-gray-800 break-words"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Disposisi 1</p>
+                                                        <p id="detail-disposisi1" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Disposisi 2</p>
+                                                        <p id="detail-disposisi2" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Disposisi 3</p>
+                                                        <p id="detail-disposisi3" class="text-gray-800"></p>
+
+                                                        <p class="font-semibold text-gray-900 self-start">Disposisi 4</p>
+                                                        <p id="detail-disposisi4" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Disposisi</p>
+                                                        <p id="detail-tgl-disposisi" class="text-gray-800"></p>
+
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Selesai</p>
+                                                        <p id="detail-tgl-selesai" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Tanggal Diambil</p>
+                                                        <p id="detail-tgl-diambil" class="text-gray-800"></p>
+                                            
+                                                        <!-- Field kondisional untuk skripsi. Hanya muncul ketika kategori berbayar = nol rupiah -->
+                                                        <div id="skripsi-fields" class="contents hidden">
+                                                            <p class="font-semibold text-gray-900 self-start">Tanggal Rencana Pengumpulan Skripsi</p>
+                                                            <p id="detail-tgl-rencana" class="text-gray-800"></p>
+                                                
+                                                            <p class="font-semibold text-gray-900 self-start">Tanggal Pengumpulan Skripsi</p>
+                                                            <p id="detail-tgl-pengumpulan" class="text-gray-800"></p>
+                                                        </div>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Status Permohonan</p>
+                                                        <p id="detail-status" class="text-gray-800"></p>
+                                            
+                                                        <!-- Garis Pemisah -->
+                                                        <div class="border-b-2 border-gray-300 my-2 col-span-2"></div>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Pemohon</p>
+                                                        <p id="detail-pemohon" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Instansi</p>
+                                                        <p id="detail-instansi" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">No HP</p>
+                                                        <p id="detail-hp" class="text-gray-800"></p>
+                                            
+                                                        <p class="font-semibold text-gray-900 self-start">Email</p>
+                                                        <p id="detail-email" class="text-gray-800"></p>
+                                            
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            </div>
+                                        </div> 
+                                        <script>
+                                           
+                                           function showDetail(id) {
+                                            const permohonan = document.getElementById('permohonan-' + id);
+                                            if (!permohonan) {
+                                                console.error('Data permohonan tidak ditemukan untuk ID:', id);
+                                                return;
+                                            }
+
+                                            const kategori_berbayar = permohonan.dataset.kategori.trim();
+                                            const skripsiFields = document.getElementById('skripsi-fields');
+
+                                            // Debugging: Cek apakah kategori terbaca dengan benar
+                                            console.log("Kategori Berbayar:", kategori_berbayar);
+
+                                            // Tampilkan/sembunyikan field skripsi berdasarkan kategori
+                                            if (kategori_berbayar === 'Nol Rupiah') {
+                                                skripsiFields.classList.remove('hidden');
+                                            } else {
+                                                skripsiFields.classList.add('hidden');
+                                            }
+
+                                            // Fungsi helper untuk mengatur warna teks
+                                            function setTextWithColor(elementId, value) {
+                                                const element = document.getElementById(elementId);
+                                                if (["Belum Diatur", "Tidak Ada", "Tidak Diketahui"].includes(value)) {
+                                                    element.style.color = 'red';  // Teks merah untuk nilai kosong
+                                                } else {
+                                                    element.style.color = ''; // Kembalikan ke warna default
+                                                }
+                                                element.textContent = value;
+                                            }
+
+                                            // Gunakan fungsi helper untuk setiap field
+                                            setTextWithColor('detail-disposisi1', permohonan.getAttribute('data-disposisi1'));
+                                            setTextWithColor('detail-disposisi2', permohonan.getAttribute('data-disposisi2'));
+                                            setTextWithColor('detail-disposisi3', permohonan.getAttribute('data-disposisi3'));
+                                            setTextWithColor('detail-disposisi4', permohonan.getAttribute('data-disposisi4'));
+                                            setTextWithColor('detail-tgl-disposisi', permohonan.getAttribute('data-tgl-disposisi'));
+                                            setTextWithColor('detail-pemohon', permohonan.getAttribute('data-pemohon'));
+                                            setTextWithColor('detail-instansi', permohonan.getAttribute('data-instansi'));
+                                            setTextWithColor('detail-hp', permohonan.getAttribute('data-hp'));
+                                            setTextWithColor('detail-email', permohonan.getAttribute('data-email'));
+                                            setTextWithColor('detail-tgl-selesai', permohonan.getAttribute('data-tgl-selesai'));
+                                            setTextWithColor('detail-tgl-diambil', permohonan.getAttribute('data-tgl-diambil'));
+
+                                             // Untuk field yang tidak perlu diwarnai, gunakan cara biasa
+                                            document.getElementById('detail-id').textContent = permohonan.getAttribute('data-id');
+                                            document.getElementById('detail-tgl-diajukan').textContent = permohonan.getAttribute('data-tgl-diajukan');
+                                            document.getElementById('detail-kategori').textContent = permohonan.getAttribute('data-kategori');
+                                            document.getElementById('detail-jenis-layanan').textContent = permohonan.getAttribute('data-jenis-layanan');
+                                            document.getElementById('detail-deskripsi').textContent = permohonan.getAttribute('data-deskripsi');
+                                            
+                                             // Untuk field skripsi
+                                            if (kategori_berbayar === 'Nol Rupiah') {
+                                                setTextWithColor('detail-tgl-rencana', permohonan.dataset.tglRencana || 'Belum Diatur');
+                                                setTextWithColor('detail-tgl-pengumpulan', permohonan.dataset.tglPengumpulan || 'Belum Diatur');
+                                            } else {
+                                                document.getElementById('detail-tgl-rencana').textContent = '-';
+                                                document.getElementById('detail-tgl-pengumpulan').textContent = '-';
+                                            }
+
+                                            // Status formatting
+                                            const status = permohonan.getAttribute('data-status');
+                                                const statusElement = document.getElementById('detail-status');
+
+                                                // Mapping status ke warna dan gaya yang sesuai
+                                                let statusHTML = '';
+                                                if (status === 'Diproses') {
+                                                    statusHTML = '<span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-gray-700 dark:text-yellow-300 border border-yellow-300 inline-block">' + status + '</span>';
+                                                } else if (status === 'Selesai Dibuat') {
+                                                    statusHTML = '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 inline-block">' + status + '</span>';
+                                                } else if (status === 'Selesai Diambil') {
+                                                    statusHTML = '<span class="bg-green-100 text-green-800 text-xs font-medium px-3 py-1 rounded dark:bg-gray-700 dark:text-green-400 border border-green-400 inline-block">' + status + '</span>';
+                                                } else if (status === 'Batal') {
+                                                    statusHTML = '<span class="bg-red-100 text-red-800 text-xs font-medium px-3 py-1 rounded dark:bg-gray-700 dark:text-red-400 border border-red-400 inline-block">' + status + '</span>';
+                                                } else {
+                                                    statusHTML = '<span class="text-gray-500">Status Tidak Diketahui</span>';
+                                                }
+
+                                            statusElement.innerHTML = statusHTML;
+
+                                            // Tampilkan modal
+                                            document.getElementById('add-modal').classList.remove('hidden');
+                                        }
+                                        </script>
                                     </td>
                                 </tr> 
                             @empty
