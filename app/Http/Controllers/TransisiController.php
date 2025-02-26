@@ -11,9 +11,15 @@ class TransisiController extends Controller
     {
         return view('transisi.transisi-kapokja-analis');
     }
+
     public function transisiAnalisBendahara()
     {
         return view('transisi.transisi-analis-bendahara');
+    }
+
+    public function transisiKapokjaBendahara()
+    {
+        return view('transisi.transisi-kapokja-bendahara');
     }
 }
 

@@ -28,6 +28,9 @@ Route::middleware(['auth', 'KapokjaAnalis_0110'])->group(function () {
 Route::middleware(['auth', 'AnalisBendahara_0011'])->group(function () {
     Route::get('/AB/analis-bendahara/transisi', [TransisiController::class, 'transisiAnalisBendahara'])->name('transisi.analis-bendahara'); 
 }); 
+Route::middleware(['auth', 'KapokjaBendahara_0101'])->group(function () {
+    Route::get('/KB/kapokja-bendahara/transisi', [TransisiController::class, 'transisiKapokjaBendahara'])->name('transisi.kapokja-bendahara'); 
+}); 
 
 Route::group(['prefix' => 'pemohon'], function() {
     Route::get('/beranda', [PemohonController::class, 'berandaPemohon'])->name('pemohon.beranda');
