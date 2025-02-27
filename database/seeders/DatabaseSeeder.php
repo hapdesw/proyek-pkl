@@ -117,7 +117,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PegawaiSeeder::class,
             JenisLayananSeeder::class,
-            ImportSeeder::class,
+            // ImportSeeder::class,
         ]);
     }
 }

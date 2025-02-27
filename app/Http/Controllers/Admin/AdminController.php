@@ -9,13 +9,25 @@ use App\Models\JenisLayanan;
 use App\Models\Disposisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil tahun dari request, default ke tahun sekarang jika tidak ada
-        $tahun = $request->input('tahun', date('Y'));
+        // Ambil tahun terbaru dari tabel permohonan
+        $tahunTerbaru = DB::table('permohonan')
+        ->select(DB::raw('YEAR(tanggal_diajukan) as tahun'))
+        ->orderBy('tanggal_diajukan', 'desc')
+        ->value('tahun');
+
+        // Jika tidak ada data permohonan, gunakan tahun sekarang sebagai fallback
+        if (!$tahunTerbaru) {
+        $tahunTerbaru = date('Y');
+        }
+
+        // Ambil tahun dari request, default ke tahun terbaru dari permohonan
+        $tahun = $request->input('tahun', $tahunTerbaru);
 
         // Menyiapkan array untuk menyimpan data rekap
         $rekapPerBulan = [
