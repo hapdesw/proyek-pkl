@@ -184,65 +184,152 @@
 
                             {{-- Pop-up Konfirmasi Export --}}
                             <div id="exportModal" class="fixed inset-0 z-50 flex items-center justify-center hidden" style="margin: 0; padding: 0;">
-                                {{-- Background overlay --}}
                                 <div class="absolute inset-0 bg-gray-800 bg-opacity-50"></div>
-                                
-                                {{-- Modal content --}}
                                 <div class="relative bg-white rounded-lg shadow-lg p-6 w-96 m-4">
                                     <p class="text-lg font-semibold text-gray-800 mb-4">
-                                        Permohonan berjumlah  akan di-export
+                                        <span id="loadingIndicator">Menghitung total permohonan...</span>
+                                        <span id="countText" class="hidden">Permohonan berjumlah akan di-export</span>
                                     </p>
-                                    <div class="flex justify-center gap-5 mb-6">
-                                        {{-- Tombol Export PDF --}}
-                                        <a href="#" class="bg-orange-500 hover:bg-orange-300 text-white hover:text-orange-700 font-bold py-2 px-4 rounded">
-                                            PDF
-                                        </a>
-                                        {{-- Tombol Export Excel --}}
-                                        <a href="#" class="bg-green-500 hover:bg-green-300 text-white hover:text-green-700 font-bold py-2 px-4 rounded">
-                                            Excel
-                                        </a>
+                                    <div id="exportButtons" class="hidden flex justify-center gap-5 mb-6">
+                                        <a class="bg-orange-500 hover:bg-orange-300 text-white hover:text-orange-700 font-bold py-2 px-4 rounded">PDF</a>
+                                        <a class="bg-green-500 hover:bg-green-300 text-white hover:text-green-700 font-bold py-2 px-4 rounded">Excel</a>
                                     </div>
-                                    {{-- Tombol Batal --}}
-                                    <button id="closeModal" class="mt-4 w-full bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
-                                        Batal
-                                    </button>
+                                    <button id="closeModal" class="mt-4 w-full bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Batal</button>
                                 </div>
                             </div>
 
-                            {{-- Script JavaScript untuk Modal --}}
+                            {{-- Script JavaScript untuk Modal Export--}}
                             <script>
-                                document.addEventListener("DOMContentLoaded", function() {
-                                    const exportButton = document.getElementById("exportButton");
-                                    const exportModal = document.getElementById("exportModal");
-                                    const closeModal = document.getElementById("closeModal");
+                               // Eksekusi setelah DOM dimuat
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    // Ambil elemen modal
+                                    const exportModal = document.getElementById('exportModal');
+                                    const closeModal = document.getElementById('closeModal');
+                                    const exportButton = document.getElementById('exportButton');
+                                    const loadingIndicator = document.getElementById('loadingIndicator');
+                                    const countText = document.getElementById('countText');
+                                    const exportButtons = document.getElementById('exportButtons');
+                                    // Tombol format export di dalam modal (PDF dan Excel)
+                                    const pdfExportButton = exportModal.querySelector('.flex.justify-center.gap-5 a:nth-child(1)');
+                                    const excelExportButton = exportModal.querySelector('.flex.justify-center.gap-5 a:nth-child(2)');
 
                                     // Fungsi untuk menampilkan modal
-                                    function openModal() {
-                                        exportModal.style.display = "flex";
-                                        document.body.style.overflow = "hidden"; // Hilangkan scroll di body
-                                    }
+                                    function showExportModal() {
+                                        // Tampilkan modal
+                                        exportModal.classList.remove('hidden');
 
+                                        // Tampilkan loading indicator dan sembunyikan konten utama
+                                        loadingIndicator.classList.remove('hidden');
+                                        countText.classList.add('hidden');
+                                        exportButtons.classList.add('hidden');
+
+                                        // Ambil total data dari server
+                                        const urlParams = new URLSearchParams(window.location.search);
+                                        const countUrl = `/permohonan/count?${urlParams.toString()}`;
+
+                                        fetch(countUrl)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                // Update teks di modal dengan jumlah yang ditemukan
+                                                countText.textContent = `Permohonan berjumlah ${data.total} akan di-export`;
+
+                                                // Sembunyikan loading indicator dan tampilkan konten utama
+                                                loadingIndicator.classList.add('hidden');
+                                                countText.classList.remove('hidden');
+                                                exportButtons.classList.remove('hidden');
+                                            })
+                                            .catch(error => {
+                                                console.error('Error fetching total count:', error);
+                                                countText.textContent = 'Gagal menghitung total permohonan.';
+                                                loadingIndicator.classList.add('hidden');
+                                                countText.classList.remove('hidden');
+                                                exportButtons.classList.remove('hidden');
+                                            });
+                                    }
+                                        
+                                    
                                     // Fungsi untuk menyembunyikan modal
-                                    function closeModalFunc() {
-                                        exportModal.style.display = "none";
-                                        document.body.style.overflow = ""; // Kembalikan scroll
+                                    function hideExportModal() {
+                                        exportModal.classList.add('hidden');
                                     }
-
-                                    // Event listener tombol export
-                                    exportButton.addEventListener("click", openModal);
-
-                                    // Event listener tombol batal
-                                    closeModal.addEventListener("click", closeModalFunc);
-
-                                    // Tutup modal jika klik di luar kotak modal
-                                    exportModal.addEventListener("click", function(event) {
-                                        if (event.target === exportModal) {
-                                            closeModalFunc();
+                                    
+                                    // Fungsi untuk mendapatkan parameter filter saat ini dari URL
+                                    function getCurrentFilters() {
+                                        const urlParams = new URLSearchParams(window.location.search);
+                                        console.log('All URL params:', Object.fromEntries(urlParams.entries()));
+                                        
+                                        // PENTING: Gunakan nama parameter yang sama dengan filter normal
+                                        const year = urlParams.get('year'); // Menggunakan 'year' bukan 'tahun'
+                                        const months = urlParams.get('months'); // Menggunakan 'months' bukan 'bulan'
+                                        const status = urlParams.get('status_permohonan');
+                                        
+                                        console.log('Extracted filters:', { year, months, status });
+                                        
+                                        return { year, months, status };
+                                    }
+                                    
+                                    // Fungsi untuk membangun URL export
+                                    function buildExportUrl(format) {
+                                        const filters = getCurrentFilters();
+                                        const baseUrl = '/admin-layanan/permohonan/export'; // Sesuaikan dengan route Anda
+                                        
+                                        let url = `${baseUrl}?format=${format}`;
+                                        
+                                        // PENTING: Gunakan nama parameter yang sama dengan yang diharapkan controller
+                                        if (filters.year !== null && filters.year !== undefined && filters.year !== '') {
+                                            url += `&year=${filters.year}`;
+                                        }
+                                        
+                                        if (filters.months !== null && filters.months !== undefined && filters.months !== '') {
+                                            url += `&months=${filters.months}`;
+                                        }
+                                        
+                                        if (filters.status !== null && filters.status !== undefined && filters.status !== '') {
+                                            url += `&status_permohonan=${filters.status}`;
+                                        }
+                                        
+                                        console.log('Export URL:', url); // Tambahkan log untuk debugging
+                                        
+                                        return url;
+                                    }
+                                    
+                                    // Event listeners untuk tombol
+                                    if (exportButton) {
+                                        exportButton.addEventListener('click', showExportModal);
+                                    }
+                                    
+                                    if (closeModal) {
+                                        closeModal.addEventListener('click', hideExportModal);
+                                    }
+                                    
+                                    // Ketika tombol PDF di klik
+                                    if (pdfExportButton) {
+                                        pdfExportButton.addEventListener('click', function(e) {
+                                            e.preventDefault();
+                                            const url = buildExportUrl('pdf');
+                                            console.log('Navigating to PDF export URL:', url);
+                                            window.location.href = url;
+                                            hideExportModal();
+                                        });
+                                    }
+                                    
+                                    // Ketika tombol Excel di klik
+                                    if (excelExportButton) {
+                                        excelExportButton.addEventListener('click', function(e) {
+                                            e.preventDefault();
+                                            const url = buildExportUrl('excel');
+                                            console.log('Navigating to Excel export URL:', url);
+                                            window.location.href = url;
+                                            hideExportModal();
+                                        });
+                                    }
+                                    
+                                    // Juga tutup modal jika user mengklik background overlay
+                                    exportModal.addEventListener('click', function(e) {
+                                        if (e.target === exportModal) {
+                                            hideExportModal();
                                         }
                                     });
-
-                                    // Pastikan modal tersembunyi saat halaman dimuat
-                                    exportModal.style.display = "none";
                                 });
                             </script>
 

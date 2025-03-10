@@ -14,6 +14,7 @@ use App\Http\Controllers\Kapokja\DisposisiController;
 use App\Http\Controllers\Kapokja\PegawaiController;
 use App\Http\Controllers\Analis\HasilLayananController;
 use App\Http\Controllers\TransisiController;
+use App\Http\Controllers\Admin\ExportController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -46,6 +47,8 @@ Route::middleware(['auth', 'Admin_1000'])->group(function () {
     Route::put('/admin-layanan/kelola-layanan/update/{id}', [JenisLayananController::class, 'update'])->name('admin.kelola-layanan.update'); 
     Route::delete('/admin-layanan/kelola-layanan/destroy/{id}', [JenisLayananController::class, 'destroy'])->name('admin.kelola-layanan.destroy'); 
     Route::get('/permohonan/filter', [PermohonanController::class, 'filter']);
+    Route::get('/permohonan/count', [PermohonanController::class, 'getFilteredCount'])->name('permohonan.count');
+    Route::get('/admin-layanan/permohonan/export', [ExportController::class, 'export'])->name('admin.permohonan.export');
     Route::get('/admin-layanan/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
     Route::get('/admin-layanan/beranda/available-years', [AdminController::class, 'getAvailableYears']);
     Route::get('/admin-layanan/permohonan', [PermohonanController::class, 'index'])->name('admin.permohonan'); 

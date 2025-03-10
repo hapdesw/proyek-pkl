@@ -84,12 +84,12 @@ class AuthenticatedSessionController extends Controller
             'role' => 'required|in:1000,0100,0010,0001',
         ]);
 
-        Log::info('Pre-Session Data:', [
-            'requested_role' => $request->role,
-            'user_id' => Auth::user()->id,
-            'current_user_role' => Auth::user()->peran,
-            'current_session' => $request->session()->all()
-        ]);
+        // Log::info('Pre-Session Data:', [
+        //     'requested_role' => $request->role,
+        //     'user_id' => Auth::user()->id,
+        //     'current_user_role' => Auth::user()->peran,
+        //     'current_session' => $request->session()->all()
+        // ]);
 
         $request->session()->put('active_role', $request->role);
         
@@ -100,13 +100,13 @@ class AuthenticatedSessionController extends Controller
                 'last_activity' => time()
             ]);
 
-        Log::info('Post-Session Data:', [
-            'active_role_in_session' => $request->session()->get('active_role'),
-            'all_session_data' => $request->session()->all(),
-            'database_session' => DB::table('sessions')
-                ->where('id', $request->session()->getId())
-                ->first()
-        ]);
+        // Log::info('Post-Session Data:', [
+        //     'active_role_in_session' => $request->session()->get('active_role'),
+        //     'all_session_data' => $request->session()->all(),
+        //     'database_session' => DB::table('sessions')
+        //         ->where('id', $request->session()->getId())
+        //         ->first()
+        // ]);
 
         $routes = [
             '1000' => 'admin.beranda',

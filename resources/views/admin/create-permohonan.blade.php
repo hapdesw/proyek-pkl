@@ -47,9 +47,25 @@
                                 No Hp
                                 <span class="text-redNew !important">*</span>
                             </label>
-                            
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="no_hp" name="no_hp" required>
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="no_hp" name="no_hp" required oninput="validatePhoneNumber(this)">
+                            @error('no_hp')
+                                <p class="text-red-500 text-sm">{{ $message }}</p>
+                            @enderror
+                             <p id="no_hp_error" class="text-red-500 text-sm hidden">Nomor telepon tidak valid!</p>
                         </div>
+                       
+                        <script>
+                        function validatePhoneNumber(input) {
+                            const regex = /^\+?[0-9()\s\-\.\/ext]+$/;
+                            const errorMessage = document.getElementById('no_hp_error');
+
+                            if (!regex.test(input.value)) {
+                                errorMessage.style.display = 'block';
+                            } else {
+                                errorMessage.style.display = 'none';
+                            }
+                        }
+                        </script>
                         <!-- Asal Instansi -->
                         <div>
                             <label for="instansi" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

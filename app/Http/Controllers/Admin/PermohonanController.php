@@ -113,6 +113,81 @@ class PermohonanController extends Controller
         return response()->json($years);
     }
 
+    // Tambahkan method ini di PermohonanController.php
+    public function getFilteredCount(Request $request)
+    {
+        // Gunakan fungsi yang sama dengan index untuk memfilter data
+        $query = Permohonan::query();
+
+        // Pencarian berdasarkan input search
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                // Pencarian yang sama dengan di method index
+                $q->where('id', 'like', '%' . $searchTerm . '%')
+                ->orWhere('tanggal_diajukan', 'like', '%' . $searchTerm . '%')
+                ->orWhere('deskripsi_keperluan', 'like', '%' . $searchTerm . '%')
+                ->orWhere('kategori_berbayar', 'like', '%' . $searchTerm . '%')
+                ->orWhere('status_permohonan', 'like', '%' . $searchTerm . '%')
+                
+                // Cari berdasarkan data pemohon
+                ->orWhereHas('pemohon', function($query) use ($searchTerm) {
+                    $query->where('nama_pemohon', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('instansi', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('no_kontak', 'like', '%' . $searchTerm . '%');
+                })
+                
+                // Cari berdasarkan jenis layanan
+                ->orWhereHas('jenisLayanan', function($query) use ($searchTerm) {
+                    $query->where('nama_jenis_layanan', 'like', '%' . $searchTerm . '%');
+                })
+                
+                // Cari berdasarkan disposisi
+                ->orWhereHas('disposisi', function($query) use ($searchTerm) {
+                    $query->whereHas('pegawai1', function($q) use ($searchTerm) {
+                        $q->where('nama', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhereHas('pegawai2', function($q) use ($searchTerm) {
+                        $q->where('nama', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhereHas('pegawai3', function($q) use ($searchTerm) {
+                        $q->where('nama', 'like', '%' . $searchTerm . '%');
+                    })
+                    ->orWhereHas('pegawai4', function($q) use ($searchTerm) {
+                        $q->where('nama', 'like', '%' . $searchTerm . '%');
+                    });
+                });
+            });
+        }
+
+        // Filter berdasarkan bulan jika ada
+        if ($request->has('months') && !empty($request->query('months'))) {
+            $months = explode(',', $request->query('months'));
+            $monthNumbers = [
+                'januari' => 1, 'februari' => 2, 'maret' => 3, 'april' => 4,
+                'mei' => 5, 'juni' => 6, 'juli' => 7, 'agustus' => 8,
+                'september' => 9, 'oktober' => 10, 'november' => 11, 'desember' => 12
+            ];
+            $selectedMonths = array_map(fn($m) => $monthNumbers[strtolower($m)] ?? null, $months);
+            $query->whereIn(DB::raw('MONTH(tanggal_diajukan)'), $selectedMonths);
+        }
+
+        // Filter berdasarkan tahun jika ada
+        if ($request->has('year') && !empty($request->query('year'))) {
+            $query->whereYear('tanggal_diajukan', $request->query('year'));
+        }
+
+        // Filter berdasarkan status permohonan jika ada
+        if ($request->has('status_permohonan') && !empty($request->query('status_permohonan'))) {
+            $statusPermohonanFilter = $request->query('status_permohonan');
+            $query->where('status_permohonan', $statusPermohonanFilter);
+        }
+
+        // Hanya kembalikan jumlah total data
+        $total = $query->count();
+        
+        return response()->json(['total' => $total]);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -146,7 +221,7 @@ class PermohonanController extends Controller
                 'tgl_pengumpulan' => 'nullable|date',
                 'nama_pemohon' => 'required|string',
                 'instansi' => 'required|string',
-                'no_hp' => 'required|string',
+               'no_hp' => ['required', 'string', 'regex:/^\+?[0-9()\s\-\.\/ext]+$/'], // Validasi nomor telepon
                 'email' => 'nullable|email',
             ]);
             Log::info('Validasi berhasil');
@@ -246,7 +321,7 @@ class PermohonanController extends Controller
                 // Validasi data pemohon
                 'nama_pemohon' => 'required|string',
                 'instansi' => 'required|string',
-                'no_hp' => 'required|string',
+               'no_hp' => ['required', 'string', 'regex:/^\+?[0-9()\s\-\.\/ext]+$/'], // Validasi nomor telepon
                 'email' => 'nullable|email',
             ]);
             Log::info('Validasi update berhasil');

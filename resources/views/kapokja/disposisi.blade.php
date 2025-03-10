@@ -88,7 +88,7 @@
                                     </select>
                             
                                     <!-- Tombol Terapkan -->
-                                    <button id="applyFilter" class="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                                    <button id="applyFilter" class="mt-4 w-full bg-blue-700 text-white py-2 rounded hover:bg-blue-800">
                                         Terapkan
                                     </button>
                                 </div>

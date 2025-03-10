@@ -99,7 +99,7 @@
                         <th scope="col" class="px-4 py-3">Instansi</th> 
                         <th scope="col" class="px-4 py-3">No. Hp</th> 
                         <th scope="col" class="px-4 py-3">Email</th> 
-                        <th scope="col" class="px-4 py-3">Total Permohonan</th> 
+                        <th scope="col" class="px-4 py-3">Aksi</th> 
                     </tr>
                 </thead>
                 <tbody>

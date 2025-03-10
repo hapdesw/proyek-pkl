@@ -50,35 +50,11 @@ class KapokjaController extends Controller
                 ->count();
         }
 
-        // Tracking pemohon unik dalam tahun yang dipilih
-        $uniquePemohonSet = [];
-
-        // Loop untuk setiap bulan dalam tahun yang dipilih
+        // Hitung Rekap Pemohon dengan filter tahun
         for ($bulan = 1; $bulan <= 12; $bulan++) {
-            // Ambil pemohon di bulan dan tahun ini
-            $pemohonBulanIni = Pemohon::whereHas('permohonan', function ($query) use ($bulan, $tahun) {
-                $query->whereYear('tanggal_diajukan', $tahun)
-                      ->whereMonth('tanggal_diajukan', $bulan);
-            })->get();
-
-            $newPemohonCount = 0;
-
-            foreach ($pemohonBulanIni as $pemohon) {
-                // Normalisasi nama dan instansi
-                $normalizedNama = strtolower(preg_replace('/\s+/', ' ', trim($pemohon->nama_pemohon)));
-                $normalizedInstansi = strtolower(preg_replace('/\s+/', ' ', trim($pemohon->instansi)));
-
-                // Buat identifier yang unik
-                $pemohonIdentifier = $normalizedNama . '|||' . $normalizedInstansi;
-
-                // Cek keunikan dalam tahun ini
-                if (!in_array($pemohonIdentifier, $uniquePemohonSet)) {
-                    $uniquePemohonSet[] = $pemohonIdentifier;
-                    $newPemohonCount++;
-                }
-            }
-
-            $rekapPerBulan['pemohon'][$bulan - 1] = $newPemohonCount;
+            $rekapPerBulan['pemohon'][$bulan - 1] = Permohonan::whereYear('tanggal_diajukan', $tahun)
+                ->whereMonth('tanggal_diajukan', $bulan)
+                ->count();
         }
 
         // Hitung jenis layanan dengan filter tahun
@@ -94,22 +70,23 @@ class KapokjaController extends Controller
                 ->count();
         }
 
-        // Hitung disposisi dengan filter tahun
-        $pegawaiList = Pegawai::all();
-        foreach ($pegawaiList as $pegawai) {
-            $disposisiPerPegawai = [];
-            for ($bulan = 1; $bulan <= 12; $bulan++) {
-                $disposisiPerPegawai[$bulan - 1] = Disposisi::whereYear('tanggal_disposisi', $tahun)
-                    ->whereMonth('tanggal_disposisi', $bulan)
-                    ->where(function($query) use ($pegawai) {
-                        $query->where('nip_pegawai1', $pegawai->nip)
-                              ->orWhere('nip_pegawai2', $pegawai->nip)
-                              ->orWhere('nip_pegawai3', $pegawai->nip);
-                    })
-                    ->count();
-            }
-            $rekapPerBulan['disposisi_per_pegawai'][$pegawai->nama] = $disposisiPerPegawai;
-        }
+         // Hitung disposisi dengan filter tahun (berdasarkan tanggal_diajukan di permohonan)
+         $pegawaiList = Pegawai::all();
+         foreach ($pegawaiList as $pegawai) {
+             $disposisiPerPegawai = [];
+             for ($bulan = 1; $bulan <= 12; $bulan++) {
+                 $disposisiPerPegawai[$bulan - 1] = Disposisi::join('permohonan', 'disposisi.id_permohonan', '=', 'permohonan.id')
+                     ->whereYear('permohonan.tanggal_diajukan', $tahun)
+                     ->whereMonth('permohonan.tanggal_diajukan', $bulan)
+                     ->where(function($query) use ($pegawai) {
+                         $query->where('nip_pegawai1', $pegawai->nip)
+                               ->orWhere('nip_pegawai2', $pegawai->nip)
+                               ->orWhere('nip_pegawai3', $pegawai->nip);
+                     })
+                     ->count();
+             }
+             $rekapPerBulan['disposisi_per_pegawai'][$pegawai->nama] = $disposisiPerPegawai;
+         }
 
         // Hitung jenis layanan dengan filter tahun
         $namaLayanan = JenisLayanan::all();
