@@ -13,9 +13,44 @@ class PegawaiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pegawai = Pegawai::paginate(15);
+        // Query dasar
+        $query = Pegawai::query();
+
+        // Mapping nama peran ke indeks di peran_pegawai
+        $roleMapping = [
+            'admin' => 0, // peran_pegawai[0]
+            'kapokja' => 1, // peran_pegawai[1]
+            'analis' => 2, // peran_pegawai[2]
+            'bendahara' => 3, // peran_pegawai[3]
+        ];
+
+        // Pencarian berdasarkan input search
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = strtolower($request->search); // Ubah ke lowercase untuk pencarian case-insensitive
+
+            // Cek apakah kata kunci pencarian cocok dengan nama peran
+            $roleIndex = $roleMapping[$searchTerm] ?? null;
+
+            $query->where(function($q) use ($searchTerm, $roleIndex) {
+                // Cari berdasarkan kolom di tabel pegawai
+                $q->where('nip', 'like', '%' . $searchTerm . '%')
+                ->orWhere('nama', 'like', '%' . $searchTerm . '%');
+
+                // Jika kata kunci pencarian cocok dengan nama peran, cari berdasarkan indeks peran
+                if ($roleIndex !== null) {
+                    $q->orWhereRaw("SUBSTRING(peran_pegawai, " . ($roleIndex + 1) . ", 1) = '1'");
+                } else {
+                    // Jika tidak, cari berdasarkan kolom peran_pegawai secara langsung
+                    $q->orWhere('peran_pegawai', 'like', '%' . $searchTerm . '%');
+                }
+            });
+        }
+
+        // Paginate hasil query
+        $pegawai = $query->paginate(15);
+
         return view('kapokja.kelola-pegawai', compact('pegawai'));   
     }
 

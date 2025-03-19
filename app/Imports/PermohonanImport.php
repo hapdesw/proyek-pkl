@@ -15,7 +15,6 @@ class PermohonanImport implements ToModel
     */
     public function model(array $row)
     {
-        
         Log::info('Row data:', $row);
         return new Permohonan([
             'id' => $row[0],
