@@ -5,6 +5,34 @@
             <div class="text-white text-lg font-semibold">Sistem Layanan Data dan Informasi</div>
         </div>
 
+        <!-- Nama dan Peran -->
+        <div class="flex-grow text-sm text-white mr-12 text-right">
+            <div class="font-medium">
+                @if(Auth::check() && Auth::user()->peran === '1000')
+                    Admin
+                @else
+                    {{ Auth::user()->pegawai->nama }}
+                @endif
+            </div>
+            <div class="text-xs text-gray-300">
+                @if(Auth::check() || session()->has('active_role'))
+                    @php
+                        $role = '';
+                        if (Auth::user()->peran === '1000' || session('active_role') === '1000') {
+                            $role = 'Admin';
+                        } elseif (Auth::user()->peran === '0100' || session('active_role') === '0100') {
+                            $role = 'Kapokja';
+                        } elseif (Auth::user()->peran === '0010' || session('active_role') === '0010') {
+                            $role = 'Analis';
+                        } elseif (Auth::user()->peran === '0001' || session('active_role') === '0001') {
+                            $role = 'Bendahara';
+                        }
+                    @endphp
+                    {{ $role }}
+                @endif
+            </div>
+        </div>
+
         <!-- Right side (Icons) -->
         <div class="flex items-center space-x-4 absolute right-5" x-data="{ open: false }">
             <!-- Icon Profile -->
