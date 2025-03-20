@@ -21,7 +21,7 @@
                         if (Auth::user()->peran === '1000' || session('active_role') === '1000') {
                             $role = 'Admin';
                         } elseif (Auth::user()->peran === '0100' || session('active_role') === '0100') {
-                            $role = 'Kapokja';
+                            $role = 'PIC LDI';
                         } elseif (Auth::user()->peran === '0010' || session('active_role') === '0010') {
                             $role = 'Analis';
                         } elseif (Auth::user()->peran === '0001' || session('active_role') === '0001') {

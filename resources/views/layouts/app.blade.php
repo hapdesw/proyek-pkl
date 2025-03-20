@@ -26,7 +26,7 @@
             @if(Auth::user()->peran === '1000' || session('active_role') === '1000')
                 @include('layouts.header-admin')
             @elseif(Auth::user()->peran === '0100' || session('active_role') === '0100')
-                @include('layouts.header-kapokja')
+                @include('layouts.header-pic-ldi')
             @elseif(Auth::user()->peran === '0010' || session('active_role') === '0010')
                 @include('layouts.header-analis')
             @elseif(Auth::user()->peran === '0001' || session('active_role') === '0001')

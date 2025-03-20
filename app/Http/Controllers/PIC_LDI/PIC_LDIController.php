@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Kapokja;
+namespace App\Http\Controllers\PIC_LDI;
 use App\Http\Controllers\Controller;
 use App\Models\Permohonan;
-use App\Models\Pemohon;
 use App\Models\Pegawai;
 use App\Models\JenisLayanan;
 use App\Models\Disposisi;
@@ -11,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
-class KapokjaController extends Controller
+class PIC_LDIController extends Controller
 {
     public function index(Request $request)
     {
@@ -130,7 +129,7 @@ class KapokjaController extends Controller
             ->orderBy('tahun', 'desc')
             ->pluck('tahun');
 
-        return view('kapokja.beranda-kapokja', compact('rekapPerBulan', 'tahun', 'tahunTersedia'));
+        return view('pic-ldi.beranda-pic-ldi', compact('rekapPerBulan', 'tahun', 'tahunTersedia'));
     }
 
     public function getAvailableYears()

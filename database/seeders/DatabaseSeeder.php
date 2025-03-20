@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'username' => 'latif123',
             'password' => bcrypt('latif123'),
-            'peran' => '0110'
+            'peran' => '0010'
         ]);
         User::create([
             'username' => 'tris123',

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Kapokja;
+namespace App\Http\Controllers\PIC_LDI;
 
 use App\Models\Disposisi;
 use App\Models\Permohonan;
@@ -103,7 +103,7 @@ class DisposisiController extends Controller
         }
 
         $permohonan = $query->paginate(15);
-        return view('kapokja.disposisi', compact('permohonan'));
+        return view('pic-ldi.disposisi', compact('permohonan'));
     }
 
     public function getAvailableYears()
@@ -127,7 +127,7 @@ class DisposisiController extends Controller
     {
         $permohonan = Permohonan::findOrFail($id);
         $pegawai = Pegawai::all();
-        return view('kapokja.atur-disposisi', compact('permohonan', 'pegawai'));
+        return view('pic-ldi.atur-disposisi', compact('permohonan', 'pegawai'));
     }
 
     /**
@@ -158,7 +158,7 @@ class DisposisiController extends Controller
 
             DB::commit();
     
-            return redirect()->route('kapokja.disposisi')->with('success', 'Disposisi berhasil ditambahkan.');
+            return redirect()->route('pic-ldi.disposisi')->with('success', 'Disposisi berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
             if ($e->getCode() === "23000") {
@@ -181,7 +181,7 @@ class DisposisiController extends Controller
         $permohonan = Permohonan::findOrFail($id);
         $pegawai = Pegawai::all();
         $disposisi = Disposisi::where('id_permohonan', $id)->first();
-        return view('kapokja.edit-disposisi', compact('permohonan', 'pegawai', 'disposisi'));
+        return view('pic-ldi.edit-disposisi', compact('permohonan', 'pegawai', 'disposisi'));
     }
 
     /**
@@ -213,7 +213,7 @@ class DisposisiController extends Controller
 
             DB::commit();
     
-            return redirect()->route('kapokja.disposisi')->with('success', 'Disposisi berhasil diperbarui.');
+            return redirect()->route('pic-ldi.disposisi')->with('success', 'Disposisi berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error saat menyimpan disposisi: ' . $e->getMessage());
@@ -236,19 +236,10 @@ class DisposisiController extends Controller
             
             DB::commit();
             
-            return redirect()->route('kapokja.disposisi')->with('success', 'Disposisi berhasil dihapus.');
+            return redirect()->route('pic-ldi.disposisi')->with('success', 'Disposisi berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Gagal menghapus disposisi. ' . $e->getMessage()]);
         }
-    }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Disposisi $disposisi)
-    {
-        //
     }
 }

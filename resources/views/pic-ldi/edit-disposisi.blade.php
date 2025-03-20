@@ -25,7 +25,7 @@
                     Edit Disposisi
                 </h3>
             </div>
-            <form action="{{route ('kapokja.disposisi.update', ['id' => $permohonan->id]) }}" method="POST" class="space-y-4">
+            <form action="{{route ('pic-ldi.disposisi.update', ['id' => $permohonan->id]) }}" method="POST" class="space-y-4">
                 @csrf
                 <div class="grid grid-cols-1 mt-5">
                     <!-- ID Permohonan -->

@@ -27,7 +27,7 @@
                 </div>
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/3">
-                    <form action="{{ route('kapokja.kelola-pegawai') }}" method="GET" class="flex items-center">
+                    <form action="{{ route('pic-ldi.kelola-pegawai') }}" method="GET" class="flex items-center">
                             <label for="simple-search" class="sr-only">Search</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -49,7 +49,7 @@
                     <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">                  
                         <div class="flex items-center space-x-3 w-full md:w-auto">
                             <div>
-                                <a href="{{route ('kapokja.kelola-pegawai.create') }}">
+                                <a href="{{route ('pic-ldi.kelola-pegawai.create') }}">
                                     <button class="flex items-center justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none dark:focus:ring-primary-800">
                                         <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                             <path clip-rule="evenodd" fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
@@ -84,17 +84,17 @@
                                         @if ($pgw->peran_pegawai == '1000')
                                             Admin
                                         @elseif ($pgw->peran_pegawai == '0100')
-                                            Kapokja
+                                            PIC LDI
                                         @elseif ($pgw->peran_pegawai == '0010')
                                             Analis
                                         @elseif ($pgw->peran_pegawai == '0001')
                                             Bendahara
                                         @elseif ($pgw->peran_pegawai == '0110')
-                                            Kapokja dan Analis
+                                            PIC LDI dan Analis
                                         @elseif ($pgw->peran_pegawai == '0011')
                                             Analis dan Bendahara
                                         @elseif ($pgw->peran_pegawai == '0101')
-                                            Kapokja dan Bendahara
+                                            PIC LDI dan Bendahara
                                         @else
                                             Tidak Diketahui
                                         @endif
@@ -113,13 +113,13 @@
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                         </svg>
                                                           
-                                                        <a href="{{ route('kapokja.kelola-pegawai.edit', $pgw->nip) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
+                                                        <a href="{{ route('pic-ldi.kelola-pegawai.edit', $pgw->nip) }}" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
                                                     </li>
                                                 </div>
                                                 <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
                                                     <li class=" flex px-4 py-1">
                                                     <form id="delete-form-{{ $pgw->nip }}" 
-                                                            action="{{ route('kapokja.kelola-pegawai.destroy', $pgw->nip) }}" 
+                                                            action="{{ route('pic-ldi.kelola-pegawai.destroy', $pgw->nip) }}" 
                                                             method="POST" 
                                                             class="flex items-center">
                                                             @csrf

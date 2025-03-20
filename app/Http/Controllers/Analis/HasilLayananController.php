@@ -102,7 +102,7 @@ class HasilLayananController extends Controller
         return view('analis.hasil-layanan', compact('permohonan'));
     }
 
-    public function indexKapokja(Request $request)
+    public function indexPIC_LDI(Request $request)
     {
         // Query dasar dengan filter 
         $query = Permohonan::whereHas('disposisi')
@@ -172,7 +172,7 @@ class HasilLayananController extends Controller
         // Paginate hasil query
         $permohonan = $query->paginate(15);
 
-        return view('kapokja.hasil-layanan', compact('permohonan'));
+        return view('pic-ldi.hasil-layanan', compact('permohonan'));
     }
 
     public function getAvailableYears()
@@ -202,7 +202,7 @@ class HasilLayananController extends Controller
         return response()->json($years);
     }
 
-    public function getAvailableYearsKapokja()
+    public function getAvailableYearsPIC_LDI()
     {
         // Query untuk mengambil tahun yang unik dari permohonan 
         $years = Permohonan::whereHas('disposisi')
@@ -225,10 +225,10 @@ class HasilLayananController extends Controller
         return view('analis.create-hasil-layanan', compact('permohonan'));
     }
 
-    public function createStatusKapokja($id)
+    public function createStatusPIC_LDI($id)
     {
         $permohonan = Permohonan::findOrFail($id);
-        return view('kapokja.atur-status-hasil', compact('permohonan'));
+        return view('pic-ldi.atur-status-hasil', compact('permohonan'));
     }
 
     /**
@@ -268,7 +268,7 @@ class HasilLayananController extends Controller
         }
     }
 
-    public function storeStatusKapokja(Request $request)
+    public function storeStatusPIC_LDI(Request $request)
     {
         $request->validate([
             'id_permohonan' => 'required|exists:permohonan,id',
@@ -295,7 +295,7 @@ class HasilLayananController extends Controller
             
             DB::commit();
 
-            return redirect()->route('kapokja.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
+            return redirect()->route('pic-ldi.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
         }catch (\Exception $e){
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Gagal mengatur status. ' . $e->getMessage()]);
@@ -312,10 +312,10 @@ class HasilLayananController extends Controller
         return view('analis.edit-hasil-layanan', compact('permohonan'));
     }
 
-    public function editStatusKapokja($id)
+    public function editStatusPIC_LDI($id)
     {
         $permohonan = Permohonan::with('hasilLayanan')->findOrFail($id);
-        return view('kapokja.edit-status-hasil', compact('permohonan'));
+        return view('pic-ldi.edit-status-hasil', compact('permohonan'));
     }
     
     /**
@@ -358,7 +358,7 @@ class HasilLayananController extends Controller
         }
     }
 
-    public function updateStatusKapokja(Request $request)
+    public function updateStatusPIC_LDI(Request $request)
     {
         $request->validate([
             'id_permohonan' => 'required|exists:permohonan,id',
@@ -384,7 +384,7 @@ class HasilLayananController extends Controller
             
             DB::commit();
 
-            return redirect()->route('kapokja.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
+            return redirect()->route('pic-ldi.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
         }catch (\Exception $e){
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Gagal mengatur status. ' . $e->getMessage()]);
@@ -415,7 +415,7 @@ class HasilLayananController extends Controller
         }
     }
 
-    public function destroyStatusKapokja($id)
+    public function destroyStatusPIC_LDI($id)
     {
         DB::beginTransaction();
         try {
@@ -434,7 +434,7 @@ class HasilLayananController extends Controller
 
             DB::commit();
 
-            return redirect()->route('kapokja.hasil-layanan')->with('success', 'Status dan koreksi berhasil dihapus!');
+            return redirect()->route('pic-ldi.hasil-layanan')->with('success', 'Status dan koreksi berhasil dihapus!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Gagal menghapus status dan koreksi. ' . $e->getMessage()]);

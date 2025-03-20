@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Session;
 
 class TransisiController extends Controller
 {
-    public function transisiKapokjaAnalis()
+    public function transisiPIC_LDIAnalis()
     {
-        return view('transisi.transisi-kapokja-analis');
+        return view('transisi.transisi-pic-ldi-analis');
     }
 
     public function transisiAnalisBendahara()
@@ -17,9 +17,9 @@ class TransisiController extends Controller
         return view('transisi.transisi-analis-bendahara');
     }
 
-    public function transisiKapokjaBendahara()
+    public function transisiPIC_LDIBendahara()
     {
-        return view('transisi.transisi-kapokja-bendahara');
+        return view('transisi.transisi-pic-ldi-bendahara');
     }
 }
 

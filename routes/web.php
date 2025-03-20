@@ -4,14 +4,14 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Kapokja\KapokjaController;
+use App\Http\Controllers\PIC_LDI\PIC_LDIController;
 use App\Http\Controllers\Admin\PermohonanController;
 use App\Http\Controllers\Admin\JenisLayananController;
 use App\Http\Controllers\Pemohon\PemohonController;
 use App\Http\Controllers\Bendahara\TagihanController;
 use App\Http\Controllers\Bendahara\KuitansiController;
-use App\Http\Controllers\Kapokja\DisposisiController;
-use App\Http\Controllers\Kapokja\PegawaiController;
+use App\Http\Controllers\PIC_LDI\DisposisiController;
+use App\Http\Controllers\PIC_LDI\PegawaiController;
 use App\Http\Controllers\Analis\HasilLayananController;
 use App\Http\Controllers\TransisiController;
 use App\Http\Controllers\Admin\ExportController;
@@ -22,15 +22,15 @@ Route::get('/', function () {
 
 Route::post('/pilih-role', [AuthenticatedSessionController::class, 'pilihRole'])->name('pilih-role');
 
-Route::middleware(['auth', 'KapokjaAnalis_0110'])->group(function () {
-    Route::get('/KA/kapokja-analis/transisi', [TransisiController::class, 'transisiKapokjaAnalis'])->name('transisi.kapokja-analis'); 
+Route::middleware(['auth', 'PIC_LDIAnalis_0110'])->group(function () {
+    Route::get('/KA/pic-ldi-analis/transisi', [TransisiController::class, 'transisiPIC_LDIAnalis'])->name('transisi.pic-ldi-analis'); 
 }); 
 
 Route::middleware(['auth', 'AnalisBendahara_0011'])->group(function () {
     Route::get('/AB/analis-bendahara/transisi', [TransisiController::class, 'transisiAnalisBendahara'])->name('transisi.analis-bendahara'); 
 }); 
-Route::middleware(['auth', 'KapokjaBendahara_0101'])->group(function () {
-    Route::get('/KB/kapokja-bendahara/transisi', [TransisiController::class, 'transisiKapokjaBendahara'])->name('transisi.kapokja-bendahara'); 
+Route::middleware(['auth', 'PIC_LDIBendahara_0101'])->group(function () {
+    Route::get('/KB/pic-ldi-bendahara/transisi', [TransisiController::class, 'transisiPIC_LDIBendahara'])->name('transisi.pic-ldi-bendahara'); 
 }); 
 
 Route::group(['prefix' => 'pemohon'], function() {
@@ -63,29 +63,29 @@ Route::middleware(['auth', 'Admin_1000'])->group(function () {
     
 }); 
 
-Route::middleware(['auth', 'Kapokja_0100'])->group(function () {
-    Route::get('/kapokja/beranda', [KapokjaController::class, 'index'])->name('kapokja.beranda'); 
-    Route::get('/kapokja/disposisi', [DisposisiController::class, 'index'])->name('kapokja.disposisi'); 
-    Route::get('/kapokja/disposisi/create/{id}', [DisposisiController::class, 'create'])->name('kapokja.disposisi.create'); 
-    Route::post('/kapokja/disposisi/store/{id}', [DisposisiController::class, 'store'])->name('kapokja.disposisi.store'); 
-    Route::get('/kapokja/disposisi/edit/{id}', [DisposisiController::class, 'edit'])->name('kapokja.disposisi.edit'); 
-    Route::post('/kapokja/disposisi/update/{id}', [DisposisiController::class, 'update'])->name('kapokja.disposisi.update'); 
-    Route::delete('/kapokja/disposisi/destroy/{id}', [DisposisiController::class, 'destroy'])->name('kapokja.disposisi.destroy'); 
-    Route::get('/kapokja/kelola-pegawai', [PegawaiController::class, 'index'])->name('kapokja.kelola-pegawai');
-    Route::get('/kapokja/kelola-pegawai/create', [PegawaiController::class, 'create'])->name('kapokja.kelola-pegawai.create');
-    Route::post('/kapokja/kelola-pegawai/store', [PegawaiController::class, 'store'])->name('kapokja.kelola-pegawai.store');
-    Route::get('/kapokja/kelola-pegawai/edit/{nip}', [PegawaiController::class, 'edit'])->name('kapokja.kelola-pegawai.edit');
-    Route::put('/kapokja/kelola-pegawai/update/{nip}', [PegawaiController::class, 'update'])->name('kapokja.kelola-pegawai.update');
-    Route::delete('/kapokja/kelola-pegawai/destroy/{nip}', [PegawaiController::class, 'destroy'])->name('kapokja.kelola-pegawai.destroy');
-    Route::get('/kapokja/hasil-layanan', [HasilLayananController::class, 'indexKapokja'])->name('kapokja.hasil-layanan');
-    Route::get('/kapokja/hasil-layanan/create/{id}', [HasilLayananController::class, 'createStatusKapokja'])->name('kapokja.hasil-layanan.create');
-    Route::post('/kapokja/hasil-layanan/store/{id}', [HasilLayananController::class, 'storeStatusKapokja'])->name('kapokja.hasil-layanan.store');
-    Route::get('/kapokja/hasil-layanan/edit/{id}', [HasilLayananController::class, 'editStatusKapokja'])->name('kapokja.hasil-layanan.edit');
-    Route::put('/kapokja/hasil-layanan/update/{id}', [HasilLayananController::class, 'updateStatusKapokja'])->name('kapokja.hasil-layanan.update');
-    Route::delete('/kapokja/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroyStatusKapokja'])->name('kapokja.hasil-layanan.destroy');
+Route::middleware(['auth', 'PIC_LDI_0100'])->group(function () {
+    Route::get('/pic-ldi/beranda', [PIC_LDIController::class, 'index'])->name('pic-ldi.beranda'); 
+    Route::get('/pic-ldi/disposisi', [DisposisiController::class, 'index'])->name('pic-ldi.disposisi'); 
+    Route::get('/pic-ldi/disposisi/create/{id}', [DisposisiController::class, 'create'])->name('pic-ldi.disposisi.create'); 
+    Route::post('/pic-ldi/disposisi/store/{id}', [DisposisiController::class, 'store'])->name('pic-ldi.disposisi.store'); 
+    Route::get('/pic-ldi/disposisi/edit/{id}', [DisposisiController::class, 'edit'])->name('pic-ldi.disposisi.edit'); 
+    Route::post('/pic-ldi/disposisi/update/{id}', [DisposisiController::class, 'update'])->name('pic-ldi.disposisi.update'); 
+    Route::delete('/pic-ldi/disposisi/destroy/{id}', [DisposisiController::class, 'destroy'])->name('pic-ldi.disposisi.destroy'); 
+    Route::get('/pic-ldi/kelola-pegawai', [PegawaiController::class, 'index'])->name('pic-ldi.kelola-pegawai');
+    Route::get('/pic-ldi/kelola-pegawai/create', [PegawaiController::class, 'create'])->name('pic-ldi.kelola-pegawai.create');
+    Route::post('/pic-ldi/kelola-pegawai/store', [PegawaiController::class, 'store'])->name('pic-ldi.kelola-pegawai.store');
+    Route::get('/pic-ldi/kelola-pegawai/edit/{nip}', [PegawaiController::class, 'edit'])->name('pic-ldi.kelola-pegawai.edit');
+    Route::put('/pic-ldi/kelola-pegawai/update/{nip}', [PegawaiController::class, 'update'])->name('pic-ldi.kelola-pegawai.update');
+    Route::delete('/pic-ldi/kelola-pegawai/destroy/{nip}', [PegawaiController::class, 'destroy'])->name('pic-ldi.kelola-pegawai.destroy');
+    Route::get('/pic-ldi/hasil-layanan', [HasilLayananController::class, 'indexPIC_LDI'])->name('pic-ldi.hasil-layanan');
+    Route::get('/pic-ldi/hasil-layanan/create/{id}', [HasilLayananController::class, 'createStatusPIC_LDI'])->name('pic-ldi.hasil-layanan.create');
+    Route::post('/pic-ldi/hasil-layanan/store/{id}', [HasilLayananController::class, 'storeStatusPIC_LDI'])->name('pic-ldi.hasil-layanan.store');
+    Route::get('/pic-ldi/hasil-layanan/edit/{id}', [HasilLayananController::class, 'editStatusPIC_LDI'])->name('pic-ldi.hasil-layanan.edit');
+    Route::put('/pic-ldi/hasil-layanan/update/{id}', [HasilLayananController::class, 'updateStatusPIC_LDI'])->name('pic-ldi.hasil-layanan.update');
+    Route::delete('/pic-ldi/hasil-layanan/destroy/{id}', [HasilLayananController::class, 'destroyStatusPIC_LDI'])->name('pic-ldi.hasil-layanan.destroy');
 
-    Route::get('/kapokja/disposisi/available-years', [DisposisiController::class, 'getAvailableYears']);
-    Route::get('/kapokja/hasil-layanan/available-years', [HasilLayananController::class, 'getAvailableYearsKapokja']);
+    Route::get('/pic-ldi/disposisi/available-years', [DisposisiController::class, 'getAvailableYears']);
+    Route::get('/pic-ldi/hasil-layanan/available-years', [HasilLayananController::class, 'getAvailableYearsPIC_LDI']);
 }); 
 
 Route::middleware(['auth', 'Analis_0010'])->group(function () {

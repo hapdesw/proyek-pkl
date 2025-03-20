@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Permohonan;
-use App\Models\Pemohon;
 use App\Models\Pegawai;
 use App\Models\JenisLayanan;
 use App\Models\Disposisi;

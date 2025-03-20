@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Kapokja;
+namespace App\Http\Controllers\PIC_LDI;
 
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
@@ -21,7 +21,7 @@ class PegawaiController extends Controller
         // Mapping nama peran ke indeks di peran_pegawai
         $roleMapping = [
             'admin' => 0, // peran_pegawai[0]
-            'kapokja' => 1, // peran_pegawai[1]
+            'pic-ldi' => 1, // peran_pegawai[1]
             'analis' => 2, // peran_pegawai[2]
             'bendahara' => 3, // peran_pegawai[3]
         ];
@@ -51,7 +51,7 @@ class PegawaiController extends Controller
         // Paginate hasil query
         $pegawai = $query->paginate(15);
 
-        return view('kapokja.kelola-pegawai', compact('pegawai'));   
+        return view('pic-ldi.kelola-pegawai', compact('pegawai'));   
     }
 
     /**
@@ -59,7 +59,7 @@ class PegawaiController extends Controller
      */
     public function create()
     {
-        return view('kapokja.create-pegawai');
+        return view('pic-ldi.create-pegawai');
     }
 
     /**
@@ -95,7 +95,7 @@ class PegawaiController extends Controller
 
             DB::commit();
     
-            return redirect()->route('kapokja.kelola-pegawai')->with('success', 'Pegawai berhasil ditambahkan.');
+            return redirect()->route('pic-ldi.kelola-pegawai')->with('success', 'Pegawai berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error saat menyimpan pegawai: ' . $e->getMessage());
@@ -111,7 +111,7 @@ class PegawaiController extends Controller
     public function edit($nip)
     {
         $pegawai = Pegawai::where('nip', $nip)->firstOrFail();
-        return view('kapokja.edit-pegawai', compact('pegawai'));
+        return view('pic-ldi.edit-pegawai', compact('pegawai'));
     }
     
     /**
@@ -140,7 +140,7 @@ class PegawaiController extends Controller
             ]);
 
             DB::commit();
-            return redirect()->route('kapokja.kelola-pegawai')->with('success', 'Data pegawai berhasil diperbarui.');
+            return redirect()->route('pic-ldi.kelola-pegawai')->with('success', 'Data pegawai berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error saat memperbarui pegawai: ' . $e->getMessage());
@@ -163,21 +163,10 @@ class PegawaiController extends Controller
 
             DB::commit();
 
-            return redirect()->route('kapokja.kelola-pegawai')->with('success', 'Pegawai berhasil dihapus.');
+            return redirect()->route('pic-ldi.kelola-pegawai')->with('success', 'Pegawai berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Gagal menghapus pegawai. ' . $e->getMessage()]);
         }
     }
-
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Pegawai $pegawai)
-    {
-        //
-    }
-
-
 }

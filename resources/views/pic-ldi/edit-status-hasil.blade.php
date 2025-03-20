@@ -27,7 +27,7 @@
                </h3>
            </div>
 
-           <form action="{{ route('kapokja.hasil-layanan.update', ['id' => $permohonan->id]) }}" method="POST" class="space-y-4">
+           <form action="{{ route('pic-ldi.hasil-layanan.update', ['id' => $permohonan->id]) }}" method="POST" class="space-y-4">
                @csrf
                @method('PUT')
                <div class="grid grid-cols-1 mt-5">

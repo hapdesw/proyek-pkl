@@ -106,7 +106,7 @@
                                 }
                             });
 
-                            fetch('/kapokja/disposisi/available-years')
+                            fetch('/pic-ldi/disposisi/available-years')
                                 .then(response => response.json())
                                 .then(years => {
                                     yearSelect.innerHTML = '<option value="">Semua Tahun</option>';

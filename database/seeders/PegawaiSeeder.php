@@ -42,7 +42,7 @@ class PegawaiSeeder extends Seeder
                 'nip' => '197607222006041003',
                 'id_user' => '5',
                 'nama' => 'Abdul Latif, S.Kom.',
-                'peran_pegawai' => '0110',
+                'peran_pegawai' => '0010',
             ],
             [
                 'nip' => '197211131995031002',

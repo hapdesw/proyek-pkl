@@ -25,7 +25,7 @@
                     Atur Disposisi
                 </h3>
             </div>
-            <form action="{{route ('kapokja.disposisi.store', ['id' => $permohonan->id]) }}" method="POST" class="space-y-4">
+            <form action="{{route ('pic-ldi.disposisi.store', ['id' => $permohonan->id]) }}" method="POST" class="space-y-4">
                 @csrf
                 <div class="grid grid-cols-1 mt-5">
                     <!-- ID Permohonan -->

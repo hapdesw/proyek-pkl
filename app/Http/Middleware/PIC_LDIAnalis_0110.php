@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
-class KapokjaBendahara_0101
+class PIC_LDIAnalis_0110
 {
     /**
      * Handle an incoming request.
@@ -16,7 +16,7 @@ class KapokjaBendahara_0101
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->peran != '0101')
+        if (Auth::user()->peran != '0110')
         {
             return redirect('/');
         }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Permohonan;
 use App\Models\Pemohon;
-use App\Models\Disposisi;
 use App\Models\JenisLayanan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
