@@ -175,13 +175,154 @@
                     @endphp
             
                     <!-- Judul Disposisi -->
-                    <h3 class="text-center text-lg font-semibold mb-5">Rekap Disposisi</h3>
-            
+                    {{-- Tombol Export --}}
+                    <div class="relative flex items-center justify-center">
+                        <h3 class="mt-6 mb-8 text-lg font-semibold absolute left-1/2 transform -translate-x-1/2">Rekap Disposisi</h3>
+
+                        <div class="ml-auto mr-6 mt-6 mb-8">
+                            <button id="exportButton" class="py-2 px-4 text-sm font-medium text-white focus:outline-none bg-yellow-500 rounded-lg border border-yellow-500 hover:bg-yellow-600 hover:text-white focus:z-10 focus:ring-4 focus:ring-yellow-200 flex items-center">
+                                <svg class="h-3.5 w-3.5 mr-2 text-white hover:gray-900 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 10V4a1 1 0 0 0-1-1H9.914a1 1 0 0 0-.707.293L5.293 7.207A1 1 0 0 0 5 7.914V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2M10 3v4a1 1 0 0 1-1 1H5m5 6h9m0 0-2-2m2 2-2 2"/>
+                                </svg>                               
+                                Export
+                            </button>
+                            {{-- Pop-up Konfirmasi Export --}}
+                            <div id="exportModal" class="fixed inset-0 z-50 flex items-center justify-center hidden" style="margin: 0; padding: 0;">
+                                <div class="absolute inset-0 bg-gray-800 bg-opacity-50"></div>
+                                <div class="relative bg-white rounded-lg shadow-lg p-6 w-96 m-4">
+                                    <!-- Pesan -->
+                                    <p class="text-lg font-semibold text-gray-800 mb-4">
+                                        Disposisi akan di-export, silahkan pilih format file
+                                    </p>
+                                    <!-- Tombol Export -->
+                                    <div id="exportButtons" class="flex justify-center gap-5 mb-6">
+                                        <a id="pdfExportButton" class="bg-redNew hover:bg-red-300 text-white hover:text-orange-700 font-bold py-2 px-4 rounded">PDF</a>
+                                        <a id="excelExportButton" class="bg-green-500 hover:bg-green-300 text-white hover:text-green-700 font-bold py-2 px-4 rounded">Excel</a>
+                                    </div>
+                                    <!-- Tombol Batal -->
+                                    <button id="closeModal" class="mt-4 w-full bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Batal</button>
+                                </div>
+                            </div>
+                            {{-- Script JavaScript untuk Modal Export--}}
+                            <script>
+                              document.addEventListener('DOMContentLoaded', function() {
+                                // Ambil elemen modal dan tombol
+                                const exportModal = document.getElementById('exportModal');
+                                const closeModal = document.getElementById('closeModal');
+                                const exportButton = document.getElementById('exportButton');
+                                const pdfExportButton = document.getElementById('pdfExportButton');
+                                const excelExportButton = document.getElementById('excelExportButton');
+
+                                // Fungsi untuk mendapatkan tahun aktif
+                                function getCurrentYear() {
+                                    // Coba ambil dari URL parameter 'tahun' (yang digunakan di filter)
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    const yearFromURL = urlParams.get('tahun');
+                                    
+                                    // Jika ada di URL, gunakan nilai tersebut
+                                    if (yearFromURL) {
+                                        console.log('Found year in URL:', yearFromURL);
+                                        return yearFromURL;
+                                    }
+                                    
+                                    // Jika tidak ada di URL, coba ambil dari elemen select
+                                    const yearFilterElem = document.getElementById('yearFilter');
+                                    if (yearFilterElem && yearFilterElem.value) {
+                                        console.log('Found year in filter element:', yearFilterElem.value);
+                                        return yearFilterElem.value;
+                                    }
+                                    
+                                    // Jika tidak ditemukan di mana pun, kembalikan nilai kosong
+                                    console.log('No year found in URL or filter');
+                                    return '';
+                                }
+
+                                // Fungsi untuk menampilkan modal
+                                function showExportModal() {
+                                    exportModal.classList.remove('hidden');
+                                }
+
+                                // Fungsi untuk menyembunyikan modal
+                                function hideExportModal() {
+                                    exportModal.classList.add('hidden');
+                                }
+
+                                // Fungsi untuk build URL export
+                                function buildExportUrl(format) {
+                                    const year = getCurrentYear();
+                                    let url = '/admin-layanan/beranda/export?format=' + format;
+                                    
+                                    // Tambahkan year ke URL jika tersedia
+                                    if (year && !isNaN(year)) {
+                                        // Gunakan 'year' sebagai nama parameter saat mengirim ke controller
+                                        url += '&year=' + encodeURIComponent(year);
+                                        console.log('Adding year to export URL:', year);
+                                    } else {
+                                        console.log('No valid year found for export URL');
+                                    }
+                                    
+                                    console.log('Final Export URL:', url);
+                                    return url;
+                                }
+
+                                // Event listener untuk tombol Export
+                                if (exportButton) {
+                                    exportButton.addEventListener('click', showExportModal);
+                                }
+
+                                // Event listener untuk tombol Batal
+                                if (closeModal) {
+                                    closeModal.addEventListener('click', hideExportModal);
+                                }
+
+                                // Event listener untuk tombol PDF
+                                if (pdfExportButton) {
+                                    pdfExportButton.addEventListener('click', function(e) {
+                                        e.preventDefault();
+                                        const url = buildExportUrl('pdf');
+                                        // Buka di tab baru untuk PDF
+                                        window.open(url, '_blank');
+                                        hideExportModal();
+                                    });
+                                }
+
+                                // Event listener untuk tombol Excel
+                                if (excelExportButton) {
+                                    excelExportButton.addEventListener('click', function(e) {
+                                        e.preventDefault();
+                                        const url = buildExportUrl('excel');
+                                        
+                                        // Show loading indicator
+                                        excelExportButton.innerHTML = '<span class="flex items-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Memproses...</span>';
+                                        
+                                        // Redirect untuk download Excel
+                                        window.location.href = url;
+                                        
+                                        // Reset button after 3 seconds in case download fails
+                                        setTimeout(() => {
+                                            excelExportButton.innerHTML = 'Excel';
+                                        }, 3000);
+                                        
+                                        hideExportModal();
+                                    });
+                                }
+
+                                // Tutup modal ketika klik di luar area popup
+                                exportModal.addEventListener('click', function(e) {
+                                    if (e.target === exportModal) {
+                                        hideExportModal();
+                                    }
+                                });
+                            });
+                            </script>
+                        </div>    
+                    </div>
+                   
                     <!-- Tabel -->
-                    <table class="table-auto border-collapse border border-green-500 w-auto">
+                    <table class="table-auto border-collapse border border-yellow-500 w-auto">
                         <thead>
                             <tr>
-                                <th class="border bg-yellow-500 border-yellow-500 px-4 py-2 text-white text-sm">Nama Disposisi</th>
+                                <th class="border bg-yellow-500 border-yellow-500 px-4 py-2 text-white text-sm">Nama Pegawai</th>
                                 @foreach ($namaBulan as $bulan)
                                     <th class="border bg-yellow-500 border-yellow-500 px-4 py-2 text-white text-sm">{{ $bulan }}</th>
                                 @endforeach

@@ -15,6 +15,7 @@ use App\Http\Controllers\PIC_LDI\PegawaiController;
 use App\Http\Controllers\Analis\HasilLayananController;
 use App\Http\Controllers\TransisiController;
 use App\Http\Controllers\Admin\ExportController;
+use App\Http\Controllers\Admin\ExportDisposisiController; // Ensure this controller exists in the specified namespace
 
 Route::get('/', function () {
     return view('auth.login');
@@ -41,6 +42,7 @@ Route::group(['prefix' => 'pemohon'], function() {
 
 Route::middleware(['auth', 'Admin_1000'])->group(function () {
     Route::get('/admin-layanan/beranda', [AdminController::class, 'index'])->name('admin.beranda'); 
+    Route::get('/admin-layanan/beranda/export', [ExportDisposisiController::class, 'export'])->name('admin.beranda.export'); // Ensure the 'export' method exists in the controller
     Route::get('/admin-layanan/kelola-layanan', [JenisLayananController::class, 'index'])->name('admin.kelola-layanan');
     Route::get('/admin-layanan/kelola-layanan/create', [JenisLayananController::class, 'create'])->name('admin.kelola-layanan.create');
     Route::post('/admin-layanan/kelola-layanan/store', [JenisLayananController::class, 'store'])->name('admin.kelola-layanan.store'); 

@@ -191,7 +191,7 @@
                                         <span id="countText" class="hidden">Permohonan berjumlah akan di-export</span>
                                     </p>
                                     <div id="exportButtons" class="hidden flex justify-center gap-5 mb-6">
-                                        <a class="bg-orange-500 hover:bg-orange-300 text-white hover:text-orange-700 font-bold py-2 px-4 rounded">PDF</a>
+                                        <a class="bg-redNew hover:bg-red-300 text-white hover:text-orange-700 font-bold py-2 px-4 rounded">PDF</a>
                                         <a class="bg-green-500 hover:bg-green-300 text-white hover:text-green-700 font-bold py-2 px-4 rounded">Excel</a>
                                     </div>
                                     <button id="closeModal" class="mt-4 w-full bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Batal</button>
