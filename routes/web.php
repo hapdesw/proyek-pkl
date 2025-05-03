@@ -117,16 +117,15 @@ Route::middleware(['auth', 'Bendahara_0001'])->group(function () {
     Route::get('/bendahara/tagihan/edit/{id}', [TagihanController::class, 'edit'])->name('bendahara.tagihan.edit');
     Route::put('/bendahara/tagihan/update/{id}', [TagihanController::class, 'update'])->name('bendahara.tagihan.update');
     Route::delete('/bendahara/tagihan/destroy/{id}', [TagihanController::class, 'destroy'])->name('bendahara.tagihan.destroy');
+    Route::get('/bendahara/tagihan/available-years', [TagihanController::class, 'getAvailableYears']);
 
     Route::get('/bendahara/kuitansi/create/{id}', [KuitansiController::class, 'create'])->name('bendahara.kuitansi.create');
     Route::post('/bendahara/kuitansi/store/{id}', [KuitansiController::class, 'store'])->name('bendahara.kuitansi.store');
     Route::get('/bendahara/kuitansi/edit/{id}', [KuitansiController::class, 'edit'])->name('bendahara.kuitansi.edit');
     Route::put('/bendahara/kuitansi/update/{id}', [KuitansiController::class, 'update'])->name('bendahara.kuitansi.update');
     Route::delete('/bendahara/kuitansi/destroy/{id}', [KuitansiController::class, 'destroy'])->name('bendahara.kuitansi.destroy'); 
+    Route::get('/bendahara/kuitansi/available-years', [KuitansiController::class, 'getAvailableYears']);
 }); 
-
-
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
