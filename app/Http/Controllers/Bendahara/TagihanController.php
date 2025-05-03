@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Permohonan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class TagihanController extends Controller
@@ -16,8 +17,9 @@ class TagihanController extends Controller
      */
     public function index(Request $request)
     {
-        // Query dasar: hanya permohonan dengan kategori berbayar
-        $query = Permohonan::where('kategori_berbayar', 'Berbayar');
+        // Query dasar dengan filter 
+        $query = Permohonan::where('kategori_berbayar', 'Berbayar')
+            ->with(['tagihan']);
 
         // Pencarian berdasarkan input search
         if ($request->has('search') && !empty($request->search)) {
@@ -25,22 +27,22 @@ class TagihanController extends Controller
             $query->where(function($q) use ($searchTerm) {
                 // Cari berdasarkan kolom di tabel permohonan
                 $q->where('id', 'like', '%' . $searchTerm . '%')
-                ->orWhere('tanggal_diajukan', 'like', '%' . $searchTerm . '%')
-                ->orWhere('deskripsi_keperluan', 'like', '%' . $searchTerm . '%')
-                ->orWhere('kategori_berbayar', 'like', '%' . $searchTerm . '%')
-                ->orWhere('status_permohonan', 'like', '%' . $searchTerm . '%')
-                
-                // Cari berdasarkan data pemohon
-                ->orWhereHas('pemohon', function($query) use ($searchTerm) {
-                    $query->where('nama_pemohon', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('tanggal_diajukan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('deskripsi_keperluan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('kategori_berbayar', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('status_permohonan', 'like', '%' . $searchTerm . '%')
+                  
+                  // Cari berdasarkan data pemohon
+                  ->orWhereHas('pemohon', function($query) use ($searchTerm) {
+                      $query->where('nama_pemohon', 'like', '%' . $searchTerm . '%')
                             ->orWhere('instansi', 'like', '%' . $searchTerm . '%')
                             ->orWhere('no_kontak', 'like', '%' . $searchTerm . '%');
-                })
-                
-                // Cari berdasarkan jenis layanan
-                ->orWhereHas('jenisLayanan', function($query) use ($searchTerm) {
-                    $query->where('nama_jenis_layanan', 'like', '%' . $searchTerm . '%');
-                });
+                  })
+                  
+                  // Cari berdasarkan jenis layanan
+                  ->orWhereHas('jenisLayanan', function($query) use ($searchTerm) {
+                      $query->where('nama_jenis_layanan', 'like', '%' . $searchTerm . '%');
+                  });
             });
         }
 
@@ -61,12 +63,18 @@ class TagihanController extends Controller
             $query->whereYear('tanggal_diajukan', $request->query('year'));
         }
 
-        // Filter berdasarkan file tagihan
+        // Filter berdasarkan tagihan
         if ($request->has('tagihan') && !empty($request->query('tagihan'))) {
             $tagihanFilter = $request->query('tagihan');
+
             if ($tagihanFilter === 'sudah') {
-                $query->whereHas('tagihan');
+                // Hanya tampilkan permohonan yang sudah memiliki tagihan
+                $query->whereHas('tagihan', function ($q) {
+                    $q->whereNotNull('nama_file_tagihan')
+                      ->whereNotNull('path_file_tagihan');
+                });
             } elseif ($tagihanFilter === 'belum') {
+                // Hanya tampilkan permohonan yang belum memiliki tagihan
                 $query->whereDoesntHave('tagihan');
             }
         }
@@ -75,6 +83,20 @@ class TagihanController extends Controller
         $permohonan = $query->paginate(15);
 
         return view('bendahara.tagihan', compact('permohonan'));
+    }
+
+    public function getAvailableYears()
+    {
+        Log::info('getAvailableYears dipanggil');
+
+        $years = Permohonan::selectRaw('DISTINCT YEAR(tanggal_diajukan) AS year')
+            ->orderBy('year', 'DESC')
+            ->pluck('year')
+            ->toArray();
+
+        Log::info('Data tahun yang ditemukan:', $years);
+
+        return response()->json($years);
     }
 
     /**

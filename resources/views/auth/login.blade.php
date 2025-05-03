@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
+    <title>Sistem Layanan Data dan Informasi</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -56,7 +56,7 @@
                         <div class="flex items-center justify-between">
                             @if (Route::has('password.request'))
                                 <a href="{{ route('password.request') }}" class="text-sm text-blue-600 hover:underline dark:text-blue-400">
-                                    {{ __('Forgot your password?') }}
+                                    {{ __('Lupa Kata Sandi') }}
                                 </a>
                             @endif
                         </div>
