@@ -196,8 +196,8 @@
                                     </p>
                                     <!-- Tombol Export -->
                                     <div id="exportButtons" class="flex justify-center gap-5 mb-6">
-                                        <a id="pdfExportButton" class="bg-redNew hover:bg-red-300 text-white hover:text-orange-700 font-bold py-2 px-4 rounded">PDF</a>
-                                        <a id="excelExportButton" class="bg-green-500 hover:bg-green-300 text-white hover:text-green-700 font-bold py-2 px-4 rounded">Excel</a>
+                                        <a href id="pdfExportButton" class="bg-redNew hover:bg-red-300 text-white hover:text-orange-700 font-bold py-2 px-4 rounded">PDF</a>
+                                        <a href id="excelExportButton" class="bg-green-500 hover:bg-green-300 text-white hover:text-green-700 font-bold py-2 px-4 rounded">Excel</a>
                                     </div>
                                     <!-- Tombol Batal -->
                                     <button id="closeModal" class="mt-4 w-full bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">Batal</button>
@@ -319,33 +319,35 @@
                     </div>
                    
                     <!-- Tabel -->
-                    <table class="table-auto border-collapse border border-yellow-500 w-auto">
-                        <thead>
-                            <tr>
-                                <th class="border bg-yellow-500 border-yellow-500 px-4 py-2 text-white text-sm">Nama Pegawai</th>
-                                @foreach ($namaBulan as $bulan)
-                                    <th class="border bg-yellow-500 border-yellow-500 px-4 py-2 text-white text-sm">{{ $bulan }}</th>
-                                @endforeach
-                                <th class="border bg-yellow-500 border-yellow-500 px-4 py-2 text-white text-sm">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($namaDisposisi as $disposisi)
+                    <div class="flex justify-center overflow-x-auto">
+                        <table class="table-auto border-collapse border border-yellow-500 mx-auto">
+                            <thead>
                                 <tr>
-                                    <td class="border border-yellow-500 px-4 py-2 text-sm">{{ $disposisi }}</td>
-                                    @php $totalPerDisposisi = 0; @endphp
-                                    @foreach ($namaBulan as $index => $bulan)
-                                        @php
-                                            $jumlah = $rekapPerBulan['disposisi_per_pegawai'][$disposisi][$index] ?? 0;
-                                            $totalPerDisposisi += $jumlah;
-                                        @endphp
-                                        <td class="border border-yellow-500 px-4 py-2 text-sm">{{ $jumlah }}</td>
+                                    <th class="border bg-yellow-500 border-yellow-500 px-4 py-2 text-white text-sm">Nama Pegawai</th>
+                                    @foreach ($namaBulan as $bulan)
+                                        <th class="border bg-yellow-500 border-yellow-500 px-4 py-2 text-white text-sm">{{ $bulan }}</th>
                                     @endforeach
-                                    <td class="border border-yellow-500 px-4 py-2 text-sm bg-yellow-200 font-semibold">{{ $totalPerDisposisi }}</td>
+                                    <th class="border bg-yellow-500 border-yellow-500 px-4 py-2 text-white text-sm">Total</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($namaDisposisi as $disposisi)
+                                    <tr>
+                                        <td class="border border-yellow-500 px-4 py-2 text-sm">{{ $disposisi }}</td>
+                                        @php $totalPerDisposisi = 0; @endphp
+                                        @foreach ($namaBulan as $index => $bulan)
+                                            @php
+                                                $jumlah = $rekapPerBulan['disposisi_per_pegawai'][$disposisi][$index] ?? 0;
+                                                $totalPerDisposisi += $jumlah;
+                                            @endphp
+                                            <td class="border border-yellow-500 px-4 py-2 text-sm">{{ $jumlah }}</td>
+                                        @endforeach
+                                        <td class="border border-yellow-500 px-4 py-2 text-sm bg-yellow-200 font-semibold">{{ $totalPerDisposisi }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             
@@ -407,33 +409,35 @@
                     <h3 class="text-center text-lg font-semibold mb-5">Rekap Jenis Layanan</h3>
 
                     <!-- Tabel -->
-                    <table class="table-auto border-collapse border border-orange-500 w-auto">
-                        <thead>
-                            <tr>
-                                <th class="border bg-orange-500 border-orange-500 px-4 py-2 text-white text-sm">Nama Layanan</th>
-                                @foreach ($namaBulan as $bulan)
-                                    <th class="border bg-orange-500 border-orange-500 px-4 py-2 text-white text-sm">{{ $bulan }}</th>
-                                @endforeach
-                                <th class="border bg-orange-500 border-orange-500 px-4 py-2 text-white text-sm">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($namaLayanan as $layanan)
+                    <div class="flex justify-center overflow-x-auto">
+                        <table class="table-auto border-collapse border border-orange-500 w-auto mx-auto">
+                            <thead>
                                 <tr>
-                                    <td class="border border-orange-500 px-4 py-2 text-sm">{{ $layanan }}</td>
-                                    @php $totalPerLayanan = 0; @endphp
-                                    @foreach ($namaBulan as $index => $bulan)
-                                        @php
-                                            $jumlah = $rekapPerBulan['jenis_layanan_nama'][$layanan][$index] ?? 0;
-                                            $totalPerLayanan += $jumlah;
-                                        @endphp
-                                        <td class="border border-orange-500 px-4 py-2 text-sm">{{ $jumlah }}</td>
+                                    <th class="border bg-orange-500 border-orange-500 px-4 py-2 text-white text-sm">Nama Layanan</th>
+                                    @foreach ($namaBulan as $bulan)
+                                        <th class="border bg-orange-500 border-orange-500 px-4 py-2 text-white text-sm">{{ $bulan }}</th>
                                     @endforeach
-                                    <td class="border border-orange-500 px-4 py-2 text-sm bg-orange-200 font-semibold">{{ $totalPerLayanan }}</td>
+                                    <th class="border bg-orange-500 border-orange-500 px-4 py-2 text-white text-sm">Total</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($namaLayanan as $layanan)
+                                    <tr>
+                                        <td class="border border-orange-500 px-4 py-2 text-sm">{{ $layanan }}</td>
+                                        @php $totalPerLayanan = 0; @endphp
+                                        @foreach ($namaBulan as $index => $bulan)
+                                            @php
+                                                $jumlah = $rekapPerBulan['jenis_layanan_nama'][$layanan][$index] ?? 0;
+                                                $totalPerLayanan += $jumlah;
+                                            @endphp
+                                            <td class="border border-orange-500 px-4 py-2 text-sm">{{ $jumlah }}</td>
+                                        @endforeach
+                                        <td class="border border-orange-500 px-4 py-2 text-sm bg-orange-200 font-semibold">{{ $totalPerLayanan }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -457,33 +461,36 @@
                     <h3 class="text-center text-lg font-semibold mb-5">Rekap Status Permohonan</h3>
 
                     <!-- Tabel -->
-                    <table class="table-auto border-collapse border border-pink-500 w-auto">
-                        <thead>
-                            <tr>
-                                <th class="border bg-pink-500 border-pink-500 px-4 py-2 text-white text-sm">Status</th>
-                                @foreach ($namaBulan as $bulan)
-                                    <th class="border bg-pink-500 border-pink-500 px-4 py-2 text-white text-sm">{{ $bulan }}</th>
-                                @endforeach
-                                <th class="border bg-pink-500 border-pink-500 px-4 py-2 text-white text-sm">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($statusList as $statusNama => $statusKey)
+                    <div class="flex justify-center overflow-x-auto">
+                        <table class="table-auto border-collapse border border-pink-500 w-auto mx-auto">
+                            <thead>
                                 <tr>
-                                    <td class="border border-pink-500 px-4 py-2 text-sm">{{ $statusNama }}</td>
-                                    @php $totalPerStatus = 0; @endphp
-                                    @foreach ($namaBulan as $index => $bulan)
-                                        @php
-                                            $jumlah = $rekapPerBulan[$statusKey][$index] ?? 0;
-                                            $totalPerStatus += $jumlah;
-                                        @endphp
-                                        <td class="border border-pink-500 px-4 py-2 text-sm">{{ $jumlah }}</td>
+                                    <th class="border bg-pink-500 border-pink-500 px-4 py-2 text-white text-sm">Status</th>
+                                    @foreach ($namaBulan as $bulan)
+                                        <th class="border bg-pink-500 border-pink-500 px-4 py-2 text-white text-sm">{{ $bulan }}</th>
                                     @endforeach
-                                    <td class="border border-pink-500 px-4 py-2 text-sm bg-pink-200 font-semibold">{{ $totalPerStatus }}</td>
+                                    <th class="border bg-pink-500 border-pink-500 px-4 py-2 text-white text-sm">Total</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($statusList as $statusNama => $statusKey)
+                                    <tr>
+                                        <td class="border border-pink-500 px-4 py-2 text-sm">{{ $statusNama }}</td>
+                                        @php $totalPerStatus = 0; @endphp
+                                        @foreach ($namaBulan as $index => $bulan)
+                                            @php
+                                                $jumlah = $rekapPerBulan[$statusKey][$index] ?? 0;
+                                                $totalPerStatus += $jumlah;
+                                            @endphp
+                                            <td class="border border-pink-500 px-4 py-2 text-sm">{{ $jumlah }}</td>
+                                        @endforeach
+                                        <td class="border border-pink-500 px-4 py-2 text-sm bg-pink-200 font-semibold">{{ $totalPerStatus }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    
                 </div>
             </div>
 

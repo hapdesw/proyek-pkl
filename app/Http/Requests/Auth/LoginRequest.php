@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class LoginRequest extends FormRequest
 {
@@ -38,19 +39,38 @@ class LoginRequest extends FormRequest
      * @throws \Illuminate\Validation\ValidationException
      */
     public function authenticate(): void
-    {
-        $this->ensureIsNotRateLimited();
+{
+    $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('username', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+    // Ambil user dengan relasi pegawai (termasuk yang soft delete)
+    $user = \App\Models\User::where('username', $this->username)
+        ->with(['pegawai' => function ($query) {
+            $query->withTrashed();
+        }])
+        ->first();
 
-            throw ValidationException::withMessages([
-                'username' => trans('auth.failed'),
-            ]);
-        }
+      // Cek apakah username/password salah
+      if (!$user || !\Illuminate\Support\Facades\Hash::check($this->password, $user->password)) {
+        RateLimiter::hit($this->throttleKey());
 
-        RateLimiter::clear($this->throttleKey());
+        throw ValidationException::withMessages([
+            'username' => 'Akun tidak ditemukan.',
+        ]);
     }
+
+    // Cek apakah pegawai-nya sudah soft delete
+    if ($user->pegawai && $user->pegawai->deleted_at !== null) {
+        throw ValidationException::withMessages([
+            'username' => 'Akun ini tidak aktif atau sudah dihapus.',
+        ]);
+    }
+
+    // Jika semua valid, login user
+    \Illuminate\Support\Facades\Auth::login($user, $this->boolean('remember'));
+
+    RateLimiter::clear($this->throttleKey());
+}
+
 
     /**
      * Ensure the login request is not rate limited.

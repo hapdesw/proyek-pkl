@@ -14,7 +14,7 @@
                     <li>
                         <a href="{{ route('admin.kelola-layanan') }}" class="flex items-center p-2 rounded hover:bg-gray-100 hover:text-gray-400 font-semibold 
                         {{ request()->routeIs('admin.kelola-layanan') ? ' 
-                        text-darkKnight font-bold' : 'text-plumb' }}">Kelola Layanan</a>
+                        text-darkKnight font-bold' : 'text-plumb' }}">Jenis Layanan</a>
                     </li>
                     <li>
                         <a href="{{ route('admin.kelola-pemohon') }}" class="flex items-center p-2 rounded hover:bg-gray-100 hover:text-gray-400 font-semibold 

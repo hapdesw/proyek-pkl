@@ -22,7 +22,7 @@
             @endif
             <div class="border-b border-gray-200 dark:border-gray-700 p-4 pb-3 flex justify-between items-center">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Kelola Pemohon
+                    Pemohon
                 </h3>
                
             </div>
@@ -40,50 +40,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">                  
-                    <div class="flex items-center space-x-3 w-full md:w-auto">
-                        <div class="relative inline-block">
-                           <!-- Tombol Filter -->
-                           <button id="filterButton" data-dropdown-toggle="dropdownFilters" class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                                <svg class="h-3.5 w-3.5 mr-2 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z"/>
-                                </svg>                                      
-                                Filter
-                            </button>
-                        
-                            <!-- Dropdown Filter -->
-                            <div id="dropdownFilters" style="display: none;" class="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-md p-4">
-                                <h3 class="font-semibold mb-2">Pilih Bulan</h3>
-                                <div class="grid grid-cols-2 gap-2">
-                                    @php
-                                        $months = [
-                                            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                                            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-                                        ];
-                                    @endphp
-                                    @foreach ($months as $month)
-                                        <label class="flex items-center space-x-2">
-                                            <input type="checkbox" class="month-filter" value="{{ strtolower($month) }}">
-                                            <span>{{ $month }}</span>
-                                        </label>
-                                    @endforeach
-                                </div>
-                        
-                                <!-- Pilih Tahun -->
-                                <h3 class="font-semibold mt-4 mb-2">Pilih Tahun</h3>
-                                <select id="yearFilter" class="w-full p-2 border rounded">
-                                    <option value="">Semua Tahun</option>
-                                    <!-- Tahun akan diisi dengan JavaScript -->
-                                </select>
-                        
-                                <!-- Tombol Terapkan -->
-                                <button id="applyFilter" class="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-                                    Terapkan
-                                </button>
-                            </div>
-                        </div>
-                    </div>   
-                </div>    
+                
             </div>
             {{-- Tabel --}}
             <div class="overflow-x-auto  min-h-screen">
@@ -122,7 +79,8 @@
                                     <span class="text-red-500">Tidak ada</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3">{{ $pmh->total_permohonan }}</td>
+                            
+                            <td class="px-4 py-3"><a href="{{ route('admin.kelola-pemohon.detail', $pmh->id) }}" class="underline text-blue-500 hover:text-blue-700">Lihat detail</a></td>
                         </tr> 
                     @empty
                         <tr>

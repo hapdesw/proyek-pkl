@@ -22,7 +22,7 @@
             @endif
             <div class="border-b border-gray-200 dark:border-gray-700">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white p-4 pb-3">
-                    Kelola Jenis Layanan
+                    Jenis Layanan
                 </h3>
             </div>
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">

@@ -7,7 +7,8 @@
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <style>
         body {
             background-image: url('/img/bg.jpg');
             background-size: cover;
@@ -30,6 +31,7 @@
         <!-- Login -->
         <div class="relative flex flex-col items-center justify-center h-full px-6 py-6">
             <div class="w-full max-w-sm bg-white rounded-lg shadow dark:border dark:bg-gray-800/80 dark:border-gray-700">
+
                 <h1 class="text-xl pt-6 pb-0 font-bold leading-tight tracking-tight text-slate-600 md:text-xl dark:text-white text-center">
                     Sistem Layanan Data dan Informasi
                 </h1>
@@ -66,6 +68,13 @@
                             {{ __('Log in') }}
                         </button>
                     </form>
+                    {{-- Link untuk menamapilkan halaman daftar --}}
+                    <div>
+                        <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                            Belum punya akun? 
+                            <a href="{{ route('daftar-akun') }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Daftar disini</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

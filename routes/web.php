@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\PIC_LDI\PIC_LDIController;
 use App\Http\Controllers\Admin\PermohonanController;
@@ -15,11 +16,17 @@ use App\Http\Controllers\PIC_LDI\PegawaiController;
 use App\Http\Controllers\Analis\HasilLayananController;
 use App\Http\Controllers\TransisiController;
 use App\Http\Controllers\Admin\ExportController;
-use App\Http\Controllers\Admin\ExportDisposisiController; // Ensure this controller exists in the specified namespace
+use App\Http\Controllers\Admin\ExportDisposisiController; 
 
 Route::get('/', function () {
     return view('auth.login');
 });
+
+Route::group(['prefix' => 'daftar'], function() {
+    Route::get('/-akun/create', [RegisteredUserController::class, 'create']) ->name('daftar-akun');
+    Route::post('/-akun/store', [RegisteredUserController::class, 'store']) ->name('daftar-akun.store');
+});
+
 
 Route::post('/pilih-role', [AuthenticatedSessionController::class, 'pilihRole'])->name('pilih-role');
 
@@ -42,7 +49,7 @@ Route::group(['prefix' => 'pemohon'], function() {
 
 Route::middleware(['auth', 'Admin_1000'])->group(function () {
     Route::get('/admin-layanan/beranda', [AdminController::class, 'index'])->name('admin.beranda'); 
-    Route::get('/admin-layanan/beranda/export', [ExportDisposisiController::class, 'export'])->name('admin.beranda.export'); // Ensure the 'export' method exists in the controller
+    Route::get('/admin-layanan/beranda/export', [ExportDisposisiController::class, 'export'])->name('admin.beranda.export'); 
     Route::get('/admin-layanan/kelola-layanan', [JenisLayananController::class, 'index'])->name('admin.kelola-layanan');
     Route::get('/admin-layanan/kelola-layanan/create', [JenisLayananController::class, 'create'])->name('admin.kelola-layanan.create');
     Route::post('/admin-layanan/kelola-layanan/store', [JenisLayananController::class, 'store'])->name('admin.kelola-layanan.store'); 
@@ -61,12 +68,14 @@ Route::middleware(['auth', 'Admin_1000'])->group(function () {
     Route::delete('/admin-layanan/permohonan/destroy/{id}', [PermohonanController::class, 'destroy'])->name('admin.permohonan.destroy');
     Route::post('/admin-layanan/permohonan/update-status/{id}', [PermohonanController::class, 'updateStatus'])->name('admin.permohonan.update-status');
     Route::get('/admin-layanan/pemohon', [PemohonController::class, 'index'])->name('admin.kelola-pemohon'); 
+    Route::get('/admin-layanan/pemohon/detail/{id}', [PemohonController::class, 'detail'])->name('admin.kelola-pemohon.detail');
     Route::get('/admin/permohonan/available-years', [PermohonanController::class, 'getAvailableYears']);
     
 }); 
 
 Route::middleware(['auth', 'PIC_LDI_0100'])->group(function () {
     Route::get('/pic-ldi/beranda', [PIC_LDIController::class, 'index'])->name('pic-ldi.beranda'); 
+    Route::get('/pic-ldi/beranda/export', [ExportDisposisiController::class, 'export'])->name('pic-ldi.beranda.export');
     Route::get('/pic-ldi/disposisi', [DisposisiController::class, 'index'])->name('pic-ldi.disposisi'); 
     Route::get('/pic-ldi/disposisi/create/{id}', [DisposisiController::class, 'create'])->name('pic-ldi.disposisi.create'); 
     Route::post('/pic-ldi/disposisi/store/{id}', [DisposisiController::class, 'store'])->name('pic-ldi.disposisi.store'); 
