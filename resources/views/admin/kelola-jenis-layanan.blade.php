@@ -27,7 +27,7 @@
             </div>
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
-                    <form class="flex items-center">
+                    <form action="{{ route('admin.kelola-layanan') }}" method="GET" class="flex items-center">
                         <label for="simple-search" class="sr-only">Search</label>
                         <div class="relative w-full">
                             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -35,7 +35,14 @@
                                     <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                 </svg>
                             </div>
-                            <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
+                            <input 
+                                type="text" 
+                                id="simple-search" 
+                                name="search" 
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 
+                                placeholder="Search" 
+                                value="{{ request('search') }}" 
+                            >
                         </div>
                     </form>
                 </div>
@@ -218,37 +225,44 @@
                 @if ($jenislayanan->hasPages())
                 <ul class="inline-flex items-stretch -space-x-px">
                     <li>
-                        <a href="{{ $jenislayanan->previousPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $jenislayanan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
+                        <a href="{{ $jenislayanan->previousPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}"
+                            class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $jenislayanan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
                             <span class="sr-only">Previous</span>
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
+                                <path fill-rule="evenodd"
+                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
                             </svg>
                         </a>
                     </li>
 
+                    {{-- Pagination links --}}
                     @foreach ($jenislayanan->getUrlRange(1, $jenislayanan->lastPage()) as $page => $url)
                         @if ($page == 1 || $page == $jenislayanan->lastPage() || ($page >= $jenislayanan->currentPage() - 1 && $page <= $jenislayanan->currentPage() + 1))
                             <li>
-                                <a href="{{ $url }}" 
-                                class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
-                                {{ $jenislayanan->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
+                                <a href="{{ $url }}{{ request('search') ? '&search=' . request('search') : '' }}"
+                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
+                                    {{ $jenislayanan->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
                                     {{ $page }}
                                 </a>
                             </li>
                         @elseif ($page == $jenislayanan->currentPage() - 2 || $page == $jenislayanan->currentPage() + 2)
                             <li>
-                                <a class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700">...</a>
+                                <span class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300">...</span>
                             </li>
                         @endif
                     @endforeach
 
+                    {{-- Next Page Link --}}
                     <li>
-                        <a href="{{ $jenislayanan->nextPageUrl() }}" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$jenislayanan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
+                        <a href="{{ $jenislayanan->nextPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}"
+                            class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$jenislayanan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
                             <span class="sr-only">Next</span>
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
+                                <path fill-rule="evenodd"
+                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
                             </svg>
                         </a>
+            
                     </li>
                 </ul>
                 @endif

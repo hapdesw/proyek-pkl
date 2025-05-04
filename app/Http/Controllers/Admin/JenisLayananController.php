@@ -11,10 +11,21 @@ class JenisLayananController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-       
-        $jenislayanan = JenisLayanan::paginate(15); 
+        $query = JenisLayanan::query();
+
+        // Pencarian berdasarkan input search
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                // Cari berdasarkan kolom di tabel jenis_layanan
+                $q->where('id', 'like', '%' . $searchTerm . '%')
+                ->orWhere('nama_jenis_layanan', 'like', '%' . $searchTerm . '%');
+
+            });
+        }
+        $jenislayanan = $query->paginate(10); 
         return view('admin.kelola-jenis-layanan', compact('jenislayanan'));
     }
 

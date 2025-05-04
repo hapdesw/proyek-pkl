@@ -12,17 +12,32 @@ use Illuminate\Support\Facades\Log;
 
 class PemohonController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pemohon = Pemohon::select(
+        $query = Pemohon::select(
             'nama_pemohon',
             'instansi',
             DB::raw('ANY_VALUE(no_kontak) as no_kontak'),
             DB::raw('ANY_VALUE(email) as email')
         )
-        ->groupBy('nama_pemohon', 'instansi')
-        ->paginate(15);
+        ->groupBy('nama_pemohon', 'instansi');
     
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                // Cari berdasarkan kolom di tabel pemohon
+                $q->where('id', 'like', '%' . $searchTerm . '%')
+                ->orWhere('nama_pemohon', 'like', '%' . $searchTerm . '%')
+                ->orWhere('instansi', 'like', '%' . $searchTerm . '%')
+                ->orWhere('no_kontak', 'like', '%' . $searchTerm . '%')
+                ->orWhere('email', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
+        // Pagination dengan search
+        $pemohon = $query->paginate(15)->withQueryString();
+
+        // Transform data per baris
         $pemohon->getCollection()->transform(function ($item) {
             // Ambil semua ID pemohon dengan nama & instansi yang sama
             $pemohonIDs = Pemohon::where('nama_pemohon', $item->nama_pemohon)
@@ -41,8 +56,9 @@ class PemohonController extends Controller
                 'total_permohonan' => $total_permohonan,
             ];
         });
+
         $totalPemohon = Pemohon::distinct()->count('nama_pemohon');
-    
+
         return view('admin.data-pemohon', compact('pemohon', 'totalPemohon'));
     }
 
@@ -70,12 +86,6 @@ class PemohonController extends Controller
 
         // Ambil tahun dari request, default ke tahun terbaru dari permohonan
         $tahun = $request->input('tahun', $tahunTerbaru);
-        
-        // Ambil daftar tahun yang tersedia untuk dropdown filter
-        // $tahunTersedia = Permohonan::selectRaw('YEAR(tanggal_diajukan) as tahun')
-        //                 ->distinct()
-        //                 ->orderBy('tahun', 'desc')
-        //                 ->pluck('tahun');
 
         $tahunTersedia = Permohonan::whereIn('id_pemohon', $pemohonIDs)
                         ->selectRaw('YEAR(tanggal_diajukan) as tahun')
@@ -174,15 +184,7 @@ class PemohonController extends Controller
             session()->flash('error', 'Terjadi kesalahan saat membuat permohonan. ' . $e->getMessage());
             return redirect()->back()->withInput();
         }
-         // Ubah redirect berdasarkan asal route
-        
-        // if (str_contains($request->route()->getName(), 'pemohon')) {
-        //     Log::info('Masuk sebagai Pemohon: Berhasil buat permohonan');
-        //     return redirect()->route('pemohon.beranda')->with('success', 'Permohonan berhasil dibuat!');
-        // }
         
         return redirect()->route('pemohon.beranda');
-        
-       
     }
 }

@@ -39,7 +39,7 @@
                                 <span class="text-redNew !important">*</span>
                             </label>
                             
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_pemohon" name="nama_pemohon" required>
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="nama_pemohon" name="nama_pemohon" value="{{ old('nama_pemohon') }}" required>
                         </div>
                         <!-- No Hp -->
                         <div>
@@ -47,7 +47,7 @@
                                 No Hp
                                 <span class="text-redNew !important">*</span>
                             </label>
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="no_hp" name="no_hp" required oninput="validatePhoneNumber(this)">
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="no_hp" name="no_hp" value="{{ old('no_hp') }}" required oninput="validatePhoneNumber(this)">
                             @error('no_hp')
                                 <p class="text-red-500 text-sm">{{ $message }}</p>
                             @enderror
@@ -73,12 +73,12 @@
                                 <span class="text-redNew !important">*</span>
                             </label>
                            
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="instansi" name="instansi" required>
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="instansi" name="instansi" value="{{ old('instansi') }}" required>
                         </div>
                         <!-- Email -->
                         <div>
                             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="email" name="email">
+                            <input type="text" class="text-sm font_medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="email" name="email" value="{{ old('email') }}">
                         </div>
                     </div>
                     {{-- Data Permohonan --}}
@@ -90,7 +90,7 @@
                                 <span class="text-redNew !important">*</span>
                             </label>
                             
-                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_diajukan" name="tgl_diajukan" required>
+                            <input type="date" class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="tgl_diajukan" name="tgl_diajukan" value="{{ old('tgl_diajukan') }}" required>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-5">
@@ -101,11 +101,13 @@
                                 <span class="text-redNew !important">*</span>
                             </label>
                             
-                            <select class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="kategori" name="kategori" required>
-                                <option value="" disabled selected>--Pilih Kategori--</option>
-                                <option value="Berbayar">Berbayar</option>
-                                <option value="Nolrupiah">Nol Rupiah</option>
+                            <select class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" 
+                                    id="kategori" name="kategori" required>
+                                <option value="" disabled {{ old('kategori') ? '' : 'selected' }}>--Pilih Kategori--</option>
+                                <option value="Berbayar" {{ old('kategori') == 'Berbayar' ? 'selected' : '' }}>Berbayar</option>
+                                <option value="Nolrupiah" {{ old('kategori') == 'Nolrupiah' ? 'selected' : '' }}>Nol Rupiah</option>
                             </select>
+
                         </div>    
                         <!-- Jenis Layanan -->
                         <div>
@@ -115,11 +117,14 @@
                             </label>
                             
                             <select name="jenis_layanan" id="jenis_layanan" class="form-select text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 w-full p-2.5" required>
-                                <option value="" disabled selected>--Pilih Jenis Layanan--</option>
+                                <option value="" disabled {{ old('jenis_layanan') ? '' : 'selected' }}>--Pilih Jenis Layanan--</option>
                                 @foreach ($jenisLayanan as $layanan)
-                                    <option value="{{ $layanan->id }}">{{ $layanan->nama_jenis_layanan }}</option>
+                                    <option value="{{ $layanan->id }}" {{ old('jenis_layanan') == $layanan->id ? 'selected' : '' }}>
+                                        {{ $layanan->nama_jenis_layanan }}
+                                    </option>
                                 @endforeach
                             </select>
+                            
                         </div>   
                        
                     </div>
@@ -145,7 +150,7 @@
                                 <span class="text-redNew !important">*</span>
                             </label>
                             
-                            <textarea class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" id="deskripsi" name="deskripsi" rows="7" required></textarea>
+                            <textarea class="text-sm font-medium bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"  id="deskripsi" name="deskripsi" rows="7" required>{{ old('deskripsi') }}</textarea>
                         </div>
                     </div>
                     <div class="flex items-center space-x-4 mt-4">

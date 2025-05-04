@@ -25,12 +25,12 @@
     </style>
 </head>
 <body>
-    <section class="relative h-max">
+    <section class="relative min-h-screen">
         <!-- Overlay untuk blur -->
         <div class="absolute inset-0 bg-overlay"></div>
 
         <!-- Daftar -->
-        <div class="relative flex flex-col items-center justify-center h-full px-6 py-6">
+        <div class="relative min-h-screen flex flex-col items-center justify-center px-6 py-12">
             <div class="w-full max-w-sm h-auto bg-white rounded-lg shadow dark:border dark:bg-gray-800/80 dark:border-gray-700">
                 <h1 class="text-xl pt-6 pb-0 font-bold leading-tight tracking-tight text-slate-600 md:text-xl dark:text-white text-center">
                     Daftar Akun
