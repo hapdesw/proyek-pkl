@@ -202,14 +202,14 @@
                                 // Fungsi pembuat badge dengan Tailwind CSS
                                 function createBadge(text, filterType, specificValue = null) {
                                     const badge = document.createElement('div');
-                                    badge.className = 'flex items-center py-1 px-3 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700';
+                                    badge.className = 'flex items-center py-0.5 px-2 text-sm font-medium text-gray-900 bg-white rounded-md border border-gray-200 hover:bg-gray-50 hover:text-primary-700';
                                     
                                     const textSpan = document.createElement('span');
                                     textSpan.textContent = text;
-                                    textSpan.className = 'mr-1.5';
+                                    textSpan.className = 'mr-1 whitespace-nowrap truncate max-w-[125px]';
                                     
                                     const removeBtn = document.createElement('button');
-                                    removeBtn.className = 'text-gray-500 hover:text-red-500 focus:outline-none';
+                                    removeBtn.className = 'ml-0.5 text-gray-400 hover:text-red-500 text-sm leading-none';
                                     removeBtn.innerHTML = '&times;';
                                     removeBtn.onclick = () => removeFilter(filterType, specificValue);
                                     

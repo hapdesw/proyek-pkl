@@ -434,10 +434,10 @@ class HasilLayananController extends Controller
 
             DB::commit();
 
-            return redirect()->route('pic-ldi.hasil-layanan')->with('success', 'Status dan koreksi berhasil dihapus!');
+            return redirect()->route('pic-ldi.hasil-layanan')->with('success', 'Status dan koreksi berhasil direset!');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['error' => 'Gagal menghapus status dan koreksi. ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => 'Gagal mereset status dan koreksi. ' . $e->getMessage()]);
         }
     }
 

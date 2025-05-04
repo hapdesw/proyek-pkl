@@ -72,7 +72,7 @@
                     <div>
                         <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                             Belum punya akun? 
-                            <a href="{{ route('daftar-akun') }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Daftar disini</a>
+                            <a href="{{ route('daftar-akun') }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Daftar di sini</a>
                         </p>
                     </div>
                 </div>
