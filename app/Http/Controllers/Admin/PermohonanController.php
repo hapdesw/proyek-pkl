@@ -32,6 +32,7 @@ class PermohonanController extends Controller
             $query->where(function($q) use ($searchTerm) {
                 // Cari berdasarkan kolom di tabel permohonan
                 $q->where('id', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('kode_permohonan', 'like', '%' . $searchTerm . '%')
                   ->orWhere('tanggal_diajukan', 'like', '%' . $searchTerm . '%')
                   ->orWhere('deskripsi_keperluan', 'like', '%' . $searchTerm . '%')
                   ->orWhere('kategori_berbayar', 'like', '%' . $searchTerm . '%')
@@ -124,6 +125,7 @@ class PermohonanController extends Controller
             $query->where(function($q) use ($searchTerm) {
                 // Pencarian yang sama dengan di method index
                 $q->where('id', 'like', '%' . $searchTerm . '%')
+                ->orWhere('kode_permohonan', 'like', '%' . $searchTerm . '%')
                 ->orWhere('tanggal_diajukan', 'like', '%' . $searchTerm . '%')
                 ->orWhere('deskripsi_keperluan', 'like', '%' . $searchTerm . '%')
                 ->orWhere('kategori_berbayar', 'like', '%' . $searchTerm . '%')
@@ -194,8 +196,16 @@ class PermohonanController extends Controller
     public function create()
     {
         
-        $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
-        $nextID = $permohonanIDLast + 1;
+        // $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
+        // $permohonanIDLast = 5654; //Start dari kode_permohonan terakhir di excel
+        // Ambil kode_permohonan numerik terbesar dari DB
+        $lastNumericKode = DB::table('permohonan')
+            ->whereRaw('kode_permohonan REGEXP "^[0-9]+$"')
+            ->orderByRaw('CAST(kode_permohonan AS UNSIGNED) DESC')
+            ->value('kode_permohonan');
+
+        $nextID = $lastNumericKode ? ((int) $lastNumericKode + 1) : 5654;
+        // $nextID = $permohonanIDLast + 1;
         $jenisLayanan = JenisLayanan::all();
         return view('admin.create-permohonan', compact('nextID', 'jenisLayanan'));
     }
@@ -207,7 +217,15 @@ class PermohonanController extends Controller
     {
         Log::info('Mulai proses store');
         Log::info('Data request:', $request->all());
-    
+       
+        // Ambil kode_permohonan numerik terbesar
+        $lastNumericKode = DB::table('permohonan')
+            ->whereRaw('kode_permohonan REGEXP "^[0-9]+$"')
+            ->orderByRaw('CAST(kode_permohonan AS UNSIGNED) DESC')
+            ->value('kode_permohonan');
+
+        $nextID = $lastNumericKode ? ((int) $lastNumericKode + 1) : 5654; // default awal 5654
+
         try {
             $request->validate([
                 'tgl_diajukan' => 'required|date',
@@ -240,6 +258,7 @@ class PermohonanController extends Controller
             ]);
     
             $permohonan = Permohonan::create([
+                'kode_permohonan' =>(string) $nextID,
                 'tanggal_diajukan' => $request->tgl_diajukan,
                 'kategori_berbayar' => $request->kategori,
                 'id_jenis_layanan' => $request->jenis_layanan,
@@ -288,8 +307,15 @@ class PermohonanController extends Controller
     {
 
         $permohonan = Permohonan::find($id); 
-        $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
-        $nextID = $permohonanIDLast + 1;
+        // $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
+         
+        // Ambil kode_permohonan numerik terbesar dari DB
+        $lastNumericKode = DB::table('permohonan')
+            ->whereRaw('kode_permohonan REGEXP "^[0-9]+$"')
+            ->orderByRaw('CAST(kode_permohonan AS UNSIGNED) DESC')
+            ->value('kode_permohonan');
+
+        $nextID = $lastNumericKode ? ((int) $lastNumericKode) : 5654;
         $jenisLayanan = JenisLayanan::all();
         $pemohon = Pemohon::all();
 
@@ -302,7 +328,14 @@ class PermohonanController extends Controller
     public function update(Request $request, $id)
     {
         Log::info('Masuk ke method update');
-        
+         // Ambil kode_permohonan numerik terbesar
+        $lastNumericKode = DB::table('permohonan')
+            ->whereRaw('kode_permohonan REGEXP "^[0-9]+$"')
+            ->orderByRaw('CAST(kode_permohonan AS UNSIGNED) DESC')
+            ->value('kode_permohonan');
+
+        $nextID = $lastNumericKode ? ((int) $lastNumericKode) : 5654; // default awal 5654
+
         try {
            
             // Jika request tidak hanya berisi tanggal, lakukan update penuh
@@ -351,6 +384,7 @@ class PermohonanController extends Controller
 
             // Update data permohonan
             $permohonan->update([
+                'kode_permohonan' =>(string) $nextID,
                 'tanggal_diajukan' => $request->tgl_diajukan,
                 'kategori_berbayar' => $request->kategori,
                 'id_jenis_layanan' => $request->jenis_layanan,

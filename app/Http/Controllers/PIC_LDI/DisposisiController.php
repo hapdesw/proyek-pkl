@@ -32,6 +32,7 @@ class DisposisiController extends Controller
             $query->where(function($q) use ($searchTerm) {
                 // Cari berdasarkan kolom di tabel permohonan
                 $q->where('id', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('kode_permohonan', 'like', '%' . $searchTerm . '%')
                   ->orWhere('tanggal_diajukan', 'like', '%' . $searchTerm . '%')
                   ->orWhere('deskripsi_keperluan', 'like', '%' . $searchTerm . '%')
                   ->orWhere('kategori_berbayar', 'like', '%' . $searchTerm . '%')

@@ -354,7 +354,8 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-4 py-3">No.</th>
-                                <th scope="col" class="px-4 py-3">ID</th>
+                               
+                                <th scope="col" class="px-4 py-3">Kode</th>
                                 <th scope="col" class="px-4 py-3">Tanggal Pengajuan</th>
                                 <th scope="col" class="px-4 py-3">Kategori</th>
                                 <th scope="col" class="px-4 py-3">Layanan</th>
@@ -370,7 +371,8 @@
 
                                 <tr class="border-b dark:border-gray-700 text-darkKnight">
                                     <td class="px-4 py-3">{{ $permohonan->firstItem() + $index }}</td>
-                                    <td class="px-4 py-3">{{ $pm->id}}</td>
+                                  
+                                    <td class="px-4 py-3">{{ $pm->kode_permohonan}}</td>
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-4 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
                                     <td class="px-4 py-3">{{ $pm->jenisLayanan->nama_jenis_layanan}}</td>
@@ -518,7 +520,7 @@
 
                                             @endphp
                                             <div id="permohonan-{{ $pm->id }}" class="hidden"
-                                                data-id="{{ $pm->id}}"
+                                                data-id="{{ $pm->kode_permohonan}}"
                                                 data-tgl-diajukan="{{ $tanggalDiajukan }}"
                                                 data-kategori="{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}"
                                                 data-jenis-layanan="{{ $pm->jenisLayanan->nama_jenis_layanan ?? 'Tidak Diketahui' }}"
@@ -550,7 +552,7 @@
                                                     </div>
                                             
                                                     <div class="grid grid-cols-[max-content_1fr] gap-x-4 gap-y-2 p-4 text-gray-700">
-                                                        <p class="font-semibold text-gray-900 self-start">ID Permohonan</p>
+                                                        <p class="font-semibold text-gray-900 self-start">Kode Permohonan</p>
                                                         <p id="detail-id" class="text-gray-800"></p>
 
                                                         <p class="font-semibold text-gray-900 self-start">Tanggal Diajukan</p>

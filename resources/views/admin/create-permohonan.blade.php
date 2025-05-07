@@ -27,7 +27,7 @@
                         Pengajuan Permohonan
                     </h3>
                 </div>
-                <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">ID Permohonan {{ $nextID }}</div>
+                <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">Kode Permohonan {{ $nextID }}</div>
                 <form action="{{ route("admin.permohonan.store") }}" method="POST" class="space-y-4 p-4">
                     @csrf
                     {{-- Data pemohon --}}

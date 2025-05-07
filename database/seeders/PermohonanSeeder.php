@@ -24,6 +24,7 @@ class PermohonanSeeder extends Seeder
         $jenisLayanan = JenisLayanan::where('nama_jenis_layanan', 'SKC')->first();
         $pemohon = Pemohon::where('nama_pemohon', 'Denise')->first();
         $permohonan1 = DB::table('permohonan')->insertGetId([
+            'kode_permohonan'=> '1111', 
             'tanggal_diajukan'=> '2025-01-15', 
             'kategori_berbayar'=> 'Berbayar', 
             'id_jenis_layanan' => $jenisLayanan->id, 
@@ -36,6 +37,7 @@ class PermohonanSeeder extends Seeder
         $jenisLayanan = JenisLayanan::where('nama_jenis_layanan', 'Data Iklim')->first();
         $pemohon = Pemohon::where('nama_pemohon', 'Hexos')->first();
         $permohonan2 = DB::table('permohonan')->insertGetId([
+            'kode_permohonan'=> '1111', 
             'tanggal_diajukan'=> '2025-01-18', 
             'kategori_berbayar'=> 'Nolrupiah', 
             'id_jenis_layanan' => $jenisLayanan->id, 

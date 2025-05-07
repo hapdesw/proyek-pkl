@@ -121,8 +121,15 @@ class PemohonController extends Controller
     public function create()
     {
         
-        $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
-        $nextID = $permohonanIDLast + 1;
+        // $permohonanIDLast = Permohonan::latest('id')->value('id') ?? 0; //ini kalau belum ada data maka default 0 
+        // $nextID = $permohonanIDLast + 1;
+         // Ambil kode_permohonan numerik terbesar dari DB
+         $lastNumericKode = DB::table('permohonan')
+            ->whereRaw('kode_permohonan REGEXP "^[0-9]+$"')
+            ->orderByRaw('CAST(kode_permohonan AS UNSIGNED) DESC')
+            ->value('kode_permohonan');
+
+        $nextID = $lastNumericKode ? ((int) $lastNumericKode + 1) : 5654;
         $jenisLayanan = JenisLayanan::all();
         return view('pemohon.create-permohonan', compact('nextID', 'jenisLayanan'));
     }
@@ -135,6 +142,14 @@ class PemohonController extends Controller
         Log::info('Mulai proses store');
         Log::info('Data request:', $request->all());
     
+         // Ambil kode_permohonan numerik terbesar
+         $lastNumericKode = DB::table('permohonan')
+            ->whereRaw('kode_permohonan REGEXP "^[0-9]+$"')
+            ->orderByRaw('CAST(kode_permohonan AS UNSIGNED) DESC')
+            ->value('kode_permohonan');
+
+        $nextID = $lastNumericKode ? ((int) $lastNumericKode + 1) : 5654; // default awal 5654
+
         try {
             $request->validate([
                 'tgl_diajukan' => 'required|date',
@@ -147,7 +162,7 @@ class PemohonController extends Controller
                 'tgl_pengumpulan' => 'nullable|date',
                 'nama_pemohon' => 'required|string',
                 'instansi' => 'required|string',
-                'no_hp' => 'required|string',
+                'no_hp' => ['required', 'string', 'regex:/^\+?[0-9()\s\-\.\/ext]+$/'], // Validasi nomor telepon
                 'email' => 'nullable|email',
             ]);
             Log::info('Validasi berhasil');
@@ -167,6 +182,7 @@ class PemohonController extends Controller
             ]);
     
             $permohonan = Permohonan::create([
+                'kode_permohonan' =>(string) $nextID,
                 'tanggal_diajukan' => $request->tgl_diajukan,
                 'kategori_berbayar' => $request->kategori,
                 'id_jenis_layanan' => $request->jenis_layanan,

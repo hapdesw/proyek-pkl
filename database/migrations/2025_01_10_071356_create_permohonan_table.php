@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('permohonan', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_permohonan')->unique();
             $table->date('tanggal_diajukan');
             $table->enum('kategori_berbayar', ['Berbayar', 'Nolrupiah']);
             $table->unsignedBigInteger('id_jenis_layanan');

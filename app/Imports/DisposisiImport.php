@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Disposisi;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Facades\Log;
 
 class DisposisiImport implements ToModel
 {
@@ -14,8 +15,9 @@ class DisposisiImport implements ToModel
     */
     public function model(array $row)
     {
+        Log::info('Baris pegawai:', $row); // Log semua baris
         return new Disposisi([
-            'id_permohonan' => $row[0],
+            'id_permohonan' =>$row[0],
             'nip_pegawai1' => $row[1],
             'nip_pegawai2' => $row[2],
             'nip_pegawai3' => $row[3],

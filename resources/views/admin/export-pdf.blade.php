@@ -73,7 +73,7 @@
             <thead>
                 <tr>
                     <th class="border border-black p-2 text-center">No.</th>
-                    <th class="border border-black p-2 text-center">ID</th>
+                    <th class="border border-black p-2 text-center">Kode</th>
                     <th class="border border-black p-2 text-center">Tanggal Pengajuan</th>
                     <th class="border border-black p-2 text-center">Kategori</th>
                     <th class="border border-black p-2 text-center">Layanan</th>
@@ -91,7 +91,7 @@
                 @foreach($yearData as $index => $pm)
                     <tr>
                         <td class="border border-black p-2 text-center">{{ $index + 1 }}</td>
-                        <td class="border border-black p-2">{{ $pm->id }}</td>
+                        <td class="border border-black p-2">{{ $pm->kode_permohonan }}</td>
                         <td class="border border-black p-2">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                         <td class="border border-black p-2">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
                         <td class="border border-black p-2">{{ $pm->jenisLayanan->nama_jenis_layanan }}</td>

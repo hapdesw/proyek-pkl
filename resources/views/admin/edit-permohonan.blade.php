@@ -7,7 +7,7 @@
                         Edit Permohonan
                     </h3>
                 </div>
-                <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">ID Permohonan {{ $permohonan->id }}</div>
+                <div disabled selected class="space-y-4 p-4 mt-3 text-pretty font-semibold">Kode Permohonan {{ $nextID }}</div>
                 <form action="{{ route("admin.permohonan.update", $permohonan->id) }}" method="POST" class="space-y-4 p-4">
                     @csrf
                     @method('PUT') <!-- Menyimulasikan PUT -->

@@ -80,7 +80,8 @@ class PIC_LDIController extends Controller
                      ->where(function($query) use ($pegawai) {
                          $query->where('nip_pegawai1', $pegawai->nip)
                                ->orWhere('nip_pegawai2', $pegawai->nip)
-                               ->orWhere('nip_pegawai3', $pegawai->nip);
+                               ->orWhere('nip_pegawai3', $pegawai->nip)
+                               ->orWhere('nip_pegawai4', $pegawai->nip);
                      })
                      ->count();
              }

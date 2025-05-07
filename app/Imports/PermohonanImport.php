@@ -17,7 +17,7 @@ class PermohonanImport implements ToModel
     {
         Log::info('Row data:', $row);
         return new Permohonan([
-            'id' => $row[0],
+            'kode_permohonan' => $row[0],
             'tanggal_diajukan' => !empty($row[1]) ? \Carbon\Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1])) : null,
             'kategori_berbayar' => $row[2],
             'id_jenis_layanan' => $row[3],

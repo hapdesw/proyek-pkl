@@ -13,6 +13,7 @@ class Permohonan extends Model
     protected $table = 'permohonan';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'kode_permohonan',
         'tanggal_diajukan', 
         'kategori_berbayar', 
         'id_jenis_layanan', 
