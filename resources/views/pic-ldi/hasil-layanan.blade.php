@@ -47,6 +47,9 @@
                         </form>
                     </div>
                     <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">                  
+                        <div id="activeFilters" class="flex items-center gap-2 overflow-x-auto max-w-full whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                            <!-- Badge filter aktif akan muncul di sini -->
+                        </div>
                         <div class="flex items-center space-x-3 w-full md:w-auto">
                             <div class="relative inline-block">
                                 <!-- Tombol Filter -->
@@ -96,73 +99,206 @@
                             </div>
                         </div>
                         <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const filterButton = document.getElementById('filterButton');
-                            const filterDropdown = document.getElementById('dropdownFilters');
-                            const applyFilterButton = document.getElementById('applyFilter');
-                            const monthCheckboxes = document.querySelectorAll('.month-filter');
-                            const yearSelect = document.getElementById('yearFilter');
-                            const statusSelect = document.getElementById('statusFilter');
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Inisialisasi elemen
+                                const filterButton = document.getElementById('filterButton');
+                                const filterDropdown = document.getElementById('dropdownFilters');
+                                const applyFilterButton = document.getElementById('applyFilter');
+                                const monthCheckboxes = document.querySelectorAll('.month-filter');
+                                const yearSelect = document.getElementById('yearFilter');
+                                const statusSelect = document.getElementById('statusFilter');
+                                const activeFiltersContainer = document.getElementById('activeFilters');
 
-                            filterButton.addEventListener('click', function () {
-                                filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
-                            });
+                                // Toggle dropdown
+                                filterButton.addEventListener('click', function() {
+                                    filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
+                                });
 
-                            document.addEventListener('click', function (event) {
-                                if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
-                                    filterDropdown.style.display = 'none';
-                                }
-                            });
+                                // Tutup dropdown saat klik di luar
+                                document.addEventListener('click', function(event) {
+                                    if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
+                                        filterDropdown.style.display = 'none';
+                                    }
+                                });
 
-                            fetch('/pic-ldi/hasil-layanan/available-years')
-                                .then(response => response.json())
-                                .then(years => {
-                                    yearSelect.innerHTML = '<option value="">Semua Tahun</option>';
-
-                                    years.forEach(year => {
-                                        const option = document.createElement('option');
-                                        option.value = year;
-                                        option.textContent = year;
-                                        yearSelect.appendChild(option);
+                                // Load data tahun dan inisialisasi filter
+                                fetch('/pic-ldi/hasil-layanan/available-years')
+                                    .then(response => {
+                                        if (!response.ok) throw new Error('Gagal memuat data tahun');
+                                        return response.json();
+                                    })
+                                    .then(years => {
+                                        // Isi dropdown tahun
+                                        yearSelect.innerHTML = '<option value="">Semua Tahun</option>';
+                                        years.forEach(year => {
+                                            const option = new Option(year, year);
+                                            yearSelect.add(option);
+                                        });
+                                        
+                                        // Inisialisasi filter dari URL
+                                        initializeFiltersFromUrl();
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        yearSelect.innerHTML = '<option value="">Gagal memuat tahun</option>';
                                     });
-                                })
-                                .catch(error => console.error('Error fetching years:', error));
 
-                            applyFilterButton.addEventListener('click', function () {
-                                const selectedMonths = Array.from(monthCheckboxes)
-                                    .filter(checkbox => checkbox.checked)
-                                    .map(checkbox => checkbox.value);
-                                const selectedYear = yearSelect.value;
-                                const selectedStatus = statusSelect.value;
-
-                                // Buat URL dengan parameter filter
-                                const url = new URL(window.location.href);
-
-                                // Hanya tambahkan parameter `months` jika ada bulan yang dipilih
-                                if (selectedMonths.length > 0) {
-                                    url.searchParams.set('months', selectedMonths.join(','));
-                                } else {
-                                    url.searchParams.delete('months'); 
+                                // Fungsi inisialisasi filter dari URL
+                                function initializeFiltersFromUrl() {
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    
+                                    // Set tahun
+                                    if (urlParams.has('year')) {
+                                        yearSelect.value = urlParams.get('year');
+                                    }
+                                    
+                                    // Set bulan
+                                    if (urlParams.has('months')) {
+                                        const selectedMonths = urlParams.get('months').split(',');
+                                        monthCheckboxes.forEach(checkbox => {
+                                            checkbox.checked = selectedMonths.includes(checkbox.value);
+                                        });
+                                    }
+                                    
+                                    // Set status status
+                                    if (urlParams.has('status')) {
+                                        statusSelect.value = urlParams.get('status');
+                                    }
+                                    
+                                    // Update badge filter aktif
+                                    updateActiveFiltersBadge();
                                 }
 
-                                // Hanya tambahkan parameter `year` jika tahun dipilih
-                                if (selectedYear) {
-                                    url.searchParams.set('year', selectedYear);
-                                } else {
-                                    url.searchParams.delete('year'); 
+                                // Fungsi update badge filter aktif (dengan style match tombol filter)
+                                function updateActiveFiltersBadge() {
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    activeFiltersContainer.innerHTML = '';
+                                    
+                                    // Badge untuk bulan
+                                    if (urlParams.has('months')) {
+                                        urlParams.get('months').split(',').forEach(month => {
+                                            const badge = createBadge(
+                                                `Bulan: ${month.charAt(0).toUpperCase() + month.slice(1)}`,
+                                                'months',
+                                                month
+                                            );
+                                            activeFiltersContainer.appendChild(badge);
+                                        });
+                                    }
+                                    
+                                    // Badge untuk tahun
+                                    if (urlParams.has('year')) {
+                                        const badge = createBadge(`Tahun: ${urlParams.get('year')}`, 'year');
+                                        activeFiltersContainer.appendChild(badge);
+                                    }
+                                    
+                                    // Badge untuk status hasil layanan
+                                    if (urlParams.has('status')) {
+                                        const statusValue = urlParams.get('status');
+                                        let statusText = '';
+                                        let badgeClass = 'flex items-center py-0.5 px-2 text-sm font-medium rounded-md border';
+                                        
+                                        // Map status values dan set warna
+                                        if (statusValue === 'pending') {
+                                            statusText = 'Pending';
+                                            badgeClass += ' bg-yellow-50 text-yellow-800 border-yellow-200 hover:bg-yellow-100';
+                                        } else if (statusValue === 'revisi') {
+                                            statusText = 'Revisi';
+                                            badgeClass += ' bg-orange-50 text-orange-800 border-orange-200 hover:bg-orange-100';
+                                        } else if (statusValue === 'disetujui') {
+                                            statusText = 'Disetujui';
+                                            badgeClass += ' bg-green-50 text-green-800 border-green-200 hover:bg-green-100';
+                                        }
+                                        
+                                        // Hanya buat badge jika status valid
+                                        if (statusText) {
+                                            const badge = document.createElement('div');
+                                            badge.className = badgeClass;
+                                            
+                                            const textSpan = document.createElement('span');
+                                            textSpan.textContent = `Status: ${statusText}`;
+                                            textSpan.className = 'mr-1 whitespace-nowrap';
+                                            
+                                            const removeBtn = document.createElement('button');
+                                            removeBtn.className = 'ml-0.5 text-gray-400 hover:text-red-500 text-sm leading-none';
+                                            removeBtn.innerHTML = '&times;';
+                                            removeBtn.onclick = () => removeFilter('status');
+                                            
+                                            badge.appendChild(textSpan);
+                                            badge.appendChild(removeBtn);
+                                            
+                                            activeFiltersContainer.appendChild(badge);
+                                        }
+                                    }
                                 }
 
-                                // Hanya tambahkan parameter `status` jika status status dipilih
-                                if (selectedStatus) {
-                                    url.searchParams.set('status', selectedStatus);
-                                } else {
-                                    url.searchParams.delete('status');
+                                // Fungsi pembuat badge dengan Tailwind CSS
+                                function createBadge(text, filterType, specificValue = null) {
+                                    const badge = document.createElement('div');
+                                    badge.className = 'flex items-center py-0.5 px-2 text-sm font-medium text-gray-900 bg-white rounded-md border border-gray-200 hover:bg-gray-50 hover:text-primary-700';
+                                    
+                                    const textSpan = document.createElement('span');
+                                    textSpan.textContent = text;
+                                    textSpan.className = 'mr-1 whitespace-nowrap truncate max-w-[125px]';
+                                    
+                                    const removeBtn = document.createElement('button');
+                                    removeBtn.className = 'ml-0.5 text-gray-400 hover:text-red-500 text-sm leading-none';
+                                    removeBtn.innerHTML = '&times;';
+                                    removeBtn.onclick = () => removeFilter(filterType, specificValue);
+                                    
+                                    badge.appendChild(textSpan);
+                                    badge.appendChild(removeBtn);
+                                    
+                                    return badge;
                                 }
 
-                                // Redirect ke URL dengan parameter filter
-                                window.location.href = url.toString();
+                                // Fungsi remove filter (global)
+                                window.removeFilter = function(filterType, specificValue = null) {
+                                    const url = new URL(window.location.href);
+                                    
+                                    if (filterType === 'months' && specificValue) {
+                                        const currentMonths = url.searchParams.get('months')?.split(',') || [];
+                                        const updatedMonths = currentMonths.filter(m => m !== specificValue);
+                                        
+                                        if (updatedMonths.length > 0) {
+                                            url.searchParams.set('months', updatedMonths.join(','));
+                                        } else {
+                                            url.searchParams.delete('months');
+                                        }
+                                    } else {
+                                        url.searchParams.delete(filterType);
+                                    }
+                                    
+                                    window.location.href = url.toString();
+                                };
+
+                                // Handler tombol "Terapkan"
+                                applyFilterButton.addEventListener('click', function() {
+                                    const selectedMonths = Array.from(monthCheckboxes)
+                                        .filter(checkbox => checkbox.checked)
+                                        .map(checkbox => checkbox.value);
+                                    
+                                    const url = new URL(window.location.href);
+                                    
+                                    // Update parameter URL
+                                    selectedMonths.length > 0 
+                                        ? url.searchParams.set('months', selectedMonths.join(',')) 
+                                        : url.searchParams.delete('months');
+                                    
+                                    yearSelect.value 
+                                        ? url.searchParams.set('year', yearSelect.value) 
+                                        : url.searchParams.delete('year');
+                                    
+                                    statusSelect.value 
+                                        ? url.searchParams.set('status', statusSelect.value) 
+                                        : url.searchParams.delete('status');
+                                    
+                                    window.location.href = url.toString();
+                                });
+
+                                // Inisialisasi pertama kali
+                                initializeFiltersFromUrl();
                             });
-                        });
                         </script>
                     </div>
                 </div>
@@ -283,7 +419,7 @@
                                                                     </svg>
                                                                     <button type="button" onclick="confirmDelete({{ $pm->id }})" 
                                                                             class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                                                        Hapus
+                                                                            Reset Status
                                                                     </button>
                                                                 </form>
                                                             </li>
@@ -305,12 +441,12 @@
                                         function confirmDelete(id) {
                                             Swal.fire({
                                                 title: 'Apakah Anda yakin?',
-                                                text: "Status hasil layanan akan dihapus secara permanen!",
+                                                text: "Status hasil layanan akan direset menjadi pending!",
                                                 icon: 'warning',
                                                 showCancelButton: true,
                                                 confirmButtonColor: '#3085d6',
                                                 cancelButtonColor: '#d33',
-                                                confirmButtonText: 'Ya, hapus!',
+                                                confirmButtonText: 'Ya, reset!',
                                                 cancelButtonText: 'Batal'
                                             }).then((result) => {
                                                 if (result.isConfirmed) {

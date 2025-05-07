@@ -31,7 +31,25 @@
         <!-- Login -->
         <div class="relative flex flex-col items-center justify-center h-full px-6 py-6">
             <div class="w-full max-w-sm bg-white rounded-lg shadow dark:border dark:bg-gray-800/80 dark:border-gray-700">
-
+            @if ($message = Session::get('success'))
+                    <script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: '{{ $message }}',
+                        });
+                    </script>
+                @endif
+        
+                @if($errors->any())
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: '{{ $errors->first() }}',
+                        });
+                    </script>
+                @endif
                 <h1 class="text-xl pt-6 pb-0 font-bold leading-tight tracking-tight text-slate-600 md:text-xl dark:text-white text-center">
                     Sistem Layanan Data dan Informasi
                 </h1>
@@ -72,7 +90,7 @@
                     <div>
                         <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                             Belum punya akun? 
-                            <a href="{{ route('daftar-akun') }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Daftar disini</a>
+                            <a href="{{ route('daftar-akun') }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">Daftar di sini</a>
                         </p>
                     </div>
                 </div>

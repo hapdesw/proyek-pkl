@@ -46,7 +46,10 @@
                             </div>
                         </form>
                     </div>
-                    <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">                  
+                    <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">  
+                        <div id="activeFilters" class="flex items-center gap-2 overflow-x-auto max-w-full whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                            <!-- Badge filter aktif akan muncul di sini -->
+                        </div>                
                         <div class="flex items-center space-x-3 w-full md:w-auto">
                             <div class="relative inline-block">
                                 <!-- Tombol Filter -->
@@ -95,73 +98,174 @@
                             </div>
                         </div>
                         <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const filterButton = document.getElementById('filterButton');
-                            const filterDropdown = document.getElementById('dropdownFilters');
-                            const applyFilterButton = document.getElementById('applyFilter');
-                            const monthCheckboxes = document.querySelectorAll('.month-filter');
-                            const yearSelect = document.getElementById('yearFilter');
-                            const kuitansiSelect = document.getElementById('kuitansiFilter');
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Inisialisasi elemen
+                                const filterButton = document.getElementById('filterButton');
+                                const filterDropdown = document.getElementById('dropdownFilters');
+                                const applyFilterButton = document.getElementById('applyFilter');
+                                const monthCheckboxes = document.querySelectorAll('.month-filter');
+                                const yearSelect = document.getElementById('yearFilter');
+                                const kuitansiSelect = document.getElementById('kuitansiFilter');
+                                const activeFiltersContainer = document.getElementById('activeFilters');
 
-                            filterButton.addEventListener('click', function () {
-                                filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
-                            });
+                                // Toggle dropdown
+                                filterButton.addEventListener('click', function() {
+                                    filterDropdown.style.display = (filterDropdown.style.display === 'none') ? 'block' : 'none';
+                                });
 
-                            document.addEventListener('click', function (event) {
-                                if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
-                                    filterDropdown.style.display = 'none';
-                                }
-                            });
+                                // Tutup dropdown saat klik di luar
+                                document.addEventListener('click', function(event) {
+                                    if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
+                                        filterDropdown.style.display = 'none';
+                                    }
+                                });
 
-                            fetch('/bendahara/kuitansi/available-years')
-                                .then(response => response.json())
-                                .then(years => {
-                                    yearSelect.innerHTML = '<option value="">Semua Tahun</option>';
-
-                                    years.forEach(year => {
-                                        const option = document.createElement('option');
-                                        option.value = year;
-                                        option.textContent = year;
-                                        yearSelect.appendChild(option);
+                                // Load data tahun dan inisialisasi filter
+                                fetch('/bendahara/kuitansi/available-years')
+                                    .then(response => {
+                                        if (!response.ok) throw new Error('Gagal memuat data tahun');
+                                        return response.json();
+                                    })
+                                    .then(years => {
+                                        // Isi dropdown tahun
+                                        yearSelect.innerHTML = '<option value="">Semua Tahun</option>';
+                                        years.forEach(year => {
+                                            const option = new Option(year, year);
+                                            yearSelect.add(option);
+                                        });
+                                        
+                                        // Inisialisasi filter dari URL
+                                        initializeFiltersFromUrl();
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        yearSelect.innerHTML = '<option value="">Gagal memuat tahun</option>';
                                     });
-                                })
-                                .catch(error => console.error('Error fetching years:', error));
 
-                            applyFilterButton.addEventListener('click', function () {
-                                const selectedMonths = Array.from(monthCheckboxes)
-                                    .filter(checkbox => checkbox.checked)
-                                    .map(checkbox => checkbox.value);
-                                const selectedYear = yearSelect.value;
-                                const selectedKuitansi = kuitansiSelect.value;
-
-                                // Buat URL dengan parameter filter
-                                const url = new URL(window.location.href);
-
-                                // Hanya tambahkan parameter `months` jika ada bulan yang dipilih
-                                if (selectedMonths.length > 0) {
-                                    url.searchParams.set('months', selectedMonths.join(','));
-                                } else {
-                                    url.searchParams.delete('months'); 
+                                // Fungsi inisialisasi filter dari URL
+                                function initializeFiltersFromUrl() {
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    
+                                    // Set tahun
+                                    if (urlParams.has('year')) {
+                                        yearSelect.value = urlParams.get('year');
+                                    }
+                                    
+                                    // Set bulan
+                                    if (urlParams.has('months')) {
+                                        const selectedMonths = urlParams.get('months').split(',');
+                                        monthCheckboxes.forEach(checkbox => {
+                                            checkbox.checked = selectedMonths.includes(checkbox.value);
+                                        });
+                                    }
+                                    
+                                    // Set status kuitansi
+                                    if (urlParams.has('kuitansi')) {
+                                        kuitansiSelect.value = urlParams.get('kuitansi');
+                                    }
+                                    
+                                    // Update badge filter aktif
+                                    updateActiveFiltersBadge();
                                 }
 
-                                // Hanya tambahkan parameter `year` jika tahun dipilih
-                                if (selectedYear) {
-                                    url.searchParams.set('year', selectedYear);
-                                } else {
-                                    url.searchParams.delete('year'); 
+                                // Fungsi update badge filter aktif (dengan style match tombol filter)
+                                function updateActiveFiltersBadge() {
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    activeFiltersContainer.innerHTML = '';
+                                    
+                                    // Badge untuk bulan
+                                    if (urlParams.has('months')) {
+                                        urlParams.get('months').split(',').forEach(month => {
+                                            const badge = createBadge(
+                                                `Bulan: ${month.charAt(0).toUpperCase() + month.slice(1)}`,
+                                                'months',
+                                                month
+                                            );
+                                            activeFiltersContainer.appendChild(badge);
+                                        });
+                                    }
+                                    
+                                    // Badge untuk tahun
+                                    if (urlParams.has('year')) {
+                                        const badge = createBadge(`Tahun: ${urlParams.get('year')}`, 'year');
+                                        activeFiltersContainer.appendChild(badge);
+                                    }
+                                    
+                                    // Badge untuk status kuitansi
+                                    if (urlParams.has('kuitansi')) {
+                                        const statusText = urlParams.get('kuitansi') === 'sudah' ? 'Sudah Diunggah' : 'Belum Diunggah';
+                                        const badge = createBadge(`Status: ${statusText}`, 'kuitansi');
+                                        activeFiltersContainer.appendChild(badge);
+                                    }
                                 }
 
-                                // Hanya tambahkan parameter `kuitansi` jika status kuitansi dipilih
-                                if (selectedKuitansi) {
-                                    url.searchParams.set('kuitansi', selectedKuitansi);
-                                } else {
-                                    url.searchParams.delete('kuitansi');
+                                // Fungsi pembuat badge dengan Tailwind CSS
+                                function createBadge(text, filterType, specificValue = null) {
+                                    const badge = document.createElement('div');
+                                    badge.className = 'flex items-center py-0.5 px-2 text-sm font-medium text-gray-900 bg-white rounded-md border border-gray-200 hover:bg-gray-50 hover:text-primary-700';
+                                    
+                                    const textSpan = document.createElement('span');
+                                    textSpan.textContent = text;
+                                    textSpan.className = 'mr-1 whitespace-nowrap truncate max-w-[125px]';
+                                    
+                                    const removeBtn = document.createElement('button');
+                                    removeBtn.className = 'ml-0.5 text-gray-400 hover:text-red-500 text-sm leading-none';
+                                    removeBtn.innerHTML = '&times;';
+                                    removeBtn.onclick = () => removeFilter(filterType, specificValue);
+                                    
+                                    badge.appendChild(textSpan);
+                                    badge.appendChild(removeBtn);
+                                    
+                                    return badge;
                                 }
 
-                                // Redirect ke URL dengan parameter filter
-                                window.location.href = url.toString();
+                                // Fungsi remove filter (global)
+                                window.removeFilter = function(filterType, specificValue = null) {
+                                    const url = new URL(window.location.href);
+                                    
+                                    if (filterType === 'months' && specificValue) {
+                                        const currentMonths = url.searchParams.get('months')?.split(',') || [];
+                                        const updatedMonths = currentMonths.filter(m => m !== specificValue);
+                                        
+                                        if (updatedMonths.length > 0) {
+                                            url.searchParams.set('months', updatedMonths.join(','));
+                                        } else {
+                                            url.searchParams.delete('months');
+                                        }
+                                    } else {
+                                        url.searchParams.delete(filterType);
+                                    }
+                                    
+                                    window.location.href = url.toString();
+                                };
+
+                                // Handler tombol "Terapkan"
+                                applyFilterButton.addEventListener('click', function() {
+                                    const selectedMonths = Array.from(monthCheckboxes)
+                                        .filter(checkbox => checkbox.checked)
+                                        .map(checkbox => checkbox.value);
+                                    
+                                    const url = new URL(window.location.href);
+                                    
+                                    // Update parameter URL
+                                    selectedMonths.length > 0 
+                                        ? url.searchParams.set('months', selectedMonths.join(',')) 
+                                        : url.searchParams.delete('months');
+                                    
+                                    yearSelect.value 
+                                        ? url.searchParams.set('year', yearSelect.value) 
+                                        : url.searchParams.delete('year');
+                                    
+                                    kuitansiSelect.value 
+                                        ? url.searchParams.set('kuitansi', kuitansiSelect.value) 
+                                        : url.searchParams.delete('kuitansi');
+                                    
+                                    window.location.href = url.toString();
+                                });
+
+                                // Inisialisasi pertama kali
+                                initializeFiltersFromUrl();
                             });
-                        });
                         </script>
                     </div>
                 </div>
@@ -295,7 +399,61 @@
                         </tbody>
                     </table>
                 </div>
-                <td class="px-3 py-3">{{ ($permohonan->currentPage() - 1) * $permohonan->perPage() + $loop->iteration }}</td>
+                <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4">
+                    <span class="text-sm font-normal text-gray-500">
+                        Showing 
+                        <span class="font-semibold text-gray-900">
+                            {{ $permohonan->firstItem() }}-{{ $permohonan->lastItem() }} 
+                        </span>
+                        of
+                        <span class="font-semibold text-gray-900 dark:text-white">
+                            {{ $permohonan->total() }}
+                        </span>
+                    </span>
+                    
+                    @if ($permohonan->hasPages())
+                    <ul class="inline-flex items-stretch -space-x-px">
+                        <!-- Previous Page Link -->
+                        <li>
+                            <a href="{{ $permohonan->previousPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                            class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $permohonan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
+                                <span class="sr-only">Previous</span>
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
+                                </svg>
+                            </a>
+                        </li>
+
+                        <!-- Pagination Links -->
+                        @foreach ($permohonan->getUrlRange(1, $permohonan->lastPage()) as $page => $url)
+                            @if ($page == 1 || $page == $permohonan->lastPage() || ($page >= $permohonan->currentPage() - 1 && $page <= $permohonan->currentPage() + 1))
+                                <li>
+                                    <a href="{{ $url }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                                    class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 
+                                    {{ $permohonan->currentPage() == $page ? 'z-10 text-primary-900 font-bold bg-primary-50 border-primary-300' : '' }}">
+                                        {{ $page }}
+                                    </a>
+                                </li>
+                            @elseif ($page == $permohonan->currentPage() - 2 || $page == $permohonan->currentPage() + 2)
+                                <li>
+                                    <span class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300">...</span>
+                                </li>
+                            @endif
+                        @endforeach
+
+                        <!-- Next Page Link -->
+                        <li>
+                            <a href="{{ $permohonan->nextPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                            class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-900 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 {{ !$permohonan->hasMorePages() ? 'cursor-not-allowed opacity-50' : '' }}">
+                                <span class="sr-only">Next</span>
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                    @endif
+                </nav>
             </div>
         </div> 
 </x-app-layout>
