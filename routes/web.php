@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Superadmin\SuperadminController;
 use App\Http\Controllers\PIC_LDI\PIC_LDIController;
 use App\Http\Controllers\Admin\PermohonanController;
 use App\Http\Controllers\Admin\JenisLayananController;
@@ -29,6 +30,12 @@ Route::group(['prefix' => 'daftar'], function() {
 
 
 Route::post('/pilih-role', [AuthenticatedSessionController::class, 'pilihRole'])->name('pilih-role');
+
+Route::middleware(['auth', 'Superadmin_1111'])->group(function () {
+    Route::get('/superadmin/beranda', [SuperadminController::class, 'index'])->name('superadmin.beranda'); 
+    
+
+}); 
 
 Route::middleware(['auth', 'PIC_LDIAnalis_0110'])->group(function () {
     Route::get('/KA/pic-ldi-analis/transisi', [TransisiController::class, 'transisiPIC_LDIAnalis'])->name('transisi.pic-ldi-analis'); 

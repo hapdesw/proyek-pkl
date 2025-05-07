@@ -21,6 +21,8 @@
                     <div class="font-medium">
                         @if(Auth::check() && Auth::user()->peran === '1000')
                             Admin
+                        @elseif(Auth::check() && Auth::user()->peran === '1111')
+                            Superadmin
                         @else
                             {{ Auth::user()->pegawai->nama }}
                         @endif
@@ -37,6 +39,9 @@
                                     $role = 'Analis';
                                 } elseif (Auth::user()->peran === '0001' || session('active_role') === '0001') {
                                     $role = 'Bendahara';
+                                }
+                                elseif (Auth::user()->peran === '1111') {
+                                    $role = 'Superadmin';
                                 }
                             @endphp
                             {{ $role }}
