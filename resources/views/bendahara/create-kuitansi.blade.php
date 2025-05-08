@@ -29,8 +29,8 @@
                 @csrf
                 <div class="grid grid-cols-1 mt-5">
                     <!-- Kode Permohonan -->
-                    <label for="id_permohonan" class="block mb-2 text-sm font-medium text-gray-900">Kode Permohonan:</label>
-                    <input type="text" class="text-sm bg-gray-200 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 cursor-not-allowed" name="id_permohonan" id="id_permohonan" value="{{ $permohonan->kode_permohonan }}" readonly>
+                    <label for="kode_permohonan" class="block mb-2 text-sm font-medium text-gray-900">Kode Permohonan:</label>
+                    <input type="text" class="text-sm bg-gray-200 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 cursor-not-allowed" name="kode_permohonan" id="kode_permohonan" value="{{ $permohonan->kode_permohonan }}" readonly>
                 </div>
                 <div class="grid grid-cols-1 gap-5">
                     <!-- Unggah File -->

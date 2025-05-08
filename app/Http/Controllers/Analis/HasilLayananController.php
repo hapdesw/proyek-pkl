@@ -239,20 +239,31 @@ class HasilLayananController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file_hasil' => 'required|mimes:pdf|max:10240', 
+            'file_hasil' => 'required|mimes:pdf|max:10240',
+            'kode_permohonan' => 'required|exists:permohonan,kode_permohonan' // Validasi kode permohonan
         ]);
 
         DB::beginTransaction();
 
-        try{
+        try {
+            // Cari permohonan berdasarkan kode
+            $permohonan = DB::table('permohonan')
+                        ->where('kode_permohonan', $request->kode_permohonan)
+                        ->first();
+
+            if (!$permohonan) {
+                throw new \Exception('Permohonan tidak ditemukan');
+            }
+
             if ($request->hasFile('file_hasil') && $request->file('file_hasil')->isValid()) {
                 $file = $request->file('file_hasil');
                 $filename = time() . '_' . $file->getClientOriginalName();
                 
                 $path = $file->storeAs('hasil_layanan', $filename, 'public');
-    
+
+                // Gunakan id_permohonan yang sesuai dengan kode_permohonan
                 DB::table('hasil_layanan')->insert([
-                    'id_permohonan' => $request->id_permohonan,
+                    'id_permohonan' => $permohonan->id,
                     'nama_file_hasil' => $filename,
                     'path_file_hasil' => $path,
                     'pengunggah' => Auth::user()->pegawai->nip,
@@ -264,43 +275,54 @@ class HasilLayananController extends Controller
 
                 return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diunggah!');
             }
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['error' => 'File gagal diunggah. ' . $e->getMessage()]);
+            return redirect()->back()
+                ->withErrors(['error' => 'File gagal diunggah. ' . $e->getMessage()])
+                ->withInput();
         }
     }
 
     public function storeStatusPIC_LDI(Request $request)
     {
         $request->validate([
-            'id_permohonan' => 'required|exists:permohonan,id',
+            'kode_permohonan' => 'required|exists:permohonan,kode_permohonan', // Ganti ke kode_permohonan
             'status' => 'required|in:revisi,disetujui',
-            'koreksi' => 'nullable|required_if:status,revisi|max:500',
+            'koreksi' => 'nullable|required_if:status,revisi|string|max:500',
         ]);
         
         DB::beginTransaction();
 
-        try{
-            $hasilLayanan = HasilLayanan::where('id_permohonan', $request->id_permohonan)->first();
-    
-            if (!$hasilLayanan) {
-                return redirect()->back()->with('error', 'Data hasil layanan tidak ditemukan.');
-            }
-    
-            DB::table('hasil_layanan')
-            ->where('id_permohonan', $request->id_permohonan)
-            ->update([
-                'status' => $request->status,
-                'koreksi' => $request->status == 'revisi' ? $request->koreksi : null,
-                'updated_at' => null
-            ]);
+        try {
+            // Cari permohonan berdasarkan kode
+            $permohonan = Permohonan::where('kode_permohonan', $request->kode_permohonan)->first();
             
+            if (!$permohonan) {
+                throw new \Exception('Permohonan tidak ditemukan');
+            }
+
+            // Update hasil layanan berdasarkan id_permohonan
+            $updated = DB::table('hasil_layanan')
+                ->where('id_permohonan', $permohonan->id)
+                ->update([
+                    'status' => $request->status,
+                    'koreksi' => $request->status == 'revisi' ? $request->koreksi : null,
+                    'updated_at' => now(), 
+                ]);
+                
+            if ($updated === 0) {
+                throw new \Exception('Data hasil layanan tidak ditemukan');
+            }
+
             DB::commit();
 
-            return redirect()->route('pic-ldi.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
-        }catch (\Exception $e){
+            return redirect()->route('pic-ldi.hasil-layanan')
+                ->with('success', 'Status berhasil diperbarui!');
+        } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors(['error' => 'Gagal mengatur status. ' . $e->getMessage()]);
+            return redirect()->back()
+                ->withErrors(['error' => 'Gagal mengatur status: ' . $e->getMessage()])
+                ->withInput();
         }
     }
 
@@ -361,37 +383,46 @@ class HasilLayananController extends Controller
     }
 
     public function updateStatusPIC_LDI(Request $request)
-    {
-        $request->validate([
-            'id_permohonan' => 'required|exists:permohonan,id',
-            'status' => 'required|in:revisi,disetujui',
-            'koreksi' => 'nullable|required_if:status,revisi|max:500',
-        ]);
+{
+    $request->validate([
+        'kode_permohonan' => 'required|exists:permohonan,kode_permohonan',
+        'status' => 'required|in:revisi,disetujui',
+        'koreksi' => 'nullable|required_if:status,revisi|string|max:500',
+    ]);
+    
+    DB::beginTransaction();
+
+    try {
+        $permohonan = Permohonan::where('kode_permohonan', $request->kode_permohonan)->first();
         
-        DB::beginTransaction();
-
-        try{
-            $hasilLayanan = HasilLayanan::where('id_permohonan', $request->id_permohonan)->first();
-    
-            if (!$hasilLayanan) {
-                return redirect()->back()->with('error', 'Data hasil layanan tidak ditemukan.');
-            }
-    
-            DB::table('hasil_layanan')
-            ->where('id_permohonan', $request->id_permohonan)
-            ->update([
-                'status' => $request->status,
-                'koreksi' => $request->status == 'revisi' ? $request->koreksi : null,
-            ]);
-            
-            DB::commit();
-
-            return redirect()->route('pic-ldi.hasil-layanan')->with('success', 'Status berhasil diperbarui!');
-        }catch (\Exception $e){
-            DB::rollBack();
-            return redirect()->back()->withErrors(['error' => 'Gagal mengatur status. ' . $e->getMessage()]);
+        if (!$permohonan) {
+            throw new \Exception('Permohonan tidak ditemukan');
         }
+
+        $hasilLayanan = HasilLayanan::where('id_permohonan', $permohonan->id)->first();
+
+        if (!$hasilLayanan) {
+            throw new \Exception('Data hasil layanan tidak ditemukan untuk permohonan ini');
+        }
+        
+        $hasilLayanan->update([
+            'status' => $request->status,
+            'koreksi' => $request->status == 'revisi' ? $request->koreksi : null,
+            'updated_at' => now(),
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('pic-ldi.hasil-layanan')
+               ->with('success', 'Status berhasil diperbarui!');
+               
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()
+               ->withErrors(['error' => 'Gagal mengatur status: ' . $e->getMessage()])
+               ->withInput();
     }
+}
     
     /**
      * Remove the specified resource from storage.

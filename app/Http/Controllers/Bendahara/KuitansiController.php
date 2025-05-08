@@ -118,11 +118,20 @@ class KuitansiController extends Controller
     {
         $request->validate([
             'file_kuitansi' => 'required|mimes:pdf|max:10240',
+            'kode_permohonan' => 'required|exists:permohonan,kode_permohonan' // Validasi kode permohonan
         ]);
 
         DB::beginTransaction();
 
         try{
+            // Cari permohonan berdasarkan kode
+            $permohonan = DB::table('permohonan')
+                        ->where('kode_permohonan', $request->kode_permohonan)
+                        ->first();
+
+            if (!$permohonan) {
+                throw new \Exception('Permohonan tidak ditemukan');
+            }
             if ($request->hasFile('file_kuitansi') && $request->file('file_kuitansi')->isValid()) {
                 $file = $request->file('file_kuitansi');
                 $filename = time() . '_' . $file->getClientOriginalName();
@@ -130,7 +139,7 @@ class KuitansiController extends Controller
                 $path = $file->storeAs('kuitansi', $filename, 'public');
     
                 Kuitansi::create([
-                    'id_permohonan' => $request->id_permohonan,
+                    'id_permohonan' => $permohonan->id,
                     'nama_file_kuitansi' => $filename,
                     'path_file_kuitansi' => $path,
                     'created_at' => now()
