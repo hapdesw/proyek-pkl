@@ -23,7 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'PIC_LDIAnalis_0110' => \App\Http\Middleware\PIC_LDIAnalis_0110::class,
             'AnalisBendahara_0011' => \App\Http\Middleware\AnalisBendahara_0011::class,
             'PIC_LDIBendahara_0101' => \App\Http\Middleware\PIC_LDIBendahara_0101::class,
-            
+            'Superadmin_1111' => \App\Http\Middleware\Superadmin_1111::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

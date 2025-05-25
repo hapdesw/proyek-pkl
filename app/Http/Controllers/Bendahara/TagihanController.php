@@ -116,11 +116,20 @@ class TagihanController extends Controller
     {
         $request->validate([
             'file_tagihan' => 'required|mimes:pdf|max:10240',
+            'kode_permohonan' => 'required|exists:permohonan,kode_permohonan' // Validasi kode permohonan
         ]);
 
         DB::beginTransaction();
 
         try{
+            // Cari permohonan berdasarkan kode
+            $permohonan = DB::table('permohonan')
+                        ->where('kode_permohonan', $request->kode_permohonan)
+                        ->first();
+
+            if (!$permohonan) {
+                throw new \Exception('Permohonan tidak ditemukan');
+            }
             if ($request->hasFile('file_tagihan') && $request->file('file_tagihan')->isValid()) {
                 $file = $request->file('file_tagihan');
                 $filename = time() . '_' . $file->getClientOriginalName();
@@ -128,7 +137,7 @@ class TagihanController extends Controller
                 $path = $file->storeAs('tagihan', $filename, 'public');
     
                 Tagihan::create([
-                    'id_permohonan' => $request->id_permohonan,
+                    'id_permohonan' => $permohonan->id,
                     'nama_file_tagihan' => $filename,
                     'path_file_tagihan' => $path,
                     'created_at' => now()

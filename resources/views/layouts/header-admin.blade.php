@@ -9,17 +9,18 @@
                     </li>
                     <li>
                         <a href="{{ route('admin.permohonan') }}" class="flex items-center p-2 rounded hover:bg-gray-100 hover:text-gray-400 font-semibold 
-                        {{ request()->routeIs('admin.permohonan') ? ' text-darkKnight font-bold' : 'text-plumb' }}">Pengajuan Permohonan</a>
+                        {{ request()->routeIs('admin.permohonan') ? ' 
+                        text-darkKnight font-bold' : 'text-plumb' }}">Pengajuan Permohonan</a>
                     </li>
                     <li>
                         <a href="{{ route('admin.kelola-layanan') }}" class="flex items-center p-2 rounded hover:bg-gray-100 hover:text-gray-400 font-semibold 
                         {{ request()->routeIs('admin.kelola-layanan') ? ' 
-                        text-darkKnight font-bold' : 'text-plumb' }}">Jenis Layanan</a>
+                        text-darkKnight font-bold' : 'text-plumb' }}">Kelola Jenis Layanan</a>
                     </li>
                     <li>
                         <a href="{{ route('admin.kelola-pemohon') }}" class="flex items-center p-2 rounded hover:bg-gray-100 hover:text-gray-400 font-semibold 
                         {{ request()->routeIs('admin.kelola-pemohon') ? ' 
-                        text-darkKnight font-bold' : 'text-plumb' }}">Pemohon</a>
+                        text-darkKnight font-bold' : 'text-plumb' }}">Kelola Pemohon</a>
                     </li>
                 </ul>
             </div>

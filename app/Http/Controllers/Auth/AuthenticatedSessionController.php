@@ -59,6 +59,10 @@ class AuthenticatedSessionController extends Controller
         {
             return redirect('/KB/pic-ldi-bendahara/transisi');
         }
+        elseif($request->user()->peran === '1111')
+        {
+            return redirect('/superadmin/beranda');
+        }
         
 
         return redirect()->intended(route('login'));

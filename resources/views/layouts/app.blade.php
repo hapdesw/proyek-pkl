@@ -31,6 +31,8 @@
                 @include('layouts.header-analis')
             @elseif(Auth::user()->peran === '0001' || session('active_role') === '0001')
                 @include('layouts.header-bendahara')
+            @elseif(Auth::user()->peran === '1111' || session('active_role') === '1111')
+                @include('layouts.header-superadmin')
             @endif
         @endif
 

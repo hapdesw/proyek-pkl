@@ -15,8 +15,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::create([
+            'username' => 'superadmin',
+            'password' => bcrypt('superadmin123'),
+            'peran' => '1111'
+        ]);
+        User::create([
             'username' => 'admin',
-            'password' => bcrypt('admin12345'),
+            'password' => bcrypt('admin123'),
             'peran' => '1000'
         ]);
         User::create([
@@ -94,27 +99,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('hana123'),
             'peran' => '0011'
         ]);
-        User::create([
-            'username' => 'budi123',
-            'password' => bcrypt('budi123'),
-            'peran' => '0100'
-        ]);
-        User::create([
-            'username' => 'dian123',
-            'password' => bcrypt('dian123'),
-            'peran' => '0001'
-        ]);
-        User::create([
-            'username' => 'caca123',
-            'password' => bcrypt('caca123'),
-            'peran' => '0011'
-        ]);
-        User::create([
-            'username' => 'cece123',
-            'password' => bcrypt('cece123'),
-            'peran' => '0101'
-        ]);
-
+        
         $this->call([
             PegawaiSeeder::class,
             JenisLayananSeeder::class,
