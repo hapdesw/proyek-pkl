@@ -9,6 +9,7 @@ use App\Http\Controllers\PIC_LDI\PIC_LDIController;
 use App\Http\Controllers\Admin\PermohonanController;
 use App\Http\Controllers\Admin\JenisLayananController;
 use App\Http\Controllers\Pemohon\PemohonController;
+use App\Http\Controllers\Auth\CustomAuthController;
 use App\Http\Controllers\Bendahara\TagihanController;
 use App\Http\Controllers\Bendahara\KuitansiController;
 use App\Http\Controllers\PIC_LDI\DisposisiController;
@@ -21,6 +22,11 @@ use App\Http\Controllers\Admin\ExportDisposisiController;
 Route::get('/', function () {
     return view('auth.login');
 });
+
+// Route::group(['middleware' => 'auth:web'], function(){
+//     // logout
+//     Route::post('/logout', [CustomAuthController::class,'logout'])-> name('logout');
+// });
 
 Route::group(['prefix' => 'daftar'], function() {
     Route::get('/-akun/create', [RegisteredUserController::class, 'create']) ->name('daftar-akun');
