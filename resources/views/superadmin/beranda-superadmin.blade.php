@@ -1,6 +1,25 @@
 <x-app-layout>
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden ml-1 mr-1 flex flex-col min-h-screen">
         <div class="overflow-x-auto min-h-screen">
+             @if ($message = Session::get('success'))
+                    <script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: '{{ $message }}',
+                        });
+                    </script>
+                @endif
+        
+                @if($errors->any())
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: '{{ $errors->first() }}',
+                        });
+                    </script>
+                @endif
             <div class="relative flex items-center justify-center">
                 <h2 class="mt-6 mb-8 text-lg font-semibold absolute left-1/2 transform -translate-x-1/2">
                     Rekap Layanan Tahunan {{ $tahun }}

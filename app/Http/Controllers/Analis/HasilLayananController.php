@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Permohonan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Pegawai;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -19,13 +20,33 @@ class HasilLayananController extends Controller
      */
     public function index(Request $request)
     {
-        // Pastikan pengguna sudah login
-        if (!Auth::check()) {
-            return redirect('/login');
-        }
+        // // Pastikan pengguna sudah login
+        // if (!Auth::check()) {
+        //     return redirect('/login');
+        // }
 
-        // Ambil NIP analis dari pengguna yang login
-        $nip_analis = Auth::user()->pegawai->nip;
+        // // Ambil NIP analis dari pengguna yang login
+        // $nip_analis = Auth::user()->pegawai->nip;
+
+        if ($request->has('pegawai')) {
+            // Cegah selain superadmin akses ini
+            if (!(Auth::user()->peran === '1111' || session('active_role') === '1111')) {
+                abort(403, 'Anda tidak memiliki izin untuk mengakses data ini.');
+            }
+
+            $nip_analis = $request->query('pegawai');
+            // Ambil nama analis dari database berdasarkan NIP
+            $analis = \App\Models\Pegawai::where('nip', $nip_analis)->first();
+            $nama_analis = $analis ? $analis->nama : 'Tidak diketahui';
+        } else {
+            // Analis biasa
+            if (!Auth::check() || !Auth::user()->pegawai) {
+                abort(403, 'Akses ditolak');
+            }
+
+            $nip_analis = Auth::user()->pegawai->nip;
+            $nama_analis = Auth::user()->pegawai->nama;
+        }
 
         // Query dasar dengan filter 
         $query = Permohonan::whereHas('disposisi', function($query) use ($nip_analis) {
@@ -100,7 +121,7 @@ class HasilLayananController extends Controller
         // Paginate hasil query
         $permohonan = $query->paginate(15);
 
-        return view('analis.hasil-layanan', compact('permohonan'));
+        return view('analis.hasil-layanan', compact('permohonan', 'nama_analis', 'nip_analis'));
     }
 
     public function indexPIC_LDI(Request $request)
@@ -221,11 +242,56 @@ class HasilLayananController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($id)
-    {
-        $permohonan = Permohonan::findOrFail($id);
-        return view('analis.create-hasil-layanan', compact('permohonan'));
+   public function create($id, Request $request)
+{
+    $permohonan = Permohonan::findOrFail($id);
+
+    // Cek apakah user adalah superadmin
+    $isSuperadmin = Auth::user()->peran === '1111' || session('active_role') === '1111';
+
+    // Kalau superadmin dan belum ada parameter ?pegawai=...
+    if ($isSuperadmin && !$request->has('pegawai')) {
+        // Coba ambil dari referer (halaman sebelumnya)
+        $pegawaiDariReferer = $request->query('pegawai');
+
+        if (!$pegawaiDariReferer) {
+            // Kalau tidak ada, tetap fallback ke default
+            $defaultPegawai = Pegawai::first();
+
+            if (!$defaultPegawai) {
+                return back()->with('error', 'Tidak ada pegawai yang tersedia untuk dipilih.');
+            }
+
+            $pegawaiDariReferer = $defaultPegawai->nip;
+        }
+
+        return redirect()->route('analis.hasil-layanan.create', [
+            'id' => $id,
+            'pegawai' => $pegawaiDariReferer,
+        ]);
     }
+
+    if ($isSuperadmin && $request->has('pegawai')) {
+        $nip_analis = $request->query('pegawai');
+        // Ambil nama analis dari database berdasarkan NIP
+        $analis = \App\Models\Pegawai::where('nip', $nip_analis)->first();
+        $nama_analis = $analis ? $analis->nama : 'Tidak diketahui';
+    } else {
+        // Untuk analis biasa, abaikan query pegawai
+        if (!Auth::check() || !Auth::user()->pegawai) {
+            abort(403, 'Akses ditolak');
+        }
+
+        $nip_analis = Auth::user()->pegawai->nip;
+        $nama_analis = Auth::user()->pegawai->nama;
+    }
+
+
+    // Ambil daftar pegawai untuk dropdown (opsional tapi sangat disarankan)
+    $daftarPegawai = Pegawai::all();
+
+    return view('analis.create-hasil-layanan', compact('permohonan', 'daftarPegawai', 'nama_analis', 'nip_analis'));
+}
 
     public function createStatusPIC_LDI($id)
     {
@@ -238,6 +304,10 @@ class HasilLayananController extends Controller
      */
     public function store(Request $request)
     {
+        // dd([
+        //     'user' => Auth::user(),
+        //     'session_role' => session('active_role'),
+        // ]);
         $request->validate([
             'file_hasil' => 'required|mimes:pdf|max:10240',
             'kode_permohonan' => 'required|exists:permohonan,kode_permohonan' // Validasi kode permohonan
@@ -261,19 +331,41 @@ class HasilLayananController extends Controller
                 
                 $path = $file->storeAs('hasil_layanan', $filename, 'public');
 
+                // Tentukan NIP pengunggah berdasarkan peran
+               $isSuperadmin = Auth::user()->peran === '1111' || session('active_role') === '1111';
+
+                if ($isSuperadmin) {
+                    $nip_pengunggah = $request->input('pegawai');
+                } else {
+                    $nip_pengunggah = Auth::user()->pegawai->nip ?? null;
+                }
+
+                if (!$nip_pengunggah) {
+                    throw new \Exception('NIP pengunggah tidak ditemukan. Pastikan Anda memilih pegawai saat mengunggah sebagai superadmin.');
+                }
+
                 // Gunakan id_permohonan yang sesuai dengan kode_permohonan
                 DB::table('hasil_layanan')->insert([
+                   
+
                     'id_permohonan' => $permohonan->id,
                     'nama_file_hasil' => $filename,
                     'path_file_hasil' => $path,
-                    'pengunggah' => Auth::user()->pegawai->nip,
+                    'pengunggah' => $nip_pengunggah,
                     'created_at' => now(),
-                    'updated_at' => null 
+                     'updated_at' => null 
+                    
                 ]);                
                 
                 DB::commit();
 
-                return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diunggah!');
+                if ($isSuperadmin) {
+                    return redirect()->route('superadmin.beranda')->with('success', 'File berhasil diunggah!');
+                } else {
+                    return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diunggah!');
+                }
+
+                // return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diunggah!');
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -330,10 +422,53 @@ class HasilLayananController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
         $permohonan = Permohonan::findOrFail($id);
-        return view('analis.edit-hasil-layanan', compact('permohonan'));
+
+        // Cek apakah user adalah superadmin
+        $isSuperadmin = Auth::user()->peran === '1111' || session('active_role') === '1111';
+
+        // Kalau superadmin dan belum ada parameter ?pegawai=...
+       if ($isSuperadmin && !$request->has('pegawai')) {
+        // Coba ambil dari referer (halaman sebelumnya)
+        $pegawaiDariReferer = $request->query('pegawai');
+
+        if (!$pegawaiDariReferer) {
+            // Kalau tidak ada, tetap fallback ke default
+            $defaultPegawai = Pegawai::first();
+
+            if (!$defaultPegawai) {
+                return back()->with('error', 'Tidak ada pegawai yang tersedia untuk dipilih.');
+            }
+
+            $pegawaiDariReferer = $defaultPegawai->nip;
+        }
+
+        return redirect()->route('analis.hasil-layanan.edit', [
+            'id' => $id,
+            'pegawai' => $pegawaiDariReferer,
+        ]);
+    }
+        if ($isSuperadmin && $request->has('pegawai')) {
+            $nip_analis = $request->query('pegawai');
+            // Ambil nama analis dari database berdasarkan NIP
+            $analis = \App\Models\Pegawai::where('nip', $nip_analis)->first();
+            $nama_analis = $analis ? $analis->nama : 'Tidak diketahui';
+        } else {
+            // Untuk analis biasa, abaikan query pegawai
+            if (!Auth::check() || !Auth::user()->pegawai) {
+                abort(403, 'Akses ditolak');
+            }
+
+            $nip_analis = Auth::user()->pegawai->nip;
+            $nama_analis = Auth::user()->pegawai->nama;
+        }
+
+        // Ambil daftar pegawai untuk dropdown (opsional tapi sangat disarankan)
+        $daftarPegawai = Pegawai::all();
+
+        return view('analis.edit-hasil-layanan', compact('permohonan', 'nama_analis', 'daftarPegawai', 'nip_analis'));
     }
 
     public function editStatusPIC_LDI($id)
@@ -350,7 +485,7 @@ class HasilLayananController extends Controller
         $request->validate([
             'file_hasil' => 'required|mimes:pdf|max:10240', 
         ]);
-
+       
         DB::beginTransaction();
 
         try{
@@ -365,16 +500,35 @@ class HasilLayananController extends Controller
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $path = $file->storeAs('hasil_layanan', $filename, 'public');
     
+                 // Tentukan NIP pengunggah berdasarkan peran
+               $isSuperadmin = Auth::user()->peran === '1111' || session('active_role') === '1111';
+
+                if ($isSuperadmin) {
+                    $nip_pengunggah = $request->input('pegawai');
+                } else {
+                    $nip_pengunggah = Auth::user()->pegawai->nip ?? null;
+                }
+
+                if (!$nip_pengunggah) {
+                    throw new \Exception('NIP pengunggah tidak ditemukan. Pastikan Anda memilih pegawai saat mengunggah sebagai superadmin.');
+                }
+
                 $hasilLayanan->update([
                     'nama_file_hasil' => $filename,
                     'path_file_hasil' => $path,
-                    'pengunggah' => Auth::user()->pegawai->nip,
+                    'pengunggah' => $nip_pengunggah,
                     'updated_at' => now()
                 ]);
 
                 DB::commit();
 
-                return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diperbarui!');
+                if ($isSuperadmin) {
+                    return redirect()->route('superadmin.beranda')->with('success', 'File berhasil diperbarui!');
+                } else {
+                    return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diperbarui!');
+                }
+
+                // return redirect()->route('analis.hasil-layanan')->with('success', 'File berhasil diperbarui!');
             }
         }catch (\Exception $e){
             DB::rollBack();
@@ -429,6 +583,8 @@ class HasilLayananController extends Controller
      */
     public function destroy($id)
     {
+        // Tentukan NIP pengunggah berdasarkan peran
+        $isSuperadmin = Auth::user()->peran === '1111' || session('active_role') === '1111';
         DB::beginTransaction();
         try {
             $hasilLayanan = HasilLayanan::where('id_permohonan', $id)->firstOrFail();
@@ -441,7 +597,13 @@ class HasilLayananController extends Controller
 
             DB::commit();
 
-            return redirect()->route('analis.hasil-layanan')->with('success', 'Hasil layanan berhasil dihapus!');
+            if ($isSuperadmin) {
+                    return redirect()->route('superadmin.beranda')->with('success', 'Hasil Layanan berhasil dihapus!');
+                } else {
+                    return redirect()->route('analis.hasil-layanan')->with('success', 'Hasil Layanan berhasil dihapus!');
+                }
+
+            // return redirect()->route('analis.hasil-layanan')->with('success', 'Hasil layanan berhasil dihapus!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['error' => 'Gagal menghapus hasil layanan. ' . $e->getMessage()]);
@@ -466,7 +628,7 @@ class HasilLayananController extends Controller
                 ]);
 
             DB::commit();
-
+            
             return redirect()->route('pic-ldi.hasil-layanan')->with('success', 'Status dan koreksi berhasil direset!');
         } catch (\Exception $e) {
             DB::rollBack();

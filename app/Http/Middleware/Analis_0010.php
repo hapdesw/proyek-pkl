@@ -15,14 +15,28 @@ class Analis_0010
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+    // public function handle(Request $request, Closure $next): Response
+    // {
+    //     $peran = Auth::user()->peran; 
+
+    //     if ($peran[2] === '1') {
+    //         View::share('userRole', 'analis');
+    //         return $next($request); 
+    //     }
+    //     return redirect('/');
+    // }
     public function handle(Request $request, Closure $next): Response
     {
-        $peran = Auth::user()->peran; 
+        $user = Auth::user();
+        $roleAktif = session('active_role') ?? $user->peran;
 
-        if ($peran[2] === '1') {
-            View::share('userRole', 'analis');
-            return $next($request); 
+        // Izinkan analis ('0010') dan superadmin ('1111')
+        if ($roleAktif === '0010' || $roleAktif === '1111') {
+            View::share('userRole', $roleAktif === '0010' ? 'analis' : 'superadmin');
+            return $next($request);
         }
-        return redirect('/');
+
+       return redirect('/');
     }
+
 }

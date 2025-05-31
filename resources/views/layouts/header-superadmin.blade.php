@@ -21,7 +21,7 @@
                                      request()->routeIs('pic-ldi.hasil-layanan') ||
                                      request()->routeIs('pic-ldi.kelola-pegawai');
 
-                        
+                        $analisActive = request()->routeIs('analis.hasil-layanan');
 
                         $bendaharaActive = request()->routeIs('bendahara.tagihan') ||
                                            request()->routeIs('bendahara.kuitansi');
@@ -61,7 +61,37 @@
                         </div>
                     </li>
 
-                    
+                    {{-- Menu Analis --}}
+                    <li class="relative">
+                        <button class="dropdown-button flex items-center p-2 rounded hover:bg-gray-100 font-semibold focus:outline-none
+                            {{ $analisActive ? 'text-darkKnight font-bold' : 'text-plumb' }}">
+                            Analis
+
+                            <svg class="w-2.5 h-2.5 ml-2.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="m1 1 4 4 4-4"/>
+                            </svg>
+                             {{-- DEBUG SEMENTARA
+                               @isset($daftarPegawai)
+                                <div class="text-xs text-green-600">
+                                    Jumlah Analis: {{ $daftarPegawai->count() }}
+                                </div>
+                            @else
+                                <div class="text-xs text-red-600">Data daftarPegawai tidak ditemukan</div>
+                            @endisset --}}
+
+
+                        </button>
+                        <div class="dropdown-menu absolute z-10 hidden bg-white shadow-lg rounded-md w-48 mt-1 py-1">
+                            @foreach ($daftarPegawai as $pegawai)
+                                <a href="{{ route('analis.hasil-layanan') }}?pegawai={{ $pegawai->nip }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    {{ $pegawai->nama }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </li>
+
 
                     <!-- Menu Bendahara -->
                     <li class="relative">

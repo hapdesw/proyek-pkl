@@ -38,8 +38,7 @@ Route::group(['prefix' => 'daftar'], function() {
 Route::post('/pilih-role', [AuthenticatedSessionController::class, 'pilihRole'])->name('pilih-role');
 
 Route::middleware(['auth', 'Superadmin_1111'])->group(function () {
-    Route::get('/superadmin/beranda', [SuperadminController::class, 'index'])->name('superadmin.beranda'); 
-    
+    Route::get('/superadmin/beranda', [SuperadminController::class, 'index'])->name('superadmin.beranda');   
 
 }); 
 

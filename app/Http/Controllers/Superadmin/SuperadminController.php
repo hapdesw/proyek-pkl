@@ -14,6 +14,7 @@ class SuperadminController extends Controller
 {
     public function index(Request $request)
     {
+        $daftarPegawai = Pegawai::whereRaw("SUBSTRING(peran_pegawai, 3, 1) = '1'")->get();
         // Ambil tahun terbaru dari tabel permohonan
         $tahunTerbaru = DB::table('permohonan')
         ->select(DB::raw('YEAR(tanggal_diajukan) as tahun'))
@@ -130,8 +131,9 @@ class SuperadminController extends Controller
             ->orderBy('tahun', 'desc')
             ->pluck('tahun');
 
-        return view('superadmin.beranda-superadmin', compact('rekapPerBulan', 'tahun', 'tahunTersedia'));
+        return view('superadmin.beranda-superadmin', compact('rekapPerBulan', 'tahun', 'tahunTersedia', 'daftarPegawai'));
     }
+
 
     public function getAvailableYears()
     {
