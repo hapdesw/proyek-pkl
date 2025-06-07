@@ -315,11 +315,11 @@ class PermohonanController extends Controller
             ->orderByRaw('CAST(kode_permohonan AS UNSIGNED) DESC')
             ->value('kode_permohonan');
 
-        $nextID = $lastNumericKode ? ((int) $lastNumericKode) : 5654;
+        // $nextID = $lastNumericKode ? ((int) $lastNumericKode) : 5654; 
         $jenisLayanan = JenisLayanan::all();
         $pemohon = Pemohon::all();
 
-        return view('admin.edit-permohonan', compact('permohonan', 'nextID','jenisLayanan', 'pemohon'));
+        return view('admin.edit-permohonan', compact('permohonan','jenisLayanan', 'pemohon'));
     }
 
     /**
@@ -328,13 +328,16 @@ class PermohonanController extends Controller
     public function update(Request $request, $id)
     {
         Log::info('Masuk ke method update');
+        // dd([
+        //     'kode_permohonan' => Permohonan::findOrFail($id)->kode_permohonan,
+        // ]);
          // Ambil kode_permohonan numerik terbesar
         $lastNumericKode = DB::table('permohonan')
             ->whereRaw('kode_permohonan REGEXP "^[0-9]+$"')
             ->orderByRaw('CAST(kode_permohonan AS UNSIGNED) DESC')
             ->value('kode_permohonan');
 
-        $nextID = $lastNumericKode ? ((int) $lastNumericKode) : 5654; // default awal 5654
+        // $nextID = $lastNumericKode ? ((int) $lastNumericKode) : 5654; // default awal 5654
 
         try {
            
@@ -384,7 +387,7 @@ class PermohonanController extends Controller
 
             // Update data permohonan
             $permohonan->update([
-                'kode_permohonan' =>(string) $nextID,
+                'kode_permohonan' => $permohonan -> kode_permohonan,
                 'tanggal_diajukan' => $request->tgl_diajukan,
                 'kategori_berbayar' => $request->kategori,
                 'id_jenis_layanan' => $request->jenis_layanan,
@@ -416,6 +419,8 @@ class PermohonanController extends Controller
             ]);
 
             Log::info('Berhasil update data permohonan');
+            Log::info('Data request berhasil update:', $request->all());
+           
             return redirect()->route('admin.permohonan')->with('success', 'Permohonan berhasil diperbarui!');
         } catch (\Exception $e) {
             Log::error('Gagal memperbarui data: ' . $e->getMessage());
