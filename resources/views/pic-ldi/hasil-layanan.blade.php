@@ -370,7 +370,7 @@
                                                 Lihat File
                                             </button>
                                             <span class="text-xs text-gray-600">
-                                                {{ $pm->hasilLayanan->updated_at ? 'Diperbarui oleh:' : 'Diunggah oleh:' }}
+                                                Diunggah oleh:
                                             </span>
                                             <span class="text-xs font-medium">{{ $pm->hasilLayanan->pegawai->nama }}</span>
                                         @else

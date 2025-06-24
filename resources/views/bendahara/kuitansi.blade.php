@@ -325,69 +325,71 @@
                                         </button>
                                         <div id="actions-dropdown-{{ $pm->id }}" class="hidden z-10 w-auto bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
                                             <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="actions-dropdown-button-{{ $pm->id }}">
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class=" flex items-center px-4 py-1">
-                                                    @if($pm->kuitansi && $pm->kuitansi->path_file_kuitansi)
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
-                                                        </svg>
-                                                        <a href="{{ route('bendahara.kuitansi.edit', ['id' => $pm->id]) }}" 
-                                                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        Edit
-                                                        </a>
-                                                    @else
-                                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                                        </svg>
-                                                        <a href="{{ route('bendahara.kuitansi.create', ['id' => $pm->id]) }}" 
-                                                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        Unggah Kuitansi
-                                                        </a>
-                                                    @endif
-                                                    </li>
-                                                </div>
-                                                <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                    <li class="flex items-center px-4 py-1">
-                                                        <form id="delete-form-{{ $pm->id }}" 
-                                                            action="{{ route('bendahara.kuitansi.destroy', $pm->id) }}" 
-                                                            method="POST" 
-                                                            class="flex items-center">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            
-                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                                @if($pm->kuitansi && $pm->kuitansi->path_file_kuitansi)
+                                                    <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                        <li class="flex items-center px-4 py-1">
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"/>
                                                             </svg>
-                                                            
-                                                            <button type="button" 
-                                                                    onclick="confirmDelete({{ $pm->id }})" 
-                                                                    class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                                                                Hapus
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                </div>
-
-                                                <script>
-                                                function confirmDelete(id) {
-                                                    Swal.fire({
-                                                        title: 'Apakah Anda yakin?',
-                                                        text: "Kuitansi akan dihapus secara permanen!",
-                                                        icon: 'warning',
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: '#3085d6',
-                                                        cancelButtonColor: '#d33',
-                                                        confirmButtonText: 'Ya, hapus!',
-                                                        cancelButtonText: 'Batal'
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            document.getElementById('delete-form-' + id).submit();
-                                                        }
-                                                    });
-                                                }
-                                                </script>
+                                                            <a href="{{ route('bendahara.kuitansi.edit', ['id' => $pm->id]) }}" 
+                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            Edit
+                                                            </a>
+                                                        </li>
+                                                    </div>
+                                                    <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                        <li class="flex items-center px-4 py-1">
+                                                            <form id="delete-form-{{ $pm->id }}" 
+                                                                action="{{ route('bendahara.kuitansi.destroy', $pm->id) }}" 
+                                                                method="POST" 
+                                                                class="flex items-center">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"/>
+                                                                </svg>
+                                                                <button type="button" 
+                                                                        onclick="confirmDelete({{ $pm->id }})" 
+                                                                        class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                                    Hapus
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    </div>
+                                                @else
+                                                    <div class="block px-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                        <li class="flex items-center px-4 py-1">
+                                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 7.757v8.486M7.757 12h8.486M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                            </svg>
+                                                            <a href="{{ route('bendahara.kuitansi.create', ['id' => $pm->id]) }}" 
+                                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            Unggah Kuitansi
+                                                            </a>
+                                                        </li>
+                                                    </div>
+                                                @endif
                                             </ul>
                                         </div>
+
+                                        <script>
+                                        function confirmDelete(id) {
+                                            Swal.fire({
+                                                title: 'Apakah Anda yakin?',
+                                                text: "Kuitansi akan dihapus secara permanen!",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: 'Ya, hapus!',
+                                                cancelButtonText: 'Batal'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    document.getElementById('delete-form-' + id).submit();
+                                                }
+                                            });
+                                        }
+                                        </script>
                                     </td>
                                 </tr> 
                             @empty
