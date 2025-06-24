@@ -32,7 +32,7 @@ class PermohonanSheet implements FromCollection, WithHeadings, WithMapping, With
     {
         return [
             'No.',
-            'ID',
+            'Kode',
             'Tanggal Pengajuan',
             'Kategori',
             'Layanan',
@@ -69,7 +69,7 @@ class PermohonanSheet implements FromCollection, WithHeadings, WithMapping, With
 
         return [
             $this->rowNumber++, // Gunakan $this->rowNumber, bukan static::$rowNumber
-            $permohonan->id,
+            $permohonan->kode_permohonan,
             Carbon::parse($permohonan->tanggal_diajukan)->format('d/m/Y'),
             $permohonan->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $permohonan->kategori_berbayar,
             $permohonan->jenisLayanan->nama_jenis_layanan,
