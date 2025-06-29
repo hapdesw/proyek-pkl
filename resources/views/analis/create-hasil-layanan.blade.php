@@ -83,8 +83,8 @@
                             Unggah file <span class="text-red-600">*</span>
                         </label>
                         <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-                            id="file_input" type="file" name="file_hasil" accept=".pdf" required>
-                        <p class="mt-1 text-sm text-gray-500">PDF (MAX. 10MB)</p>
+                            id="file_input" type="file" name="file_hasil" accept=".pdf,.doc,.docx" required>
+                        <p class="mt-1 text-sm text-gray-500">PDF, DOC, DOCX (MAX. 10MB)</p>
                     </div>
                 </div>
 

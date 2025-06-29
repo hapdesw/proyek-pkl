@@ -115,7 +115,7 @@ class TagihanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file_tagihan' => 'required|mimes:pdf|max:10240',
+            'file_tagihan' => 'required|mimes:pdf,doc,docx|max:10240',
             'kode_permohonan' => 'required|exists:permohonan,kode_permohonan' // Validasi kode permohonan
         ]);
 
@@ -168,7 +168,7 @@ class TagihanController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'file_tagihan' => 'required|mimes:pdf|max:10240',
+            'file_tagihan' => 'required|mimes:pdf,doc,docx|max:10240',
         ]);
 
         DB::beginTransaction();

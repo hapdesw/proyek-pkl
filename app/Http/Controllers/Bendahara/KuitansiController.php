@@ -117,7 +117,7 @@ class KuitansiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file_kuitansi' => 'required|mimes:pdf|max:10240',
+            'file_kuitansi' => 'required|mimes:pdf,doc,docx|max:10240',
             'kode_permohonan' => 'required|exists:permohonan,kode_permohonan' // Validasi kode permohonan
         ]);
 
@@ -170,7 +170,7 @@ class KuitansiController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'file_kuitansi' => 'required|mimes:pdf|max:10240',
+            'file_kuitansi' => 'required|mimes:pdf,doc,docx|max:10240',
         ]);
 
         DB::beginTransaction();

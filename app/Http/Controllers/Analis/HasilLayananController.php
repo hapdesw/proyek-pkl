@@ -309,7 +309,7 @@ class HasilLayananController extends Controller
         //     'session_role' => session('active_role'),
         // ]);
         $request->validate([
-            'file_hasil' => 'required|mimes:pdf|max:10240',
+            'file_hasil' => 'required|mimes:pdf,doc,docx|max:10240',
             'kode_permohonan' => 'required|exists:permohonan,kode_permohonan' // Validasi kode permohonan
         ]);
 
@@ -483,7 +483,7 @@ class HasilLayananController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'file_hasil' => 'required|mimes:pdf|max:10240', 
+            'file_hasil' => 'required|mimes:pdf,doc,docx|max:10240', 
         ]);
        
         DB::beginTransaction();
