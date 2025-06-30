@@ -32,7 +32,7 @@
                             <label for="simple-search" class="sr-only">Search</label>
                             <div class="relative w-full">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                     </svg>
                                 </div>
@@ -45,6 +45,11 @@
                                     value="{{ request('search') }}" 
                                 >
                             </div>
+
+                            {{-- Tambahkan hidden input untuk mempertahankan parameter pegawai --}}
+                            @if (request('pegawai'))
+                                <input type="hidden" name="pegawai" value="{{ request('pegawai') }}">
+                            @endif
                         </form>
                     </div>
                     <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">                  
@@ -325,7 +330,7 @@
                             @forelse ($permohonan as $pm)
 
                                 <tr class="border-b dark:border-gray-700 text-darkKnight">
-                                    <td class="px-3 py-3">{{ $loop->iteration }}</td>
+                                    <td class="px-3 py-3">{{ ($permohonan->currentPage() - 1) * $permohonan->perPage() + $loop->iteration }}</td>
                                     <td class="px-4 py-3">{{ $pm->kode_permohonan }}</td>
                                     <td class="px-3 py-3 w-20">{{ \Carbon\Carbon::parse($pm->tanggal_diajukan)->format('d/m/Y') }}</td>
                                     <td class="px-1.5 py-3">{{ $pm->kategori_berbayar == 'Nolrupiah' ? 'Nol Rupiah' : $pm->kategori_berbayar }}</td>
@@ -481,7 +486,7 @@
                     <ul class="inline-flex items-stretch -space-x-px">
                         <!-- Previous Page Link -->
                         <li>
-                            <a href="{{ $permohonan->previousPageUrl() }}{{ request('search') ? '&search=' . request('search') : '' }}{{ request('months') ? '&months=' . request('months') : '' }}{{ request('year') ? '&year=' . request('year') : '' }}" 
+                            <a href="{{ $permohonan->previousPageUrl() }}"
                             class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-900 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 {{ $permohonan->onFirstPage() ? 'cursor-not-allowed opacity-50' : '' }}">
                                 <span class="sr-only">Previous</span>
                                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

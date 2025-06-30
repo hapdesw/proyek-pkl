@@ -119,7 +119,7 @@ class HasilLayananController extends Controller
         }
 
         // Paginate hasil query
-        $permohonan = $query->paginate(15);
+        $permohonan = $query->paginate(15)->appends($request->query());
 
         return view('analis.hasil-layanan', compact('permohonan', 'nama_analis', 'nip_analis'));
     }
@@ -199,16 +199,25 @@ class HasilLayananController extends Controller
     }
 
     public function getAvailableYears()
-    {
-        // Pastikan pengguna sudah login
-        if (!Auth::check()) {
-            return response()->json([]); 
+{
+    if (!Auth::check()) {
+        return response()->json([]);
+    }
+
+    if (Auth::user()->peran === '1111' || session('active_role') === '1111') {
+        // Superadmin: ambil semua tahun dari semua permohonan
+        $years = Permohonan::selectRaw('DISTINCT YEAR(tanggal_diajukan) AS year')
+            ->orderBy('year', 'DESC')
+            ->pluck('year')
+            ->toArray();
+    } else {
+        // Analis biasa: ambil tahun berdasarkan NIP pegawai
+        if (!Auth::user()->pegawai) {
+            return response()->json([]);
         }
 
-        // Ambil NIP analis dari pengguna yang login
         $nip_analis = Auth::user()->pegawai->nip;
 
-        // Query untuk mengambil tahun yang unik dari permohonan yang terkait dengan nip_analis
         $years = Permohonan::whereHas('disposisi', function($query) use ($nip_analis) {
             $query->where('nip_pegawai1', $nip_analis)
                 ->orWhere('nip_pegawai2', $nip_analis)
@@ -217,13 +226,12 @@ class HasilLayananController extends Controller
         })
         ->selectRaw('DISTINCT YEAR(tanggal_diajukan) AS year')
         ->orderBy('year', 'DESC')
-        ->pluck('year') 
+        ->pluck('year')
         ->toArray();
-
-        Log::info('Data tahun yang ditemukan untuk nip_analis ' . $nip_analis . ':', $years);
-
-        return response()->json($years);
     }
+
+    return response()->json($years);
+}
 
     public function getAvailableYearsPIC_LDI()
     {
