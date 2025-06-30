@@ -99,6 +99,11 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('hana123'),
             'peran' => '0011'
         ]);
+        User::create([
+            'username' => 'hesty123',
+            'password' => bcrypt('hesty123'),
+            'peran' => '0010'
+        ]);
         
         $this->call([
             PegawaiSeeder::class,

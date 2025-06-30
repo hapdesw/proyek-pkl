@@ -110,6 +110,12 @@ class PegawaiSeeder extends Seeder
                 'nama' => 'Hana Amalia, S.Tr.',
                 'peran_pegawai' => '0011',
             ],
+            [
+                'nip' => '196910041990032001',
+                'id_user' => '18',
+                'nama' => 'Hesty Panitiastuti, S.Kom.',
+                'peran_pegawai' => '0010',
+            ],
         ];
 
         foreach ($pegawaiData as $data) {
